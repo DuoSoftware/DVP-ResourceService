@@ -1,27 +1,28 @@
 {
   "name": "DVP-ResourceService",
   "version": "1.0.0",
+  "description": "",
   "main": "app.js",
   "dependencies": {
-    "DVP-DBModels": "git+https://github.com/DuoSoftware/DVP-DBModels",
-    "restify": "^3.0.3",
-    "sequelize": "^3.3.2",
-    "config": "^1.14.0",
-    "stringify": "^3.1.0",
-    "moment": "^2.10.3",
-    "DVP-Common": "git+https://github.com/DuoSoftware/DVP-Common",
+    "collections": "^1.2.4",
+    "config": "^1.16.0",
+    "dvp-common": "^0.0.2",
+    "dvp-dbmodels": "^0.0.12",
+    "moment": "^2.10.6",
     "redis": "^0.12.1",
-    "collections": "^1.2.3"
+    "restify": "^3.0.3",
+    "sequelize": "^3.9.0",
+    "stringify": "^3.1.0"
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified \" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/DuoSoftware/DVP-ResourceService.git"
   },
-  "author": "",
+  "author": "Rajinda",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/DuoSoftware/DVP-ResourceService/issues"
