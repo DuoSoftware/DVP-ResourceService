@@ -2,73 +2,74 @@
 1 verbose cli [ 'C:\\Program Files\\nodejs\\\\node.exe',
 1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
 1 verbose cli   'install',
-1 verbose cli   'DVP-Common' ]
+1 verbose cli   'DVP-DBModels' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.33
 4 verbose node symlink C:\Program Files\nodejs\\node.exe
 5 warn package.json DVP-ResourceService@1.0.0 No description
 6 warn package.json DVP-ResourceService@1.0.0 No README data
-7 verbose readDependencies using package.json deps
-8 verbose cache add [ 'DVP-Common', null ]
-9 verbose cache add name=undefined spec="DVP-Common" args=["DVP-Common",null]
-10 verbose parsed url { protocol: null,
-10 verbose parsed url   slashes: null,
-10 verbose parsed url   auth: null,
-10 verbose parsed url   host: null,
-10 verbose parsed url   port: null,
-10 verbose parsed url   hostname: null,
-10 verbose parsed url   hash: null,
-10 verbose parsed url   search: null,
-10 verbose parsed url   query: null,
-10 verbose parsed url   pathname: 'DVP-Common',
-10 verbose parsed url   path: 'DVP-Common',
-10 verbose parsed url   href: 'DVP-Common' }
-11 silly lockFile 5479c35d-DVP-Common DVP-Common
-12 verbose lock DVP-Common C:\Users\Rajinda\AppData\Roaming\npm-cache\5479c35d-DVP-Common.lock
-13 silly lockFile 5479c35d-DVP-Common DVP-Common
-14 silly lockFile 5479c35d-DVP-Common DVP-Common
-15 verbose addNamed [ 'DVP-Common', '' ]
-16 verbose addNamed [ null, '*' ]
-17 silly lockFile b8bcccdb-DVP-Common DVP-Common@
-18 verbose lock DVP-Common@ C:\Users\Rajinda\AppData\Roaming\npm-cache\b8bcccdb-DVP-Common.lock
-19 silly addNameRange { name: 'DVP-Common', range: '*', hasData: false }
-20 verbose request where is /DVP-Common
-21 verbose request registry https://registry.npmjs.org/
-22 verbose request id 99deb1dd1c3ad059
-23 verbose url raw /DVP-Common
-24 verbose url resolving [ 'https://registry.npmjs.org/', './DVP-Common' ]
-25 verbose url resolved https://registry.npmjs.org/DVP-Common
-26 verbose request where is https://registry.npmjs.org/DVP-Common
-27 info trying registry request attempt 1 at 11:36:30
-28 http GET https://registry.npmjs.org/DVP-Common
-29 http 404 https://registry.npmjs.org/DVP-Common
-30 silly registry.get cb [ 404,
-30 silly registry.get   { 'content-type': 'application/json',
-30 silly registry.get     'cache-control': 'max-age=0',
-30 silly registry.get     'content-length': '2',
-30 silly registry.get     'accept-ranges': 'bytes',
-30 silly registry.get     date: 'Tue, 29 Sep 2015 06:10:03 GMT',
-30 silly registry.get     via: '1.1 varnish',
-30 silly registry.get     age: '0',
-30 silly registry.get     connection: 'keep-alive',
-30 silly registry.get     'x-served-by': 'cache-sin6924-SIN',
-30 silly registry.get     'x-cache': 'MISS',
-30 silly registry.get     'x-cache-hits': '0',
-30 silly registry.get     'x-timer': 'S1443507003.478499,VS0,VE206' } ]
-31 silly lockFile b8bcccdb-DVP-Common DVP-Common@
-32 silly lockFile b8bcccdb-DVP-Common DVP-Common@
-33 error 404 Not Found
-33 error 404
-33 error 404 'DVP-Common' is not in the npm registry.
-33 error 404 You should bug the author to publish it
-33 error 404 It was specified as a dependency of 'DVP-ResourceService'
-33 error 404
-33 error 404 Note that you can also install from a
-33 error 404 tarball, folder, or http url, or git url.
-34 error System Windows_NT 6.2.9200
-35 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "DVP-Common"
-36 error cwd I:\Duo Projects\NodeJS\DVP-ResourceService
-37 error node -v v0.10.33
-38 error npm -v 1.4.28
-39 error code E404
-40 verbose exit [ 1, true ]
+7 warn package.json dvp-dbmodels@0.0.15 No description
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'DVP-DBModels', null ]
+10 verbose cache add name=undefined spec="DVP-DBModels" args=["DVP-DBModels",null]
+11 verbose parsed url { protocol: null,
+11 verbose parsed url   slashes: null,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: null,
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: null,
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: 'DVP-DBModels',
+11 verbose parsed url   path: 'DVP-DBModels',
+11 verbose parsed url   href: 'DVP-DBModels' }
+12 silly lockFile 4859167c-DVP-DBModels DVP-DBModels
+13 verbose lock DVP-DBModels C:\Users\Rajinda\AppData\Roaming\npm-cache\4859167c-DVP-DBModels.lock
+14 silly lockFile 4859167c-DVP-DBModels DVP-DBModels
+15 silly lockFile 4859167c-DVP-DBModels DVP-DBModels
+16 verbose addNamed [ 'DVP-DBModels', '' ]
+17 verbose addNamed [ null, '*' ]
+18 silly lockFile 027d2af4-DVP-DBModels DVP-DBModels@
+19 verbose lock DVP-DBModels@ C:\Users\Rajinda\AppData\Roaming\npm-cache\027d2af4-DVP-DBModels.lock
+20 silly addNameRange { name: 'DVP-DBModels', range: '*', hasData: false }
+21 verbose request where is /DVP-DBModels
+22 verbose request registry https://registry.npmjs.org/
+23 verbose request id bc24c3cecaad3322
+24 verbose url raw /DVP-DBModels
+25 verbose url resolving [ 'https://registry.npmjs.org/', './DVP-DBModels' ]
+26 verbose url resolved https://registry.npmjs.org/DVP-DBModels
+27 verbose request where is https://registry.npmjs.org/DVP-DBModels
+28 info trying registry request attempt 1 at 15:47:37
+29 http GET https://registry.npmjs.org/DVP-DBModels
+30 http 404 https://registry.npmjs.org/DVP-DBModels
+31 silly registry.get cb [ 404,
+31 silly registry.get   { 'content-type': 'application/json',
+31 silly registry.get     'cache-control': 'max-age=0',
+31 silly registry.get     'content-length': '2',
+31 silly registry.get     'accept-ranges': 'bytes',
+31 silly registry.get     date: 'Tue, 20 Oct 2015 10:20:48 GMT',
+31 silly registry.get     via: '1.1 varnish',
+31 silly registry.get     age: '0',
+31 silly registry.get     connection: 'keep-alive',
+31 silly registry.get     'x-served-by': 'cache-fra1230-FRA',
+31 silly registry.get     'x-cache': 'MISS',
+31 silly registry.get     'x-cache-hits': '0',
+31 silly registry.get     'x-timer': 'S1445336448.529356,VS0,VE100' } ]
+32 silly lockFile 027d2af4-DVP-DBModels DVP-DBModels@
+33 silly lockFile 027d2af4-DVP-DBModels DVP-DBModels@
+34 error 404 Not Found
+34 error 404
+34 error 404 'DVP-DBModels' is not in the npm registry.
+34 error 404 You should bug the author to publish it
+34 error 404 It was specified as a dependency of 'DVP-ResourceService'
+34 error 404
+34 error 404 Note that you can also install from a
+34 error 404 tarball, folder, or http url, or git url.
+35 error System Windows_NT 6.2.9200
+36 error command "C:\\Program Files\\nodejs\\\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "install" "DVP-DBModels"
+37 error cwd I:\Duo Projects\NodeJS\DVP-ResourceService
+38 error node -v v0.10.33
+39 error npm -v 1.4.28
+40 error code E404
+41 verbose exit [ 1, true ]

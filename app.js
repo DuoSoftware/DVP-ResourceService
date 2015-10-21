@@ -14,7 +14,7 @@ var attributeHandler = require('./AttributeHandler');
 var groupsHandler = require('./GroupsHandler');
 var resourceHandler = require('./ResourceHandler');
 var taskHandler = require('./TaskHandler');
-
+var taskInfoHandler = require('./TaskInfoHandler');
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
     name: "ResourceService",
@@ -291,7 +291,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group', f
         catch (ex) {
             logger.error('[groupsHandler.CreateGroups-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        groupsHandler.CreateGroups(att.GroupName, att.GroupClass, att.GroupType, att.GroupCategory, tenantId, companyId, att.OtherData, res);
+        groupsHandler.CreateGroups(att.GroupName, att.GroupClass, att.GroupType, att.GroupCategory, tenantId, companyId, att.OtherData,att.Percentage, res);
 
     }
     catch (ex) {
@@ -324,7 +324,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
         catch (ex) {
             logger.error('[groupsHandler.EditGroups-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        groupsHandler.EditGroups(req.params.GroupId, att.GroupName, att.GroupClass, att.GroupType, att.GroupCategory, tenantId, companyId, att.OtherData, res);
+        groupsHandler.EditGroups(req.params.GroupId, att.GroupName, att.GroupClass, att.GroupType, att.GroupCategory, tenantId, companyId, att.OtherData,att.Percentage, res);
 
     }
     catch (ex) {
@@ -886,7 +886,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task', fun
         catch (ex) {
             logger.error('[taskHandler.CreateTask-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        taskHandler.CreateTask(att.TaskClass, att.TaskType, att.TaskCategory, tenantId, companyId, att.TaskName, att.OtherData, res);
+        taskHandler.CreateTask( tenantId, companyId, att.TaskInfoId, att.OtherData, res);
 
     }
     catch (ex) {
@@ -919,7 +919,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
         catch (ex) {
             logger.error('[taskHandler.EditTask-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        taskHandler.EditTask(req.params.TaskId,att.TaskClass, att.TaskType, att.TaskCategory, tenantId, companyId, att.TaskName, att.OtherData, res);
+        taskHandler.EditTask(req.params.TaskId,tenantId, companyId, att.TaskName, att.OtherData, res);
 
     }
     catch (ex) {
@@ -1066,6 +1066,44 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
 
 
 //-------------------------End Task Handler ------------------------- \\
+
+//-------------------------TaskInfo Handler ------------------------- \\
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfoHandler/TaskInfo', function (req, res, next) {
+    try {
+
+        logger.info('[GetAllTasks.GetAllTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        var att = req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[taskHandler.GetAllTasks-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        taskInfoHandler.GetAllTasks( res);
+
+    }
+    catch (ex) {
+
+        logger.error('[GetAllTasks.GetAllTasks] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[GetAllTasks.GetAllTasks] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//-------------------------End TaskInfo Handler ------------------------- \\
+
 
 //------------------------- Crossdomain ------------------------- \\
 

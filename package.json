@@ -7,7 +7,7 @@
     "collections": "^1.2.4",
     "config": "^1.16.0",
     "dvp-common": "^0.0.2",
-    "dvp-dbmodels": "^0.0.21",
+    "dvp-dbmodels": "^0.0.23",
     "moment": "^2.10.6",
     "redis": "^0.12.1",
     "restify": "^3.0.3",

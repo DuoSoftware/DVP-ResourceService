@@ -10,7 +10,7 @@ var moment = require('moment');
 var Sequelize = require('sequelize');
 
 
-function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData, callback) {
+function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData,percentage, callback) {
     DbConn.ResGroups
         .create(
         {
@@ -21,6 +21,7 @@ function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId,
             TenantId: tenantId,
             CompanyId: companyId,
             OtherData: otherData,
+            Percentage:percentage,
             Status: true
         }
     ).then(function (cmp) {
@@ -34,7 +35,7 @@ function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId,
         });
 }
 
-function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData, callback) {
+function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData,percentage, callback) {
     DbConn.ResGroups
         .create(
         {
@@ -45,6 +46,7 @@ function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, te
             TenantId: tenantId,
             CompanyId: companyId,
             OtherData: otherData,
+            Percentage:percentage,
             Status: true
         },
         {where: [{GroupId: groupId}, {TenantId: tenantId}, {CompanyId: companyId}]}

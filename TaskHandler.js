@@ -9,16 +9,13 @@ var moment = require('moment');
 var Sequelize = require('sequelize');
 
 
-function CreateTask(taskClass, taskType, taskCategory, tenantId, companyId, taskName, otherData, callback) {
+function CreateTask(tenantId, companyId, taskInfoId, otherData, callback) {
     DbConn.ResTask
         .create(
         {
-            TaskClass: taskClass,
-            TaskType: taskType,
-            TaskCategory: taskCategory,
             TenantId: tenantId,
             CompanyId: companyId,
-            TaskName: taskName,
+            TaskInfoId: taskInfoId,
             OtherData: otherData,
             Status: true
         }
@@ -27,20 +24,17 @@ function CreateTask(taskClass, taskType, taskCategory, tenantId, companyId, task
             logger.info('[DVP-ResTask.CreateTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
         }).error(function (err) {
-            logger.error('[DVP-ResTask.CreateTask] - [%s] - [PGSQL] - insertion  failed-[%s]', taskName, err);
+            logger.error('[DVP-ResTask.CreateTask] - [%s] - [PGSQL] - insertion  failed-[%s]', taskInfoId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
 }
 
-function EditTask(taskId,taskClass, taskType, taskCategory, tenantId, companyId, taskName, otherData, callback) {
+function EditTask(taskId, tenantId, companyId, taskInfoId, otherData, callback) {
     DbConn.ResTask
         .update(
         {
-            TaskClass: taskClass,
-            TaskType: taskType,
-            TaskCategory: taskCategory,
-            TaskName: taskName,
+            TaskInfoId: taskInfoId,
             OtherData: otherData,
             Status: true
         },
@@ -52,7 +46,7 @@ function EditTask(taskId,taskClass, taskType, taskCategory, tenantId, companyId,
             logger.info('[DVP-ResTask.EditTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
         }).error(function (err) {
-            logger.error('[DVP-ResTask.EditTask] - [%s] - [PGSQL] - insertion  failed-[%s]', taskName, err);
+            logger.error('[DVP-ResTask.EditTask] - [%s] - [PGSQL] - insertion  failed-[%s]', taskInfoId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
