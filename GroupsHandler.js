@@ -256,12 +256,13 @@ function GetAttributeByGroupId(groupId, tenantId, companyId, callback) {
 }
 
 function GetAttributeByGroupIdWithDetails(groupId, tenantId, companyId, callback) {
-    DbConn.ResAttributeGroups.findAll({
+
+    DbConn.ResGroups.find({
         where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
-        include: [{ model: DbConn.ResGroups,  as: "ResGroups" },
-            { model: DbConn.ResAttribute, as: "ResAttribute"   }
-        ]
-    }).then(function (CamObject) {
+        include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }],
+
+    }
+    ).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttributeGroups.GetAttributeByGroupIdWithDetails] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -278,6 +279,15 @@ function GetAttributeByGroupIdWithDetails(groupId, tenantId, companyId, callback
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
+
+    /*
+     DbConn.ResAttributeGroups.findAll({
+     where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
+     include: [{ model: DbConn.ResGroups,  as: "ResGroups" },
+     { model: DbConn.ResAttribute, as: "ResAttribute"   }
+     ]
+     }
+     */
 }
 
 function GetGroupDetailsByAttributeId(attributeId, tenantId, companyId, callback) {
