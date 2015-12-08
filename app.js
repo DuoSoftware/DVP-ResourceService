@@ -43,7 +43,7 @@ RestServer.listen(port, function () {
 
 //------------------------- Attribute Handler ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.CreateAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -76,7 +76,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attri
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute/:AttributeId', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.EditAttribute] - [HTTP]  - Request received -  Data - %s  - %s', JSON.stringify(req.body),JSON.stringify(req.params));
@@ -109,7 +109,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attrib
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute/:AttributeId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.DeleteAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -142,7 +142,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attrib
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.GetAllAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -173,7 +173,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attrib
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute/:RowCount/:PageNo', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:PageNo', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.GetAllAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -204,7 +204,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attrib
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute/:AttributeId', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.GetAttributeById] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -235,7 +235,7 @@ var att=req.params;
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attribute/:AttributeId/Details', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/Details', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetGroupDetailsByAttributeId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -271,7 +271,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeHandler/Attrib
 
 //------------------------- Group Handler ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.CreateGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -304,7 +304,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group', f
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.EditGroups] - [HTTP]  - Request received -  Data - %s - %s ', JSON.stringify(req.body),JSON.stringify(req.params));
@@ -337,7 +337,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.DeleteGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -369,7 +369,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -401,7 +401,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group', fu
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Groups/:RowCount/:PageNo', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageNo', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -433,7 +433,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Groups/:Ro
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -465,7 +465,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/Attribute', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Group/Attribute', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.AddAttributeToGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -498,7 +498,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/Att
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId/Attribute', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.AddAttributeToExsistingGroups] - [HTTP]  - Request received -  Data - %s - %s ', JSON.stringify(req.body),JSON.stringify(req.params));
@@ -531,7 +531,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId/Attribute', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAttributeByGroupId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -563,7 +563,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId/Attribute/Details', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/Details', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAttributeByGroupId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -595,7 +595,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:GroupId/Attribute/:AttributeId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.DeleteAttributeFromGroup] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -631,7 +631,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/GroupHandler/Group/:Gro
 
 //------------------------- Resource Handler ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.CreateResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -664,7 +664,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resour
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource/:ResourceId', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.EditResource] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.body), JSON.stringify(req.params));
@@ -697,7 +697,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resourc
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource/:ResourceId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.DeleteResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -730,7 +730,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resourc
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -763,7 +763,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resourc
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource/:ResourceId', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllResourceById] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -796,7 +796,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resourc
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.AssignTaskToResource] - [HTTP]  - Request received -  Data - %s -%s',JSON.stringify(req.body), JSON.stringify(req.params));
@@ -829,7 +829,7 @@ var att=req.body;
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resource/:ResourceId/Tasks', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
@@ -866,7 +866,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceHandler/Resourc
 
 //------------------------- Task Handler ------------------------- \\
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.CreateTask] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
@@ -899,7 +899,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task', fun
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskId', function (req, res, next) {
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.EditTask] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body),JSON.stringify(req.params));
@@ -932,7 +932,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.DeleteTask] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -965,7 +965,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Task', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.GetAllTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -998,7 +998,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task', func
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskId', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.GetTaskById] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -1031,7 +1031,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskId/Resources', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
@@ -1069,7 +1069,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskHandler/Task/:TaskI
 
 //-------------------------TaskInfo Handler ------------------------- \\
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfoHandler/TaskInfo', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', function (req, res, next) {
     try {
 
         logger.info('[GetAllTasks.GetAllTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
