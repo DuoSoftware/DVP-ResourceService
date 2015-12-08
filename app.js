@@ -142,7 +142,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', function (req, res, next) {
     try {
 
         logger.info('[attributeHandler.GetAllAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -369,7 +369,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', functi
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Group', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -730,7 +730,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.GetAllResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
@@ -965,7 +965,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', function
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Task', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Tasks', function (req, res, next) {
     try {
 
         logger.info('[taskHandler.GetAllTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
