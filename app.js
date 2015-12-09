@@ -862,6 +862,172 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
     return next();
 });
 
+///ResResourceAttributeTask
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {
+    try {
+
+        logger.info('[AddAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[AddAttributeToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.AddAttributeToResource(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('AddAttributeToResource - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('AddAttributeToResource - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', function (req, res, next) {
+    try {
+
+        logger.info('[EditAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[EditAttributeToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.EditAttributeToResource(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('EditAttributeToResource - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('EditAttributeToResource - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', function (req, res, next) {
+    try {
+
+        logger.info('[DeleteAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[DeleteAttributeToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.DeleteAttributeToResource(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('DeleteAttributeToResource - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('DeleteAttributeToResource - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/', function (req, res, next) {
+    try {
+
+        logger.info('[ViewAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[ViewAttributeToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.ViewAttributeToResource(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('ViewAttributeToResource - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('ViewAttributeToResource - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', function (req, res, next) {
+    try {
+
+        logger.info('[ViewAttributeToResourceById] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[ViewAttributeToResourceById-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.ViewAttributeToResourceById(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('ViewAttributeToResourceById - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('ViewAttributeToResourceById - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 //-------------------------End Resource Handler ------------------------- \\
 
 //------------------------- Task Handler ------------------------- \\
