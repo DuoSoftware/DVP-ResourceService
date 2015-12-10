@@ -1354,7 +1354,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', function (re
         catch (ex) {
             logger.error('[taskHandler.GetAllTasks-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        taskInfoHandler.GetAllTasks( res);
+        taskInfoHandler.GetAllTasks(tenantId,companyId, res);
 
     }
     catch (ex) {
