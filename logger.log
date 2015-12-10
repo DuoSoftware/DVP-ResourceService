@@ -276,3 +276,11 @@
 {"level":"info","message":"[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - {\"ResourceId\":\"1\"} ","timestamp":"2015-12-10T08:46:36.513Z"}
 {"level":"error","timestamp":"2015-12-10T08:46:36.586Z"}
 {"level":"info","message":"[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [{\"Exception\":null,\"CustomMessage\":\"SUCCESS\",\"IsSuccess\":true,\"Result\":[]}] ","timestamp":"2015-12-10T08:46:42.652Z"}
+{"level":"info","message":"[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - {\"ResourceId\":\"1\"} ","timestamp":"2015-12-10T08:52:59.294Z"}
+{"level":"error","timestamp":"2015-12-10T08:52:59.300Z"}
+{"level":"info","message":"[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - {\"ResourceId\":\"1\"} ","timestamp":"2015-12-10T08:54:56.283Z"}
+{"level":"error","timestamp":"2015-12-10T08:54:56.291Z"}
+{"level":"info","message":"[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [{\"Exception\":null,\"CustomMessage\":\"SUCCESS\",\"IsSuccess\":true,\"Result\":[]}] ","timestamp":"2015-12-10T08:54:56.740Z"}
+{"level":"info","message":"[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - {\"ResourceId\":\"1\"} ","timestamp":"2015-12-10T08:55:12.886Z"}
+{"level":"error","timestamp":"2015-12-10T08:55:12.892Z"}
+{"level":"info","message":"[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [{\"Exception\":null,\"CustomMessage\":\"SUCCESS\",\"IsSuccess\":true,\"Result\":[]}] ","timestamp":"2015-12-10T08:55:13.113Z"}

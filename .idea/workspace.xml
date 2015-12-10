@@ -306,8 +306,8 @@
       <file leaf-file-name="ResourceHandler.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ResourceHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5914787">
-              <caret line="154" column="43" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.6766917">
+              <caret line="156" column="9" selection-start-line="156" selection-start-column="9" selection-end-line="156" selection-end-column="9" />
               <folding>
                 <element signature="e#0#43#0" expanded="false" />
                 <element signature="n#!!block;n#CreateResource#0" expanded="false" />
@@ -342,43 +342,42 @@
                 <element signature="e#5749#5932#0" expanded="false" />
                 <element signature="e#5959#6226#0" expanded="false" />
                 <element signature="e#6249#6526#0" expanded="false" />
-                <element signature="e#7282#7548#0" expanded="false" />
                 <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-                <element signature="e#7664#7916#0" expanded="false" />
-                <element signature="e#7782#7906#0" expanded="false" />
-                <element signature="e#7943#8201#0" expanded="false" />
-                <element signature="e#8224#8486#0" expanded="false" />
+                <element signature="e#7659#7911#0" expanded="false" />
+                <element signature="e#7777#7901#0" expanded="false" />
+                <element signature="e#7938#8196#0" expanded="false" />
+                <element signature="e#8219#8481#0" expanded="false" />
                 <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-                <element signature="e#8601#8692#0" expanded="false" />
-                <element signature="e#8719#8979#0" expanded="false" />
-                <element signature="e#9002#9266#0" expanded="false" />
-                <element signature="e#9393#9491#0" expanded="false" />
-                <element signature="e#9518#9778#0" expanded="false" />
-                <element signature="e#9801#10065#0" expanded="false" />
+                <element signature="e#8596#8687#0" expanded="false" />
+                <element signature="e#8714#8974#0" expanded="false" />
+                <element signature="e#8997#9261#0" expanded="false" />
+                <element signature="e#9388#9486#0" expanded="false" />
+                <element signature="e#9513#9773#0" expanded="false" />
+                <element signature="e#9796#10060#0" expanded="false" />
                 <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-                <element signature="e#10207#10477#0" expanded="false" />
-                <element signature="e#10504#10759#0" expanded="false" />
-                <element signature="e#10782#11046#0" expanded="false" />
+                <element signature="e#10202#10472#0" expanded="false" />
+                <element signature="e#10499#10754#0" expanded="false" />
+                <element signature="e#10777#11041#0" expanded="false" />
                 <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-                <element signature="e#11189#11459#0" expanded="false" />
-                <element signature="e#11460#11532#0" expanded="false" />
-                <element signature="e#11477#11526#0" expanded="false" />
-                <element signature="e#11559#11813#0" expanded="false" />
-                <element signature="e#11836#12099#0" expanded="false" />
+                <element signature="e#11184#11454#0" expanded="false" />
+                <element signature="e#11455#11527#0" expanded="false" />
+                <element signature="e#11472#11521#0" expanded="false" />
+                <element signature="e#11554#11808#0" expanded="false" />
+                <element signature="e#11831#12094#0" expanded="false" />
                 <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-                <element signature="e#12244#12281#0" expanded="false" />
-                <element signature="e#12282#12370#0" expanded="false" />
-                <element signature="e#12303#12360#0" expanded="false" />
-                <element signature="e#12397#12653#0" expanded="false" />
-                <element signature="e#12676#12941#0" expanded="false" />
+                <element signature="e#12239#12276#0" expanded="false" />
+                <element signature="e#12277#12365#0" expanded="false" />
+                <element signature="e#12298#12355#0" expanded="false" />
+                <element signature="e#12392#12648#0" expanded="false" />
+                <element signature="e#12671#12936#0" expanded="false" />
                 <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-                <element signature="e#13071#13160#0" expanded="false" />
-                <element signature="e#13187#13441#0" expanded="false" />
-                <element signature="e#13464#13727#0" expanded="false" />
+                <element signature="e#13066#13155#0" expanded="false" />
+                <element signature="e#13182#13436#0" expanded="false" />
+                <element signature="e#13459#13722#0" expanded="false" />
                 <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-                <element signature="e#13861#13977#0" expanded="false" />
-                <element signature="e#14004#14258#0" expanded="false" />
-                <element signature="e#14281#14544#0" expanded="false" />
+                <element signature="e#13856#13972#0" expanded="false" />
+                <element signature="e#13999#14253#0" expanded="false" />
+                <element signature="e#14276#14539#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -1032,43 +1031,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1200,43 +1198,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2906,43 +2903,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3246,43 +3242,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -3990,43 +3985,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -4076,43 +4070,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -4617,8 +4610,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ResourceHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5914787">
-          <caret line="154" column="43" selection-start-line="154" selection-start-column="43" selection-end-line="154" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.6766917">
+          <caret line="156" column="9" selection-start-line="156" selection-start-column="9" selection-end-line="156" selection-end-column="9" />
           <folding>
             <element signature="e#0#43#0" expanded="false" />
             <element signature="n#!!block;n#CreateResource#0" expanded="false" />
@@ -4653,43 +4646,42 @@
             <element signature="e#5749#5932#0" expanded="false" />
             <element signature="e#5959#6226#0" expanded="false" />
             <element signature="e#6249#6526#0" expanded="false" />
-            <element signature="e#7282#7548#0" expanded="false" />
             <element signature="n#!!block;n#GetResourceByTaskId#0" expanded="false" />
-            <element signature="e#7664#7916#0" expanded="false" />
-            <element signature="e#7782#7906#0" expanded="false" />
-            <element signature="e#7943#8201#0" expanded="false" />
-            <element signature="e#8224#8486#0" expanded="false" />
+            <element signature="e#7659#7911#0" expanded="false" />
+            <element signature="e#7777#7901#0" expanded="false" />
+            <element signature="e#7938#8196#0" expanded="false" />
+            <element signature="e#8219#8481#0" expanded="false" />
             <element signature="n#!!block;n#RemoveTaskFromResource#0" expanded="false" />
-            <element signature="e#8601#8692#0" expanded="false" />
-            <element signature="e#8719#8979#0" expanded="false" />
-            <element signature="e#9002#9266#0" expanded="false" />
-            <element signature="e#9393#9491#0" expanded="false" />
-            <element signature="e#9518#9778#0" expanded="false" />
-            <element signature="e#9801#10065#0" expanded="false" />
+            <element signature="e#8596#8687#0" expanded="false" />
+            <element signature="e#8714#8974#0" expanded="false" />
+            <element signature="e#8997#9261#0" expanded="false" />
+            <element signature="e#9388#9486#0" expanded="false" />
+            <element signature="e#9513#9773#0" expanded="false" />
+            <element signature="e#9796#10060#0" expanded="false" />
             <element signature="n#!!block;n#AddAttributeToResource#0" expanded="false" />
-            <element signature="e#10207#10477#0" expanded="false" />
-            <element signature="e#10504#10759#0" expanded="false" />
-            <element signature="e#10782#11046#0" expanded="false" />
+            <element signature="e#10202#10472#0" expanded="false" />
+            <element signature="e#10499#10754#0" expanded="false" />
+            <element signature="e#10777#11041#0" expanded="false" />
             <element signature="n#!!block;n#EditAttributeToResource#0" expanded="false" />
-            <element signature="e#11189#11459#0" expanded="false" />
-            <element signature="e#11460#11532#0" expanded="false" />
-            <element signature="e#11477#11526#0" expanded="false" />
-            <element signature="e#11559#11813#0" expanded="false" />
-            <element signature="e#11836#12099#0" expanded="false" />
+            <element signature="e#11184#11454#0" expanded="false" />
+            <element signature="e#11455#11527#0" expanded="false" />
+            <element signature="e#11472#11521#0" expanded="false" />
+            <element signature="e#11554#11808#0" expanded="false" />
+            <element signature="e#11831#12094#0" expanded="false" />
             <element signature="n#!!block;n#DeleteAttributeToResource#0" expanded="false" />
-            <element signature="e#12244#12281#0" expanded="false" />
-            <element signature="e#12282#12370#0" expanded="false" />
-            <element signature="e#12303#12360#0" expanded="false" />
-            <element signature="e#12397#12653#0" expanded="false" />
-            <element signature="e#12676#12941#0" expanded="false" />
+            <element signature="e#12239#12276#0" expanded="false" />
+            <element signature="e#12277#12365#0" expanded="false" />
+            <element signature="e#12298#12355#0" expanded="false" />
+            <element signature="e#12392#12648#0" expanded="false" />
+            <element signature="e#12671#12936#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResource#0" expanded="false" />
-            <element signature="e#13071#13160#0" expanded="false" />
-            <element signature="e#13187#13441#0" expanded="false" />
-            <element signature="e#13464#13727#0" expanded="false" />
+            <element signature="e#13066#13155#0" expanded="false" />
+            <element signature="e#13182#13436#0" expanded="false" />
+            <element signature="e#13459#13722#0" expanded="false" />
             <element signature="n#!!block;n#ViewAttributeToResourceById#0" expanded="false" />
-            <element signature="e#13861#13977#0" expanded="false" />
-            <element signature="e#14004#14258#0" expanded="false" />
-            <element signature="e#14281#14544#0" expanded="false" />
+            <element signature="e#13856#13972#0" expanded="false" />
+            <element signature="e#13999#14253#0" expanded="false" />
+            <element signature="e#14276#14539#0" expanded="false" />
           </folding>
         </state>
       </provider>
