@@ -21,11 +21,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="app.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-10.724138">
-              <caret line="1252" column="52" selection-start-line="1252" selection-start-column="32" selection-end-line="1252" selection-end-column="52" />
+            <state vertical-scroll-proportion="0.24394463">
+              <caret line="1336" column="65" selection-start-line="1336" selection-start-column="41" selection-end-line="1336" selection-end-column="65" />
               <folding>
                 <element signature="e#0#42#0" expanded="false" />
                 <element signature="e#718#771#0" expanded="false" />
@@ -226,8 +226,6 @@
                 <element signature="e#46885#47226#0" expanded="false" />
                 <element signature="e#47570#47813#0" expanded="false" />
                 <element signature="e#47707#47803#0" expanded="false" />
-                <element signature="e#47833#47979#0" expanded="false" />
-                <element signature="e#48062#48405#0" expanded="false" />
                 <element signature="e#48528#49603#0" expanded="false" />
                 <element signature="e#48538#49223#0" expanded="false" />
                 <element signature="e#48729#48972#0" expanded="false" />
@@ -240,14 +238,12 @@
                 <element signature="e#50087#50183#0" expanded="false" />
                 <element signature="e#50213#50369#0" expanded="false" />
                 <element signature="e#50479#50842#0" expanded="false" />
-                <element signature="e#51110#52177#0" expanded="false" />
-                <element signature="e#51120#51797#0" expanded="false" />
                 <element signature="e#51338#51581#0" expanded="false" />
                 <element signature="e#51475#51571#0" expanded="false" />
                 <element signature="e#51601#51747#0" expanded="false" />
-                <element signature="e#51813#52156#0" expanded="false" />
+                <element signature="e#51832#52175#0" expanded="false" />
                 <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-                <element signature="e#52607#52797#0" expanded="false" />
+                <element signature="e#52626#52816#0" expanded="false" />
                 <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
               </folding>
             </state>
@@ -355,11 +351,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="TaskInfoHandler.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="TaskInfoHandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/TaskInfoHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.30807248">
-              <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="11" column="20" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -394,9 +390,9 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/GroupsHandler.js" />
         <option value="$PROJECT_DIR$/config/default.js" />
-        <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/ResourceHandler.js" />
         <option value="$PROJECT_DIR$/TaskInfoHandler.js" />
+        <option value="$PROJECT_DIR$/app.js" />
       </list>
     </option>
   </component>
@@ -887,8 +883,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -901,14 +895,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -1455,8 +1447,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -1469,14 +1459,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -1707,8 +1695,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -1721,14 +1707,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -1938,8 +1922,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -1952,14 +1934,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -2169,8 +2149,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -2183,14 +2161,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -2400,8 +2376,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -2414,14 +2388,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -2631,8 +2603,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -2645,14 +2615,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -2952,8 +2920,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -2966,14 +2932,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -3273,8 +3237,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -3287,14 +3249,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -3579,8 +3539,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -3593,14 +3551,12 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
         </state>
@@ -4158,10 +4114,32 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/TaskHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="80" selection-start-line="32" selection-start-column="80" selection-end-line="32" selection-end-column="80" />
+          <folding>
+            <element signature="n#!!block;n#CreateTask#0" expanded="false" />
+            <element signature="n#!!block;n#EditTask#0" expanded="false" />
+            <element signature="n#!!block;n#DeleteTask#0" expanded="false" />
+            <element signature="n#!!block;n#GetAllTasks#0" expanded="false" />
+            <element signature="n#!!block;n#GetTaskById#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/TaskInfoHandler.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="20" selection-start-line="11" selection-start-column="9" selection-end-line="11" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-10.724138">
-          <caret line="1252" column="52" selection-start-line="1252" selection-start-column="32" selection-end-line="1252" selection-end-column="52" />
+        <state vertical-scroll-proportion="0.24394463">
+          <caret line="1336" column="65" selection-start-line="1336" selection-start-column="41" selection-end-line="1336" selection-end-column="65" />
           <folding>
             <element signature="e#0#42#0" expanded="false" />
             <element signature="e#718#771#0" expanded="false" />
@@ -4362,8 +4340,6 @@
             <element signature="e#46885#47226#0" expanded="false" />
             <element signature="e#47570#47813#0" expanded="false" />
             <element signature="e#47707#47803#0" expanded="false" />
-            <element signature="e#47833#47979#0" expanded="false" />
-            <element signature="e#48062#48405#0" expanded="false" />
             <element signature="e#48528#49603#0" expanded="false" />
             <element signature="e#48538#49223#0" expanded="false" />
             <element signature="e#48729#48972#0" expanded="false" />
@@ -4376,38 +4352,14 @@
             <element signature="e#50087#50183#0" expanded="false" />
             <element signature="e#50213#50369#0" expanded="false" />
             <element signature="e#50479#50842#0" expanded="false" />
-            <element signature="e#51110#52177#0" expanded="false" />
-            <element signature="e#51120#51797#0" expanded="false" />
             <element signature="e#51338#51581#0" expanded="false" />
             <element signature="e#51475#51571#0" expanded="false" />
             <element signature="e#51601#51747#0" expanded="false" />
-            <element signature="e#51813#52156#0" expanded="false" />
+            <element signature="e#51832#52175#0" expanded="false" />
             <element signature="n#!!block;n#Crossdomain#0" expanded="false" />
-            <element signature="e#52607#52797#0" expanded="false" />
+            <element signature="e#52626#52816#0" expanded="false" />
             <element signature="n#!!block;n#Clientaccesspolicy#0" expanded="false" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TaskHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="80" selection-start-line="32" selection-start-column="80" selection-end-line="32" selection-end-column="80" />
-          <folding>
-            <element signature="n#!!block;n#CreateTask#0" expanded="false" />
-            <element signature="n#!!block;n#EditTask#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteTask#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllTasks#0" expanded="false" />
-            <element signature="n#!!block;n#GetTaskById#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/TaskInfoHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.30807248">
-          <caret line="11" column="41" selection-start-line="11" selection-start-column="41" selection-end-line="11" selection-end-column="41" />
-          <folding />
         </state>
       </provider>
     </entry>
