@@ -273,3 +273,6 @@
 {"level":"info","message":"[attributeHandler.CreateAttribute] - [HTTP]  - Request received -  Data - {\"Attribute\":\"1122\",\"AttClass\":\"4587\",\"AttType\":\"4587\",\"AttCategory\":\"1254\",\"OtherData\":\"sdsafds\"} ","timestamp":"2015-12-08T11:45:28.389Z"}
 {"level":"error","timestamp":"2015-12-08T11:45:28.398Z"}
 {"level":"info","message":"[DVP-ResAttribute.CreateAttribute] - [PGSQL] - inserted successfully. [{\"Exception\":null,\"CustomMessage\":\"SUCCESS\",\"IsSuccess\":true,\"Result\":{\"AttributeId\":1,\"Attribute\":\"1122\",\"AttClass\":\"4587\",\"AttType\":\"4587\",\"AttCategory\":\"1254\",\"TenantId\":1,\"CompanyId\":1,\"OtherData\":\"sdsafds\",\"Status\":true,\"updatedAt\":\"2015-12-08T11:45:28.405Z\",\"createdAt\":\"2015-12-08T11:45:28.405Z\"}}] ","timestamp":"2015-12-08T11:45:28.831Z"}
+{"level":"info","message":"[groupsHandler.GetTaskByResourceId] - [HTTP]  - Request received -  Data - {\"ResourceId\":\"1\"} ","timestamp":"2015-12-10T08:46:36.513Z"}
+{"level":"error","timestamp":"2015-12-10T08:46:36.586Z"}
+{"level":"info","message":"[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [{\"Exception\":null,\"CustomMessage\":\"SUCCESS\",\"IsSuccess\":true,\"Result\":[]}] ","timestamp":"2015-12-10T08:46:42.652Z"}

@@ -151,7 +151,8 @@ function GetTaskByResourceId(resourceId,tenantId,companyId,callback){
         {
             where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
             include: [{ model: DbConn.ResResource,  as: "ResResource" },
-                { model: DbConn.ResTask, as: "ResTask"   }
+                { model: DbConn.ResTask, as: "ResTask"   },
+                { model: DbConn.ResTaskInfo, as: "ResTaskInfo"   }
             ]
         }
     ).then(function (cmp) {
