@@ -963,7 +963,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute', function (req, res, next) {
     try {
 
         logger.info('[ViewAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
