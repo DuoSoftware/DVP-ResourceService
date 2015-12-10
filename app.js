@@ -862,6 +862,105 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.GetResourceByTaskId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.GetResourceByTaskId(req.params.TaskId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetResourceByTaskId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.RemoveTaskFromResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.RemoveTaskFromResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.RemoveTaskFromResource(req.params.TaskId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.RemoveTaskFromResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.RemoveTaskFromResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.RemoveAllTasksAssignToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.RemoveAllTasksAssignToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.RemoveAllTasksAssignToResource(req.params.ResourceId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.RemoveAllTasksAssignToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.RemoveAllTasksAssignToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 ///ResResourceAttributeTask
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {

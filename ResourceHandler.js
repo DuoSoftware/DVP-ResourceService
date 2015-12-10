@@ -184,6 +184,39 @@ function GetResourceByTaskId(taskId,tenantId,companyId,callback){
         });
 }
 
+function RemoveTaskFromResource(taskId,tenantId,companyId,callback){
+    DbConn.ResResourceTask.del(
+        {
+            where :[{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId}]
+
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
+function RemoveAllTasksAssignToResource(resourceId,tenantId,companyId,callback){
+    DbConn.ResResourceTask.del(
+        {
+            where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId}]
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
 function AddAttributeToResource(params,body,tenantId,companyId,callback){
 
     DbConn.ResResourceAttributeTask
@@ -304,3 +337,6 @@ module.exports.EditAttributeToResource = EditAttributeToResource;
 module.exports.DeleteAttributeToResource = DeleteAttributeToResource;
 module.exports.ViewAttributeToResourceById = ViewAttributeToResourceById;
 module.exports.ViewAttributeToResource = ViewAttributeToResource;
+module.exports.GetResourceByTaskId=GetResourceByTaskId;
+module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
+module.exports.RemoveAllTasksAssignToResource=RemoveAllTasksAssignToResource;
