@@ -74,7 +74,8 @@ function DeleteTask(taskId,tenantId, companyId, callback) {
 
 function GetAllTasks(tenantId, companyId,  callback) {
     DbConn.ResTask.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
+        include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResTask.GetAllTask] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
