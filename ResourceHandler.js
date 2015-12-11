@@ -150,10 +150,10 @@ function GetTaskByResourceId(resourceId,tenantId,companyId,callback){
     DbConn.ResResourceTask.findAll(
         {
             where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            include: [{ model: DbConn.ResResource,  as: "ResResource" },
-                { model: DbConn.ResTask, as: "ResTask" ,  include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo"   }]}
+            include: [{ model: DbConn.ResResource,  as: "ResResource" },{ model: DbConn.ResTask, as: "ResTask" ,include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]}]
 
-            ]
+
+
         }
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -186,7 +186,7 @@ function GetResourceByTaskId(taskId,tenantId,companyId,callback){
 }
 
 function RemoveTaskFromResource(taskId,tenantId,companyId,callback){
-    DbConn.ResResourceTask.del(
+    DbConn.ResResourceTask.destroy(
         {
             where :[{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId}]
 
@@ -203,7 +203,7 @@ function RemoveTaskFromResource(taskId,tenantId,companyId,callback){
 }
 
 function RemoveAllTasksAssignToResource(resourceId,tenantId,companyId,callback){
-    DbConn.ResResourceTask.del(
+    DbConn.ResResourceTask.destroy(
         {
             where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId}]
         }
