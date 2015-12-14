@@ -146,6 +146,29 @@ function AssignTaskToResource(resourceId,taskId,tenantId,companyId,concurrency,r
         });
 }
 
+function UpdateAssignTaskToResource(resourceId,taskId,tenantId,companyId,concurrency,refInfo,otherData,callback){
+
+    DbConn.ResResourceTask
+        .update(
+        {
+            Concurrency:concurrency,RefInfo:refInfo,OtherData:otherData,Status: true
+        }
+        ,
+        {
+            where:[{ResourceId:resourceId},{TaskId:taskId},{TenantId: tenantId},{CompanyId: companyId}]
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
+
 function GetTaskByResourceId(resourceId,tenantId,companyId,callback){
     DbConn.ResResourceTask.findAll(
         {
@@ -185,10 +208,10 @@ function GetResourceByTaskId(taskId,tenantId,companyId,callback){
         });
 }
 
-function RemoveTaskFromResource(taskId,tenantId,companyId,callback){
+function RemoveTaskFromResource(resourceId,taskId,tenantId,companyId,callback){
     DbConn.ResResourceTask.destroy(
         {
-            where :[{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId}]
+            where :[{ResourceId:resourceId},{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId}]
 
         }
     ).then(function (cmp) {
@@ -332,6 +355,7 @@ module.exports.DeleteResource = DeleteResource;
 module.exports.GetAllResource = GetAllResource;
 module.exports.GetAllResourceById = GetAllResourceById;
 module.exports.AssignTaskToResource = AssignTaskToResource;
+module.exports.UpdateAssignTaskToResource = UpdateAssignTaskToResource;
 module.exports.GetTaskByResourceId = GetTaskByResourceId;
 module.exports.AddAttributeToResource = AddAttributeToResource;
 module.exports.EditAttributeToResource = EditAttributeToResource;

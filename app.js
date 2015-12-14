@@ -796,7 +796,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.AssignTaskToResource] - [HTTP]  - Request received -  Data - %s -%s',JSON.stringify(req.body), JSON.stringify(req.params));
@@ -824,6 +824,39 @@ var att=req.body;
         logger.error('[groupsHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.UpdateAssignTaskToResource] - [HTTP]  - Request received -  Data - %s -%s',JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.AssignTaskToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.UpdateAssignTaskToResource(req.params.ResourceId,req.params.TaskId,tenantId,companyId,att.Concurrency,att.RefInfo,att.OtherData,res) ;
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.UpdateAssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.UpdateAssignTaskToResource] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -895,7 +928,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId',
     return next();
 });
 
-RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', function (req, res, next) {
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.RemoveTaskFromResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
