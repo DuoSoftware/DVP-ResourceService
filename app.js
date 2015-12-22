@@ -1269,8 +1269,6 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', function (re
 });
 
 //-------------------------End TaskInfo Handler ------------------------- \\
-
-
 //------------------------- Crossdomain ------------------------- \\
 
 function Crossdomain(req, res, next) {
