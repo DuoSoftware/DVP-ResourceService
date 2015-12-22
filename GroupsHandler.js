@@ -37,7 +37,7 @@ function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId,
 
 function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData,percentage, callback) {
     DbConn.ResGroups
-        .create(
+        .update(
         {
             GroupName: groupName,
             GroupClass: groupClass,
@@ -63,7 +63,7 @@ function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, te
 
 function DeleteGroups(groupId, tenantId, companyId, callback) {
     DbConn.ResGroups
-        .create(
+        .update(
         {
             Status: false
         },
