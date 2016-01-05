@@ -1131,7 +1131,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/'
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', function (req, res, next) {
     try {
 
-        logger.info('[ViewAttributeToResourceById] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+        logger.info('[ViewAttributeToResourceByResAttId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
 
         var att=req.body;
         var tenantId = 1;
@@ -1146,16 +1146,49 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
             }
         }
         catch (ex) {
-            logger.error('[ViewAttributeToResourceById-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+            logger.error('[ViewAttributeToResourceByResAttId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        resourceHandler.ViewAttributeToResourceById(req.params,req.body,tenantId,companyId,res);
+        resourceHandler.ViewAttributeToResourceByResAttId(req.params,req.body,tenantId,companyId,res);
 
     }
     catch (ex) {
 
-        logger.error('ViewAttributeToResourceById - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        logger.error('ViewAttributeToResourceByResAttId - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('ViewAttributeToResourceById - Request response : %s ', jsonString);
+        logger.debug('ViewAttributeToResourceByResAttId - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId', function (req, res, next) {
+    try {
+
+        logger.info('[ViewAttributeToResourceByResTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[ViewAttributeToResourceByResTaskId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.ViewAttributeToResourceByResTaskId(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('ViewAttributeToResourceByResTaskId - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('ViewAttributeToResourceByResTaskId - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
