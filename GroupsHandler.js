@@ -104,7 +104,7 @@ function GetAllGroupsPaging(tenantId, companyId, rowCount, pageNo, callback) {
 
     DbConn.ResGroups.findAll({
         where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], offset: ((pageNo - 1) * rowCount),
-        limit: rowCount,
+        limit: rowCount
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResGroups.GetAllGroupsPaging] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -236,7 +236,8 @@ function AddAttributeToExsistingGroups(AttributeIds, groupId, tenantId, companyI
 }
 
 function GetAttributeByGroupId(groupId, tenantId, companyId, callback) {
-    DbConn.ResAttributeGroups.findAll({where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+    DbConn.ResAttributeGroups.findAll({where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
+        include :[{model: DbConn.ResAttribute, as:"ResAttribute" }]}).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -259,7 +260,7 @@ function GetAttributeByGroupIdWithDetails(groupId, tenantId, companyId, callback
 
     DbConn.ResGroups.find({
         where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
-        include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }],
+        include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }]
 
     }
     ).then(function (CamObject) {
