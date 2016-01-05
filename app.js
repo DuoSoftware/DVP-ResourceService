@@ -1161,7 +1161,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/attribute', function (req, res, next) {
     try {
 
         logger.info('[ViewAttributeToResourceByResTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
