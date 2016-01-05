@@ -948,7 +948,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
         catch (ex) {
             logger.error('[groupsHandler.RemoveTaskFromResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        resourceHandler.RemoveTaskFromResource(req.params.TaskId,tenantId,companyId,res);
+        resourceHandler.RemoveTaskFromResource(req.params.ResourceId,req.params.TaskId,tenantId,companyId,res);
 
     }
     catch (ex) {
