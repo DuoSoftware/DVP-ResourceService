@@ -261,11 +261,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ResourceHandler.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ResourceHandler.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ResourceHandler.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6127451">
-              <caret line="352" column="43" selection-start-line="352" selection-start-column="9" selection-end-line="352" selection-end-column="43" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="245" column="35" selection-start-line="245" selection-start-column="11" selection-end-line="245" selection-end-column="35" />
               <folding>
                 <element signature="e#0#43#0" expanded="false" />
                 <element signature="n#!!block;n#EditResource#0" expanded="false" />
@@ -309,7 +309,6 @@
                 <element signature="e#10397#10495#0" expanded="false" />
                 <element signature="e#10522#10782#0" expanded="false" />
                 <element signature="e#10805#11069#0" expanded="false" />
-                <element signature="e#11508#11763#0" expanded="false" />
                 <element signature="e#11786#12050#0" expanded="false" />
                 <element signature="e#12464#12536#0" expanded="false" />
                 <element signature="e#12563#12817#0" expanded="false" />
@@ -327,6 +326,26 @@
                 <element signature="e#15095#15349#0" expanded="false" />
                 <element signature="e#15372#15635#0" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ResResourceAttributeTask.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/ResResourceAttributeTask.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="8" column="32" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="32" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="package.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/package.json">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.19499105">
+              <caret line="9" column="30" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="30" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -355,7 +374,6 @@
       <list>
         <option value="$PROJECT_DIR$/AttributeHandler.js" />
         <option value="$PROJECT_DIR$/config/custom-environment-variables.js" />
-        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/GroupsHandler.js" />
         <option value="$PROJECT_DIR$/TaskInfoHandler.js" />
         <option value="$PROJECT_DIR$/node_modules/dvp-dbmodels/index.js" />
@@ -363,6 +381,7 @@
         <option value="$PROJECT_DIR$/app.js" />
         <option value="$PROJECT_DIR$/config/default.js" />
         <option value="$PROJECT_DIR$/ResourceHandler.js" />
+        <option value="$PROJECT_DIR$/package.json" />
       </list>
     </option>
   </component>
@@ -403,6 +422,7 @@
     </navigator>
     <panes>
       <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -431,13 +451,44 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-ResourceService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-ResourceService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dvp-dbmodels" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-ResourceService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DVP-ResourceService" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="config" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -530,23 +581,23 @@
     <frame x="-8" y="-8" width="1370" height="744" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.122372374" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23648648" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32843137" sideWeight="0.5029762" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28874388" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32913387" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5187602" sideWeight="0.49702382" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28874388" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32789558" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5187602" sideWeight="0.49702382" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22916667" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -667,73 +718,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/GroupsHandler.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="261" column="147" selection-start-line="261" selection-start-column="147" selection-end-line="261" selection-end-column="147" />
-          <folding>
-            <element signature="e#0#43#0" expanded="false" />
-            <element signature="n#!!block;n#CreateGroups#0" expanded="false" />
-            <element signature="e#501#818#0" expanded="false" />
-            <element signature="e#845#1098#0" expanded="false" />
-            <element signature="e#1121#1383#0" expanded="false" />
-            <element signature="n#!!block;n#EditGroups#0" expanded="false" />
-            <element signature="e#1568#1885#0" expanded="false" />
-            <element signature="e#1997#2251#0" expanded="false" />
-            <element signature="e#2274#2534#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteGroups#0" expanded="false" />
-            <element signature="e#2650#2687#0" expanded="false" />
-            <element signature="e#2799#3054#0" expanded="false" />
-            <element signature="e#3077#3339#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllGroups#0" expanded="false" />
-            <element signature="e#3529#4158#0" expanded="false" />
-            <element signature="e#3554#3851#0" expanded="false" />
-            <element signature="e#3865#4152#0" expanded="false" />
-            <element signature="e#4181#4447#0" expanded="false" />
-            <element signature="n#!!block;n#GetAllGroupsPaging#0" expanded="false" />
-            <element signature="e#4562#4708#0" expanded="false" />
-            <element signature="e#4736#5377#0" expanded="false" />
-            <element signature="e#4761#5064#0" expanded="false" />
-            <element signature="e#5078#5371#0" expanded="false" />
-            <element signature="e#5400#5672#0" expanded="false" />
-            <element signature="n#!!block;n#GetGroupByGroupId#0" expanded="false" />
-            <element signature="e#5893#6532#0" expanded="false" />
-            <element signature="e#5918#6220#0" expanded="false" />
-            <element signature="e#6234#6526#0" expanded="false" />
-            <element signature="e#6555#6829#0" expanded="false" />
-            <element signature="n#!!block;n#DeleteAttributeFromGroup#0" expanded="false" />
-            <element signature="e#6978#7085#0" expanded="false" />
-            <element signature="e#7112#7377#0" expanded="false" />
-            <element signature="e#7400#7669#0" expanded="false" />
-            <element signature="n#!!block;n#AddAttributeToGroups#0" expanded="false" />
-            <element signature="e#7858#8140#0" expanded="false" />
-            <element signature="e#8167#8494#0" expanded="false" />
-            <element signature="e#8517#8779#0" expanded="false" />
-            <element signature="n#!!block;n#AddAttributeToExsistingGroups#0" expanded="false" />
-            <element signature="e#9037#11018#0" expanded="false" />
-            <element signature="e#9062#10668#0" expanded="false" />
-            <element signature="e#9370#9706#0" expanded="false" />
-            <element signature="e#9397#9661#0" expanded="false" />
-            <element signature="e#9857#10166#0" expanded="false" />
-            <element signature="e#10189#10498#0" expanded="false" />
-            <element signature="e#10520#10656#0" expanded="false" />
-            <element signature="e#10682#11012#0" expanded="false" />
-            <element signature="e#11041#11346#0" expanded="false" />
-            <element signature="n#!!block;n#GetAttributeByGroupId#0" expanded="false" />
-            <element signature="e#11584#12249#0" expanded="false" />
-            <element signature="e#11609#11924#0" expanded="false" />
-            <element signature="e#11938#12243#0" expanded="false" />
-            <element signature="e#12272#12556#0" expanded="false" />
-            <element signature="e#13326#13642#0" expanded="false" />
-            <element signature="e#13671#13966#0" expanded="false" />
-            <element signature="e#13974#14255#0" expanded="false" />
-            <element signature="e#14688#15014#0" expanded="false" />
-            <element signature="e#15028#15344#0" expanded="false" />
-            <element signature="e#15373#15668#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/default.js">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1047,7 +1031,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -1450,7 +1433,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -1599,7 +1581,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -3190,7 +3171,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -3496,7 +3476,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -4174,7 +4153,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -4242,7 +4220,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -4288,14 +4265,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="37" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/package.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.18072289">
-          <caret line="9" column="28" selection-start-line="9" selection-start-column="28" selection-end-line="9" selection-end-column="28" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -4657,8 +4626,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ResourceHandler.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6127451">
-          <caret line="352" column="43" selection-start-line="352" selection-start-column="9" selection-end-line="352" selection-end-column="43" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="245" column="35" selection-start-line="245" selection-start-column="11" selection-end-line="245" selection-end-column="35" />
           <folding>
             <element signature="e#0#43#0" expanded="false" />
             <element signature="n#!!block;n#EditResource#0" expanded="false" />
@@ -4702,7 +4671,6 @@
             <element signature="e#10397#10495#0" expanded="false" />
             <element signature="e#10522#10782#0" expanded="false" />
             <element signature="e#10805#11069#0" expanded="false" />
-            <element signature="e#11508#11763#0" expanded="false" />
             <element signature="e#11786#12050#0" expanded="false" />
             <element signature="e#12464#12536#0" expanded="false" />
             <element signature="e#12563#12817#0" expanded="false" />
@@ -4720,6 +4688,22 @@
             <element signature="e#15095#15349#0" expanded="false" />
             <element signature="e#15372#15635#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/dvp-dbmodels/ResResourceAttributeTask.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="8" column="32" selection-start-line="8" selection-start-column="8" selection-end-line="8" selection-end-column="32" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19499105">
+          <caret line="9" column="30" selection-start-line="9" selection-start-column="4" selection-end-line="9" selection-end-column="30" />
+          <folding />
         </state>
       </provider>
     </entry>
