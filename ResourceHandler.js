@@ -295,10 +295,8 @@ function EditAttributeToResource(params,body,tenantId,companyId,callback){
 function DeleteAttributeToResource(params,body,tenantId,companyId,callback){
 
     DbConn.ResResourceAttributeTask
-        .update(
+        .destroy(
         {
-            Status: false
-        },{
             where: {
                 ResAttId: params.ResAttId
             }

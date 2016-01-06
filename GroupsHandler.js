@@ -63,7 +63,7 @@ function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, te
 
 function DeleteGroups(groupId, tenantId, companyId, callback) {
     DbConn.ResGroups
-        .create(
+        .update(
         {
             Status: false
         },

@@ -3,6 +3,7 @@ module.exports = function(sequelize, DataTypes)
     var PBXUser = sequelize.define('CSDB_PBXUser',
         {
             UserUuid: {type:DataTypes.STRING, primaryKey:true},
+            UserName: {type:DataTypes.STRING, allowNull:false},
             BypassMedia: DataTypes.BOOLEAN,
             IgnoreEarlyMedia: DataTypes.BOOLEAN,
             VoicemailEnabled: DataTypes.BOOLEAN,

@@ -350,7 +350,6 @@ models.forEach(function(model) {
             //------------------ResResourceTask
                 m.ResTask.belongsTo(m.ResTaskInfo, {as:"ResTaskInfo", foreignKey:"TaskInfoId"});
                 m.ResTaskInfo.hasMany(m.ResTask, {as:"ResTask", foreignKey:"TaskInfoId"});
-
             //------------------ResResourceTask
         //------------------ResResourceTask
             m.ResResourceTask.belongsTo(m.ResTask, {as:"ResTask", foreignKey:"TaskId"});
