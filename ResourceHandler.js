@@ -331,11 +331,12 @@ function ViewAttributeToResource(params,tenantId,companyId,callback){
         });
 }
 
-function ViewAttributeToResourceById(params,tenantId,companyId,callback){
+function ViewAttributeToResourceByResAttId(params,body,tenantId,companyId,callback){
 
     DbConn.ResResourceAttributeTask
         .findAll({
-            where: [{ResAttId:params.ResAttId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}]
+            where: [{ResAttId:params.ResAttId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
+            include: [{ model: DbConn.ResAttribute,  as: "ResAttribute" }]
         }
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -343,6 +344,24 @@ function ViewAttributeToResourceById(params,tenantId,companyId,callback){
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ViewAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
+function ViewAttributeToResourceByResTaskId(params,body,tenantId,companyId,callback){
+
+    DbConn.ResResourceTask
+        .findAll({
+            where: [{ResTaskId:params.ResTaskId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
+            include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ViewAttributeToResourceByResTaskId] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ViewAttributeToResourceByResTaskId] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
@@ -359,7 +378,8 @@ module.exports.GetTaskByResourceId = GetTaskByResourceId;
 module.exports.AddAttributeToResource = AddAttributeToResource;
 module.exports.EditAttributeToResource = EditAttributeToResource;
 module.exports.DeleteAttributeToResource = DeleteAttributeToResource;
-module.exports.ViewAttributeToResourceById = ViewAttributeToResourceById;
+module.exports.ViewAttributeToResourceByResAttId = ViewAttributeToResourceByResAttId;
+module.exports.ViewAttributeToResourceByResTaskId = ViewAttributeToResourceByResTaskId;
 module.exports.ViewAttributeToResource = ViewAttributeToResource;
 module.exports.GetResourceByTaskId=GetResourceByTaskId;
 module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
