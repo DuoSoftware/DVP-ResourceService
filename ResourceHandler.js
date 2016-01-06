@@ -168,7 +168,6 @@ function UpdateAssignTaskToResource(resourceId,taskId,tenantId,companyId,concurr
         });
 }
 
-
 function GetTaskByResourceId(resourceId,tenantId,companyId,callback){
     DbConn.ResResourceTask.findAll(
         {

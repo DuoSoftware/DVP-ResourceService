@@ -948,7 +948,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
         catch (ex) {
             logger.error('[groupsHandler.RemoveTaskFromResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        resourceHandler.RemoveTaskFromResource(req.params.TaskId,tenantId,companyId,res);
+        resourceHandler.RemoveTaskFromResource(req.params.ResourceId,req.params.TaskId,tenantId,companyId,res);
 
     }
     catch (ex) {
@@ -996,7 +996,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 
 ///ResResourceAttributeTask
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[AddAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
@@ -1161,7 +1161,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/attribute', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attributes', function (req, res, next) {
     try {
 
         logger.info('[ViewAttributeToResourceByResTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
