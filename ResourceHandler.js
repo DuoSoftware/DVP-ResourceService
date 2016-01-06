@@ -353,7 +353,7 @@ function ViewAttributeToResourceByResAttId(params,body,tenantId,companyId,callba
 function ViewAttributeToResourceByResTaskId(params,body,tenantId,companyId,callback){
 
     DbConn.ResResourceTask
-        .findAll({
+        .find({
             where: [{ResTaskId:params.ResTaskId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
             //include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
             include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask",include: [{ model: DbConn.ResAttribute,  as: "ResAttribute"}] }]
