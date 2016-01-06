@@ -354,7 +354,9 @@ function ViewAttributeToResourceByResTaskId(params,body,tenantId,companyId,callb
     DbConn.ResResourceTask
         .findAll({
             where: [{ResTaskId:params.ResTaskId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
+            //include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
+            include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask",include: [{ model: DbConn.ResAttribute,  as: "ResAttribute"}] }]
+            //include: [{ model: DbConn.ResResource,  as: "ResResource" },{ model: DbConn.ResTask, as: "ResTask" ,include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]}]
         }
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
