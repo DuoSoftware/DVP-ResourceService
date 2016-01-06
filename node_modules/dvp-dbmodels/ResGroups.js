@@ -18,7 +18,5 @@ module.exports = function (sequelize, DataTypes) {
             GroupId: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true}
         }
     );
-
-
     return ResGroups;
 };

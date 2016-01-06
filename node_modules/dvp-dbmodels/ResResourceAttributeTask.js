@@ -7,7 +7,7 @@
 
 module.exports = function (sequelize, DataTypes) {
     var ResResourceAttributeTask = sequelize.define('DB_RES_ResourceAttributeTask', {
-            Percentage: {type:DataTypes.INTEGER,unique: 'ResResourceAttributeTaskCompositeIndex'},
+            Percentage: DataTypes.INTEGER,
             AttributeId: {type:DataTypes.INTEGER,unique: 'ResResourceAttributeTaskCompositeIndex'},
             ResTaskId: {type:DataTypes.INTEGER,unique: 'ResResourceAttributeTaskCompositeIndex'},
             TenantId:  {type:DataTypes.INTEGER,unique: 'ResResourceAttributeTaskCompositeIndex'},
