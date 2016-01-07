@@ -236,8 +236,7 @@ function AddAttributeToExsistingGroups(AttributeIds, groupId, tenantId, companyI
 }
 
 function GetAttributeByGroupId(groupId, tenantId, companyId, callback) {
-    DbConn.ResAttributeGroups.findAll({where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
-        include :[{model: DbConn.ResAttribute, as:"ResAttribute" }]}).then(function (CamObject) {
+    DbConn.ResAttributeGroups.findAll({where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
