@@ -259,7 +259,7 @@ function GetAttributeByGroupIdWithDetails(groupId, tenantId, companyId, callback
 
     DbConn.ResGroups.find({
         where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],
-        include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }],
+        include: [{ model: DbConn.ResAttributeGroups,where :{Status:true},  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }]
 
     }
     ).then(function (CamObject) {
