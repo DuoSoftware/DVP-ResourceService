@@ -23,6 +23,7 @@ var RestServer = restify.createServer({
 
 });
 restify.CORS.ALLOW_HEADERS.push('api_key');
+restify.CORS.ALLOW_HEADERS.push('authorization');
 
 RestServer.use(restify.CORS());
 RestServer.use(restify.fullResponse());
@@ -573,6 +574,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
         try {
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
+
 
             if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
