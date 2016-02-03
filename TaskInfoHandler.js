@@ -9,7 +9,7 @@ var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
 
-function GetAllTasks(callback) {
+function GetAllTasks(tenantId, companyId,callback) {
     DbConn.ResTaskInfo.findAll({
         where: [{Status: true}]
     }).then(function (CamObject) {

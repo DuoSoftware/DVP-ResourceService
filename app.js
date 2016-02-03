@@ -23,6 +23,7 @@ var RestServer = restify.createServer({
 
 });
 restify.CORS.ALLOW_HEADERS.push('api_key');
+restify.CORS.ALLOW_HEADERS.push('authorization');
 
 RestServer.use(restify.CORS());
 RestServer.use(restify.fullResponse());
@@ -574,6 +575,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
             var auth = req.header('authorization');
             var authInfo = auth.split("#");
 
+
             if (authInfo.length >= 2) {
                 tenantId = authInfo[0];
                 companyId = authInfo[1];
@@ -796,7 +798,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
     try {
 
         logger.info('[groupsHandler.AssignTaskToResource] - [HTTP]  - Request received -  Data - %s -%s',JSON.stringify(req.body), JSON.stringify(req.params));
@@ -824,6 +826,39 @@ var att=req.body;
         logger.error('[groupsHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.UpdateAssignTaskToResource] - [HTTP]  - Request received -  Data - %s -%s',JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.AssignTaskToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.UpdateAssignTaskToResource(req.params.ResourceId,req.params.TaskId,tenantId,companyId,att.Concurrency,att.RefInfo,att.OtherData,res) ;
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.UpdateAssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.UpdateAssignTaskToResource] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -862,9 +897,108 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.GetResourceByTaskId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.GetResourceByTaskId(req.params.TaskId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetResourceByTaskId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.RemoveTaskFromResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.RemoveTaskFromResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.RemoveTaskFromResource(req.params.ResourceId,req.params.TaskId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.RemoveTaskFromResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.RemoveTaskFromResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task', function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.RemoveAllTasksAssignToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[groupsHandler.RemoveAllTasksAssignToResource-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.RemoveAllTasksAssignToResource(req.params.ResourceId,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.RemoveAllTasksAssignToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.RemoveAllTasksAssignToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 ///ResResourceAttributeTask
 
-RestServer.post('/DVP/API/' + version + '/ResourceManager/Resourcetask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {
+RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attribute/:AttributeId', function (req, res, next) {
     try {
 
         logger.info('[AddAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
@@ -999,7 +1133,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute',
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', function (req, res, next) {
     try {
 
-        logger.info('[ViewAttributeToResourceById] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+        logger.info('[ViewAttributeToResourceByResAttId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
 
         var att=req.body;
         var tenantId = 1;
@@ -1014,16 +1148,49 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
             }
         }
         catch (ex) {
-            logger.error('[ViewAttributeToResourceById-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+            logger.error('[ViewAttributeToResourceByResAttId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        resourceHandler.ViewAttributeToResourceById(req.params,req.body,tenantId,companyId,res);
+        resourceHandler.ViewAttributeToResourceByResAttId(req.params,req.body,tenantId,companyId,res);
 
     }
     catch (ex) {
 
-        logger.error('ViewAttributeToResourceById - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        logger.error('ViewAttributeToResourceByResAttId - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('ViewAttributeToResourceById - Request response : %s ', jsonString);
+        logger.debug('ViewAttributeToResourceByResAttId - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attributes', function (req, res, next) {
+    try {
+
+        logger.info('[ViewAttributeToResourceByResTaskId] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
+
+        var att=req.body;
+        var tenantId = 1;
+        var companyId = 1;
+        try {
+            var auth = req.header('authorization');
+            var authInfo = auth.split("#");
+
+            if (authInfo.length >= 2) {
+                tenantId = authInfo[0];
+                companyId = authInfo[1];
+            }
+        }
+        catch (ex) {
+            logger.error('[ViewAttributeToResourceByResTaskId-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
+        }
+        resourceHandler.ViewAttributeToResourceByResTaskId(req.params,req.body,tenantId,companyId,res);
+
+    }
+    catch (ex) {
+
+        logger.error('ViewAttributeToResourceByResTaskId - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('ViewAttributeToResourceByResTaskId - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -1255,7 +1422,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', function (re
         catch (ex) {
             logger.error('[taskHandler.GetAllTasks-authorization] - [HTTP]  - Exception occurred -  Data - %s ', "authorization", ex);
         }
-        taskInfoHandler.GetAllTasks( res);
+        taskInfoHandler.GetAllTasks(tenantId,companyId, res);
 
     }
     catch (ex) {
