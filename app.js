@@ -1097,7 +1097,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/', function (req, res, next) {
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute', function (req, res, next) {
     try {
 
         logger.info('[ViewAttributeToResource] - [HTTP]  - Request received -  Data - %s ',JSON.stringify(req.params));
@@ -1436,8 +1436,6 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', function (re
 });
 
 //-------------------------End TaskInfo Handler ------------------------- \\
-
-
 //------------------------- Crossdomain ------------------------- \\
 
 function Crossdomain(req, res, next) {
