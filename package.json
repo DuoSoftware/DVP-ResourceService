@@ -4,15 +4,20 @@
   "description": "",
   "main": "app.js",
   "dependencies": {
-    "collections": "^1.2.4",
-    "config": "^1.16.0",
-    "dvp-common": "^0.0.2",
-    "dvp-dbmodels": "^0.0.25",
-    "moment": "^2.10.6",
-    "redis": "^0.12.1",
-    "restify": "^3.0.3",
-    "sequelize": "^3.9.0",
-    "stringify": "^3.1.0"
+    "cors": "^2.7.1",
+    "collections": "^3.0.0",
+    "config": "^1.19.0",
+    "dvp-common": "^0.0.15",
+    "dvp-dbmodels": "^0.0.35",
+    "enum": "^2.3.0",
+    "moment": "^2.11.2",
+    "node": "^0.0.0",
+    "nodejs": "^0.0.0",
+    "restify": "^4.0.3",
+    "string-format": "^0.5.0",
+    "stringify": "^3.2.0",
+    "sequelize": "^3.19.1"
+
   },
   "devDependencies": {},
   "scripts": {
