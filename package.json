@@ -1,0 +1,23 @@
+{
+  "name": "dvp-resourceservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "restify-jwt": "^0.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DuoSoftware/DVP-ResourceService.git"
+  },
+  "author": "Rajinda",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DuoSoftware/DVP-ResourceService/issues"
+  },
+  "homepage": "https://github.com/DuoSoftware/DVP-ResourceService#readme"
+}
