@@ -52,7 +52,7 @@ RestServer.listen(port, function () {
 //------------------------- Attribute Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -80,7 +80,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', authorizat
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -106,7 +106,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -132,7 +132,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -156,7 +156,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorizat
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:PageNo', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -180,7 +180,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:Pa
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -204,7 +204,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/Details', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -233,7 +233,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/
 //------------------------- Group Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -259,7 +259,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization(
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -285,7 +285,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -310,7 +310,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -335,7 +335,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization(
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageNo', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -360,7 +360,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageN
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -385,7 +385,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Group/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -411,7 +411,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group/Attribute', auth
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -437,7 +437,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -462,7 +462,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/Details', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -487,7 +487,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/:AttributeId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -516,7 +516,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 //------------------------- Resource Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -542,7 +542,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource', authorizati
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -568,7 +568,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -593,7 +593,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -619,7 +619,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -645,7 +645,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -671,7 +671,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -697,7 +697,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -723,7 +723,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -749,7 +749,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId',
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -774,7 +774,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -801,7 +801,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 ///ResResourceAttributeTask
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attribute/:AttributeId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -827,7 +827,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskI
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -853,7 +853,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -879,7 +879,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -904,7 +904,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute',
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -929,7 +929,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attributes', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -957,7 +957,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId
 //------------------------- Task Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', authorization({
-    resource: "Task",
+    resource: "task",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -983,7 +983,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', authorization({
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1009,7 +1009,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1034,7 +1034,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Tasks', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1059,7 +1059,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Tasks', authorization({
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1084,7 +1084,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1114,7 +1114,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources'
 //-------------------------TaskInfo Handler ------------------------- \\
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', authorization({
-    resource: "TaskInfo",
+    resource: "taskinfo",
     action: "read"
 }), function (req, res, next) {
     try {
