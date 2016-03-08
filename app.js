@@ -798,6 +798,32 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Status', authorization({
+    resource: "ardsresource",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[Resource Handler.AddStatusChangeInfo] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 ///ResResourceAttributeTask
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attribute/:AttributeId', authorization({
