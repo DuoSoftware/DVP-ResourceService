@@ -15,6 +15,8 @@ var groupsHandler = require('./GroupsHandler');
 var resourceHandler = require('./ResourceHandler');
 var taskHandler = require('./TaskHandler');
 var taskInfoHandler = require('./TaskInfoHandler');
+var productivityHandler = require('./ProductivityHandler');
+
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
     name: "ResourceService",
@@ -1136,6 +1138,218 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources'
 
 
 //-------------------------End Task Handler ------------------------- \\
+
+//-------------------------Productivity Handler ------------------------- \\
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.Productivity] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.Productivity(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.Productivity] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.Productivity] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/ACW', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetAcwTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetAcwTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetAcwTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetAcwTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/BreakTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetBreakTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetBreakTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetBreakTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetBreakTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/HoldTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetHoldTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetHoldTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetHoldTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetHoldTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IdleTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetIdleTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetIdleTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetIdleTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetIdleTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IncomingCallCount', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetIncomingCallCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetIncomingCallCount(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetIncomingCallCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetIncomingCallCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/OnCallTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetOnCallTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetOnCallTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetOnCallTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetOnCallTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/StaffedTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetStaffedTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetStaffedTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetStaffedTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetStaffedTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/TransferCallCount', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetTransferCallCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetTransferCallCount(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetTransferCallCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetTransferCallCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//-------------------------Productivity Handler end------------------------- \\
+
 
 //-------------------------TaskInfo Handler ------------------------- \\
 
