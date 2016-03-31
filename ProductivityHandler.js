@@ -10,6 +10,7 @@ var redisport = config.Security.port;
 var redisClient = redis.createClient(redisport, redisip);
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var format = require('string-format')
 
 redisClient.on("error", function (err) {
     console.log("Redis connection error  " + err);
@@ -61,7 +62,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 module.exports.GetTransferCallCount = function (req, res, companyId, tenantId) {
 
     var resourceId = req.params["ResourceId"];
-    var key = resourceId;
+    var key = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
     client.get(key, function (err, reuslt) {
         if (err) {
             logger.error('[TransferCallCount] - [%s]', key, err);
@@ -133,7 +134,7 @@ module.exports.GetIdleTime = function (req, res, companyId, tenantId) {
 module.exports.GetStaffedTime = function (req, res, companyId, tenantId) {
 
     var resourceId = req.params["ResourceId"];
-    var key = resourceId;
+    var key = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
     client.get(key, function (err, reuslt) {
         if (err) {
             logger.error('[StaffedTime] - [%s]', key, err);
@@ -169,7 +170,7 @@ module.exports.GetOnCallTime = function (req, res, companyId, tenantId) {
 module.exports.GetBreakTime = function (req, res, companyId, tenantId) {
 
     var resourceId = req.params["ResourceId"];
-    var key = resourceId;
+    var key = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "BREAK", resourceId, "parameter2");
     client.get(key, function (err, reuslt) {
         if (err) {
             logger.error('[BreakTime] - [%s]', key, err);
@@ -187,7 +188,7 @@ module.exports.GetBreakTime = function (req, res, companyId, tenantId) {
 module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
 
     var resourceId = req.params["ResourceId"];
-    var key = resourceId;
+    var key = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "AFTERWORK", resourceId, "parameter2");
     client.get(key, function (err, reuslt) {
         if (err) {
             logger.error('[GetAcwTime] - [%s]', key, err);
