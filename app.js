@@ -15,6 +15,9 @@ var groupsHandler = require('./GroupsHandler');
 var resourceHandler = require('./ResourceHandler');
 var taskHandler = require('./TaskHandler');
 var taskInfoHandler = require('./TaskInfoHandler');
+var productivityHandler = require('./ProductivityHandler');
+var sharedResourceHandler = require('./SharedResourceHandler');
+
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
     name: "ResourceService",
@@ -52,7 +55,7 @@ RestServer.listen(port, function () {
 //------------------------- Attribute Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -80,7 +83,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', authorizat
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -106,7 +109,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -132,7 +135,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -156,7 +159,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorizat
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:PageNo', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -180,7 +183,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:Pa
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -204,7 +207,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/Details', authorization({
-    resource: "Attribute",
+    resource: "attribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -233,7 +236,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/
 //------------------------- Group Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -259,7 +262,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization(
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -285,7 +288,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -310,7 +313,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -335,7 +338,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization(
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageNo', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -360,7 +363,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageN
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -385,7 +388,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
 });
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Group/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -411,7 +414,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group/Attribute', auth
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -437,7 +440,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -462,7 +465,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/Details', authorization({
-    resource: "Group",
+    resource: "group",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -487,7 +490,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute/:AttributeId', authorization({
-    resource: "Group",
+    resource: "group",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -516,7 +519,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
 //------------------------- Resource Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -542,7 +545,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource', authorizati
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -568,7 +571,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -593,7 +596,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -619,7 +622,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -645,7 +648,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId', 
 });
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -671,7 +674,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -697,7 +700,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Tasks', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -723,7 +726,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -749,7 +752,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/Task/:TaskId',
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -774,7 +777,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task', authorization({
-    resource: "Resource",
+    resource: "ardsresource",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -798,10 +801,36 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Status', authorization({
+    resource: "ardsresource",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[Resource Handler.AddStatusChangeInfo] - [HTTP]  - Request received -  Data - %s -%s', JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 ///ResResourceAttributeTask
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attribute/:AttributeId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -827,7 +856,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskI
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -853,7 +882,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -879,7 +908,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -904,7 +933,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute',
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:ResAttId', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -929,7 +958,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId/Attributes', authorization({
-    resource: "ResourceTaskAttribute",
+    resource: "resourcetaskattribute",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -957,7 +986,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskId
 //------------------------- Task Handler ------------------------- \\
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', authorization({
-    resource: "Task",
+    resource: "task",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -983,7 +1012,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', authorization({
 });
 
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "write"
 }), function (req, res, next) {
     try {
@@ -1009,7 +1038,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "delete"
 }), function (req, res, next) {
     try {
@@ -1034,7 +1063,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Tasks', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1059,7 +1088,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Tasks', authorization({
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1084,7 +1113,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources', authorization({
-    resource: "Task",
+    resource: "task",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1111,10 +1140,298 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources'
 
 //-------------------------End Task Handler ------------------------- \\
 
+//-------------------------Productivity Handler ------------------------- \\
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.Productivity] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.Productivity(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.Productivity] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.Productivity] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/ACW', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetAcwTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetAcwTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetAcwTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetAcwTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/BreakTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetBreakTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetBreakTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetBreakTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetBreakTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/HoldTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetHoldTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetHoldTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetHoldTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetHoldTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IdleTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetIdleTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetIdleTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetIdleTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetIdleTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IncomingCallCount', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetIncomingCallCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetIncomingCallCount(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetIncomingCallCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetIncomingCallCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/OnCallTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetOnCallTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetOnCallTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetOnCallTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetOnCallTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/StaffedTime', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetStaffedTime] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetStaffedTime(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetStaffedTime] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetStaffedTime] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/TransferCallCount', authorization({
+    resource: "Productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.GetTransferCallCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.GetTransferCallCount(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.GetTransferCallCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.GetTransferCallCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//-------------------------Productivity Handler end------------------------- \\
+
+//-------------------------Shared Resource Handler ------------------------- \\
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId/Shared', authorization({
+    resource: "Shared",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.SharedResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.SharedResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.SharedResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.SharedResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId/Shared/Assign', authorization({
+    resource: "Shared",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.AssignTaskToResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.AssignTaskToResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Shared', authorization({
+    resource: "Shared",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.GetSharedResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.GetSharedResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.GetSharedResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.GetSharedResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//-------------------------Shared Resource end------------------------- \\
+
 //-------------------------TaskInfo Handler ------------------------- \\
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', authorization({
-    resource: "TaskInfo",
+    resource: "taskinfo",
     action: "read"
 }), function (req, res, next) {
     try {
