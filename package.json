@@ -1,5 +1,5 @@
 {
-  "name": "DVP-ResourceService",
+  "name": "dvp-resourceservice",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -7,8 +7,13 @@
     "cors": "^2.7.1",
     "collections": "^3.0.0",
     "config": "^1.19.0",
+<<<<<<< HEAD
     "dvp-common": "^0.0.15",
     "dvp-dbmodels": "^0.0.35",
+=======
+    "dvp-common": "^0.1.1",
+    "dvp-dbmodels": "^0.0.54",
+>>>>>>> Development
     "enum": "^2.3.0",
     "moment": "^2.11.2",
     "node": "^0.0.0",
@@ -16,8 +21,13 @@
     "restify": "^4.0.3",
     "string-format": "^0.5.0",
     "stringify": "^3.2.0",
+<<<<<<< HEAD
     "sequelize": "^3.19.1"
 
+=======
+    "sequelize": "^3.19.1",
+    "restify-jwt": "^0.4.0"
+>>>>>>> Development
   },
   "devDependencies": {},
   "scripts": {
@@ -25,12 +35,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/DuoSoftware/DVP-ResourceService.git"
+    "url": "git+https://github.com/DuoSoftware/DVP-ResourceService.git"
   },
   "author": "Rajinda",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/DuoSoftware/DVP-ResourceService/issues"
   },
-  "homepage": "https://github.com/DuoSoftware/DVP-ResourceService"
+  "homepage": "https://github.com/DuoSoftware/DVP-ResourceService#readme"
 }
