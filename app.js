@@ -16,6 +16,7 @@ var resourceHandler = require('./ResourceHandler');
 var taskHandler = require('./TaskHandler');
 var taskInfoHandler = require('./TaskInfoHandler');
 var productivityHandler = require('./ProductivityHandler');
+var sharedResourceHandler = require('./SharedResourceHandler');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1350,6 +1351,82 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 
 //-------------------------Productivity Handler end------------------------- \\
 
+//-------------------------Shared Resource Handler ------------------------- \\
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId/Shared', authorization({
+    resource: "Shared",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.SharedResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.SharedResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.SharedResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.SharedResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Task/:TaskId/Shared/Assign', authorization({
+    resource: "Shared",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.AssignTaskToResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.AssignTaskToResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+
+
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Shared', authorization({
+    resource: "Shared",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[sharedResourceHandler.GetSharedResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        sharedResourceHandler.GetSharedResource(tenantId,companyId,req,res);
+    }
+    catch (ex) {
+        logger.error('[sharedResourceHandler.GetSharedResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[sharedResourceHandler.GetSharedResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//-------------------------Shared Resource end------------------------- \\
 
 //-------------------------TaskInfo Handler ------------------------- \\
 

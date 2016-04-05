@@ -5,12 +5,18 @@
 
 var config = require('config');
 var redis = require('redis');
-var redisip = config.Security.ip;
-var redisport = config.Security.port;
+var redisip = config.Redis.ip;
+var redisport = config.Redis.port;
 var redisClient = redis.createClient(redisport, redisip);
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var format = require('string-format')
+
+redisClient.auth(config.Redis.password, function (err) {
+    /*if (err)
+        throw err;*/
+    console.log("Redis Auth error  " + err);
+});
 
 redisClient.on("error", function (err) {
     console.log("Redis connection error  " + err);
