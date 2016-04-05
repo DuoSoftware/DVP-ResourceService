@@ -7,7 +7,7 @@
 
 #EXPOSE 8831
 
-FROM node:argon
+FROM node:5.10.0
 RUN git clone git://github.com/DuoSoftware/DVP-ResourceService.git /usr/local/src/resourceservice
 RUN cd /usr/local/src/resourceservice; npm install
 WORKDIR /usr/local/src/resourceservice
