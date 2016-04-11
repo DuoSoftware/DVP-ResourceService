@@ -55,7 +55,7 @@ function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, te
             logger.info('[DVP-ResGroups.EditGroups] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
         }).error(function (err) {
-            logger.error('[DVP-ResGroups.EditGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', attribute, err);
+            logger.error('[DVP-ResGroups.EditGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', groupId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
@@ -73,7 +73,7 @@ function DeleteGroups(groupId, tenantId, companyId, callback) {
             logger.info('[DVP-ResGroups.DeleteGroups] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
         }).error(function (err) {
-            logger.error('[DVP-ResGroups.DeleteGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', attribute, err);
+            logger.error('[DVP-ResGroups.DeleteGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', groupId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });

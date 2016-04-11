@@ -23,7 +23,7 @@ redisClient.on("error", function (err) {
 });
 
 redisClient.on("connect", function (err) {
-    redisClient.select(config.Security.redisdb, redis.print);
+    redisClient.select(config.Redis.redisdb, redis.print);
 });
 
 module.exports.Productivity = function (req, res, companyId, tenantId) {
