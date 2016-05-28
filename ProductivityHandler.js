@@ -51,6 +51,13 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
     var AgentsProductivity = [];
     var id = format("Resource:{0}:{1}:*", companyId,tenantId) ;
+
+    function toSeconds(time) {
+        var sTime = time.split(':'); // split it at the colons
+        // minutes are worth 60 seconds. Hours are worth 60 minutes.
+        return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
+    }
+
     redisardsClient.keys(id, function (err, resourceIds) {
         if (err) {
             logger.error('[TransferCallCount] - [%s]', id, err);
@@ -112,7 +119,13 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                 else {
 
                                     try{
-                                        productivity.StaffedTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+
+
+                                        var sTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt))).format("HH:mm:ss"); // split it at the colons
+                                        productivity.StaffedTime = toSeconds(sTime);
+
+                                        var worktime = parseInt(productivity.OnCallTime)+parseInt(productivity.AcwTime)+parseInt(productivity.BreakTime);
+                                        productivity.IdleTime = parseInt(productivity.StaffedTime)+parseInt(worktime)
                                     }catch(ex){
                                         console.log(ex);
                                     }
@@ -202,7 +215,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     else {
 
                         try{
-                            productivity.StaffedTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt, "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+                            productivity.StaffedTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt))).format("HH:mm:ss");
                         }catch(ex){
                             console.log(ex);
                         }
