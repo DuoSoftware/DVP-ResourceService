@@ -50,6 +50,7 @@ RestServer.listen(port, function () {
 });
 
 
+
 //------------------------- End Restify Server ------------------------- \\
 
 //------------------------- Attribute Handler ------------------------- \\
@@ -1141,9 +1142,8 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources'
 //-------------------------End Task Handler ------------------------- \\
 
 //-------------------------Productivity Handler ------------------------- \\
-
-RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity', authorization({
-    resource: "Productivity",
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity', authorization({
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1165,8 +1165,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity', authorization({
+    resource: "productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivityHandler.Productivity] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivityHandler.ProductivityByResourceId(req,res,companyId,tenantId);
+    }
+    catch (ex) {
+        logger.error('[productivityHandler.Productivity] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivityHandler.Productivity] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/ACW', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1189,7 +1212,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/BreakTime', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1212,7 +1235,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/HoldTime', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1235,7 +1258,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IdleTime', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1258,7 +1281,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/IncomingCallCount', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1281,7 +1304,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/OnCallTime', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1304,7 +1327,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/StaffedTime', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -1327,7 +1350,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivity/TransferCallCount', authorization({
-    resource: "Productivity",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
