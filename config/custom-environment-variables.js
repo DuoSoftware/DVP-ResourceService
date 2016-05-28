@@ -20,7 +20,8 @@ module.exports = {
         "ip": "SYS_REDIS_HOST",
         "port": "SYS_REDIS_PORT",
         "password":"SYS_REDIS_PASSWORD",
-        "redisdb":"SYS_REDIS_DB"
+        "redisdb":"SYS_REDIS_DB",
+        "ardsData":"SYS_ARDS_DB"
     }
     ,
 
