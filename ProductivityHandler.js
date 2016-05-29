@@ -65,10 +65,11 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
             res.end(jsonString);
         }
         else {
-
+console.log(resourceIds);
+            console.log("-------------------------");
             var count =0;
             resourceIds.forEach(function(resId) {
-                count++;
+
                 //Resource:3:1:1
                 var resourceId =  resId.split(":")[3];
 
@@ -135,10 +136,11 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                         }
                                         else{
                                             redisClient.mget(ids, function (err, misscalls) {
+                                                count++;
                                                 productivity.MissCallCount = misscalls.reduce(function(pv, cv) { return pv + cv; }, 0);
                                                 AgentsProductivity.push(productivity);
                                                 if(count==resourceIds.length){
-                                                    console.log(AgentsProductivity);
+
                                                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
                                                     logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
                                                     res.end(jsonString);
