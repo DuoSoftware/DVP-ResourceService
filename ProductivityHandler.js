@@ -133,44 +133,38 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                         try {
                                                             sTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt))).format("HH:mm:ss"); // split it at the colons
                                                             productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);
-                                                            productivity.IdleTime = parseInt(productivity.StaffedTime) - parseInt(workTime);
+                                                            productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);
                                                         }
                                                         catch (ex) {
                                                             console.log(err);
                                                         }
-                                                        redisClient.keys(missCallCount, function (err, ids) {
-                                                            if (err) {
-                                                                console.log(err);
-                                                            }
-                                                            else {
-                                                                redisClient.mget(ids, function (err, misscalls) {
-                                                                    count++;
-                                                                    try {
-                                                                        productivity.MissCallCount = 0;
-                                                                        productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
-                                                                            return pv + cv;
-                                                                        }, 0);
-                                                                    } catch (ex) {
-                                                                    }
-                                                                    AgentsProductivity.push(productivity);
-                                                                    if (count == resourceIds.length) {
-
-                                                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                        logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                        res.end(jsonString);
-                                                                    }
-                                                                });
-                                                            }
-                                                        });
-
                                                     }
-                                                    else {
-                                                        productivity.StaffedTime = 0;
-                                                        productivity.IdleTime = 0;
-                                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                        logger.info('[Productivity-miss some data] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                        res.end(jsonString);
-                                                    }
+                                                    productivity.IdleTime = parseInt(productivity.StaffedTime) - parseInt(workTime);
+
+                                                    redisClient.keys(missCallCount, function (err, ids) {
+                                                        if (err) {
+                                                            console.log(err);
+                                                        }
+                                                        else {
+                                                            redisClient.mget(ids, function (err, misscalls) {
+                                                                count++;
+                                                                try {
+                                                                    productivity.MissCallCount = 0;
+                                                                    productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
+                                                                        return pv + cv;
+                                                                    }, 0);
+                                                                } catch (ex) {
+                                                                }
+                                                                AgentsProductivity.push(productivity);
+                                                                if (count == resourceIds.length) {
+
+                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                    res.end(jsonString);
+                                                                }
+                                                            });
+                                                        }
+                                                    });
                                                 }
                                             });
                                         } catch (ex) {
