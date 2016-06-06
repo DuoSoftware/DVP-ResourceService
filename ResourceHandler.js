@@ -84,7 +84,7 @@ function DeleteResource(resourceId,  callback) {
 
 function GetAllResource(tenantId, companyId, callback) {
     DbConn.ResResource.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],order: [['ResourceId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResource] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -99,6 +99,32 @@ function GetAllResource(tenantId, companyId, callback) {
         }
     }).error(function (err) {
         logger.error('[DVP-ResResource.GetAllResource] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function GetAllResourcePage(req,tenantId, companyId, callback) {
+
+    var pageNo = req.params.PageNo;
+    var rowCount = req.params.RowCount;
+    DbConn.ResResource.findAll({
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], offset: ((pageNo - 1) * rowCount),
+        limit: rowCount,order: [['ResourceId', 'DESC']]
+    }).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResResource.GetAllResourcePage] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResResource.GetAllResourcePage] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.GetAllResourcePage] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
@@ -389,6 +415,7 @@ module.exports.CreateResource = CreateResource;
 module.exports.EditResource = EditResource;
 module.exports.DeleteResource = DeleteResource;
 module.exports.GetAllResource = GetAllResource;
+module.exports.GetAllResourcePage = GetAllResourcePage;
 module.exports.GetAllResourceById = GetAllResourceById;
 module.exports.AssignTaskToResource = AssignTaskToResource;
 module.exports.UpdateAssignTaskToResource = UpdateAssignTaskToResource;
