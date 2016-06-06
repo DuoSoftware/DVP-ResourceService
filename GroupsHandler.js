@@ -61,6 +61,40 @@ function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, te
         });
 }
 
+
+function EditGroupAndAttachAttributes(req, tenantId, companyId, callback) {
+    DbConn.ResGroups
+        .update(
+        {
+            GroupName: req.body.GroupName,
+            GroupClass: req.body.GroupClass,
+            GroupType: req.body.GroupType,
+            GroupCategory: req.body.GroupCategory,
+            TenantId: tenantId,
+            CompanyId: companyId,
+            OtherData: req.body.OtherData,
+            Percentage:req.body.Percentage,
+            Status: true
+        },
+        {where: [{GroupId: req.params.GroupId}, {TenantId: tenantId}, {CompanyId: companyId}]}
+    ).then(function (cmp) {
+
+            var ids = [];
+            req.body.Attributes.forEach(function(entry) {
+              if(entry){
+                  ids.push(entry.AttributeId);
+              }
+            });
+            AddAttributeToExsistingGroups(ids,req.params.GroupId,tenantId,companyId,req.body.OtherData,callback);
+
+        }).error(function (err) {
+            logger.error('[DVP-ResGroups.EditGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', groupId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
+
 function DeleteGroups(groupId, tenantId, companyId, callback) {
     DbConn.ResGroups
         .update(
@@ -81,7 +115,7 @@ function DeleteGroups(groupId, tenantId, companyId, callback) {
 
 function GetAllGroups(tenantId, companyId, callback) {
 
-    DbConn.ResGroups.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }]}).then(function (CamObject) {
+    DbConn.ResGroups.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],order: [['GroupId', 'DESC']], include: [{ model: DbConn.ResAttributeGroups,  as: "ResAttributeGroups", include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }] }]}).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResGroups.GetAllGroups] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -100,10 +134,30 @@ function GetAllGroups(tenantId, companyId, callback) {
     });
 }
 
+function GroupsCount(tenantId, companyId, callback) {
+
+    DbConn.ResGroups.count({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.GetAllGroups] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResGroups.GetAllGroups] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.GetAllGroups] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
 function GetAllGroupsPaging(tenantId, companyId, rowCount, pageNo, callback) {
 
     DbConn.ResGroups.findAll({
-        where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], offset: ((pageNo - 1) * rowCount),
+        where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],order: [['GroupId', 'DESC']], offset: ((pageNo - 1) * rowCount),
         limit: rowCount,
     }).then(function (CamObject) {
         if (CamObject) {
@@ -156,6 +210,22 @@ function DeleteAttributeFromGroup(groupId,attributeId ,tenantId, companyId, call
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResGroups.DeleteAttributeFromGroup] - [%s] - [PGSQL] - delete  failed-[%s]', groupId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
+function DeleteAttributesFromGroup(req ,tenantId, companyId, callback){
+    DbConn.ResAttributeGroups
+        .destroy(
+        { where : [{AttributeId:req.body.AttributeIds},{GroupId:req.params.GroupId},{TenantId:tenantId},{CompanyId:companyId}]
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
+            logger.info('[DVP-ResGroups.DeleteAttributesFromGroup] - [PGSQL] - delete successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResGroups.DeleteAttributesFromGroup] - [%s] - [PGSQL] - delete  failed-[%s]', groupId, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
@@ -314,8 +384,10 @@ function GetGroupDetailsByAttributeId(attributeId, tenantId, companyId, callback
 
 module.exports.CreateGroups = CreateGroups;
 module.exports.EditGroups = EditGroups;
+module.exports.EditGroupAndAttachAttributes=EditGroupAndAttachAttributes,
 module.exports.DeleteGroups = DeleteGroups;
 module.exports.GetAllGroups = GetAllGroups;
+module.exports.GroupsCount = GroupsCount;
 module.exports.GetAllGroupsPaging = GetAllGroupsPaging;
 module.exports.GetGroupByGroupId = GetGroupByGroupId;
 module.exports.AddAttributeToGroups = AddAttributeToGroups;
@@ -324,3 +396,5 @@ module.exports.GetAttributeByGroupId = GetAttributeByGroupId;
 module.exports.GetAttributeByGroupIdWithDetails = GetAttributeByGroupIdWithDetails;
 module.exports.GetGroupDetailsByAttributeId = GetGroupDetailsByAttributeId;
 module.exports.DeleteAttributeFromGroup = DeleteAttributeFromGroup;
+module.exports.DeleteAttributesFromGroup = DeleteAttributesFromGroup;
+

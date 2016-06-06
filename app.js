@@ -159,7 +159,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorizat
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:RowCount/:PageNo', authorization({
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeCount', authorization({
+    resource: "attribute",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[attributeHandler.GetAllAttributeCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        attributeHandler.GetAllAttributeCount(tenantId, companyId, res);
+    }
+    catch (ex) {
+
+        logger.error('[attributeHandler.GetAllAttributeCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[attributeHandler.GetAllAttributeCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes/:RowCount/:PageNo', authorization({
     resource: "attribute",
     action: "read"
 }), function (req, res, next) {
@@ -288,6 +312,32 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
     return next();
 });
 
+RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attributes', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.EditGroupAndAttachAttributes] - [HTTP]  - Request received -  Data - %s - %s ', JSON.stringify(req.body), JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.EditGroupAndAttachAttributes(req, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.EditGroupAndAttachAttributes] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.EditGroupAndAttachAttributes] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
     resource: "group",
     action: "delete"
@@ -333,6 +383,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization(
         logger.error('[groupsHandler.GetAllGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GetAllGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupsCount', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GroupsCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.GroupsCount(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GroupsCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GroupsCount] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -515,6 +590,30 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
     return next();
 });
 
+RestServer.del('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/DeleteAttributes', authorization({
+    resource: "group",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.DeleteAttributesFromGroup] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.DeleteAttributesFromGroup(req, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.DeleteAttributesFromGroup] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.DeleteAttributesFromGroup] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 //-------------------------End Group Handler ------------------------- \\
 
 //------------------------- Resource Handler ------------------------- \\
@@ -1422,9 +1521,6 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
     }
     return next();
 });
-
-
-
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Shared', authorization({
     resource: "Shared",
