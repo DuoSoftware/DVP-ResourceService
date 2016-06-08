@@ -109,7 +109,9 @@ function GetAllResourcePage(req,tenantId, companyId, callback) {
     var pageNo = req.params.PageNo;
     var rowCount = req.params.RowCount;
     DbConn.ResResource.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], offset: ((pageNo - 1) * rowCount),
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
+        include: [{ model: DbConn.ResResourceTask, as: "ResResourceTask" }],
+        offset: ((pageNo - 1) * rowCount),
         limit: rowCount,order: [['ResourceId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
