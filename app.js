@@ -49,8 +49,6 @@ RestServer.listen(port, function () {
 
 });
 
-
-
 //------------------------- End Restify Server ------------------------- \\
 
 //------------------------- Attribute Handler ------------------------- \\
@@ -948,6 +946,31 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/S
         logger.error('[groupsHandler.AssignTaskToResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.AssignTaskToResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/profile/:profileName', authorization({
+    resource: "ardsresource",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        resourceHandler.ResourceNameIsExsists(req.params.profileName, res);
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetResourceByTaskId] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();

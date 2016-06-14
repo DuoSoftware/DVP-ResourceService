@@ -7,30 +7,78 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
+var request = require('request');
 
+
+var resourceNameIsExsists = function (resourceName,res) {
+
+    var options = {
+        method: 'GET',
+
+        uri: "http://localhost:3636/DVP/API/1.0.0.0/User/"+resourceName+"/exsists", //Query string data
+        headers: {
+            'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkaW51c2hhZGNrIiwianRpIjoiYjExYzg3YjktMzYyNS00ZWE0LWFlZWMtYzE0NGEwNjZlM2I5Iiwic3ViIjoiNTZhOWU3NTlmYjA3MTkwN2EwMDAwMDAxMjVkOWU4MGI1YzdjNGY5ODQ2NmY5MjExNzk2ZWJmNDMiLCJleHAiOjE4OTM2NTQyNzEsInRlbmFudCI6MSwiY29tcGFueSI6Mywic2NvcGUiOlt7InJlc291cmNlIjoiYWxsIiwiYWN0aW9ucyI6ImFsbCJ9XSwiaWF0IjoxNDYxNjUwNjcxfQ.j4zqaDSeuYIw5fy8AkiBTglyLpjV-Cucmlp1qdq9CfA"
+        }
+    };
+
+    request(options, function (error, response, body) { //Checkout cart
+        if (error) {
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[resourceNameIsExsists] - [%s] - [%s] - Error.', response, body, error);
+            res.end(jsonString);
+        }
+        var jsonResp = JSON.parse(body);
+        return jsonResp.Result;
+    });
+
+};
 
 function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
-    DbConn.ResResource
-        .create(
-        {
-            ResClass: resClass,
-            ResType: resType,
-            ResCategory: resCategory,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            ResourceName: resourceName,
-            OtherData: otherData,
-            Status: true
+    var options = {
+        method: 'GET',
+
+        uri: "http://localhost:3636/DVP/API/1.0.0.0/User/"+resourceName+"/exsists", //Query string data
+        headers: {
+            'Accept': 'application/json',
+            'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkaW51c2hhZGNrIiwianRpIjoiYjExYzg3YjktMzYyNS00ZWE0LWFlZWMtYzE0NGEwNjZlM2I5Iiwic3ViIjoiNTZhOWU3NTlmYjA3MTkwN2EwMDAwMDAxMjVkOWU4MGI1YzdjNGY5ODQ2NmY5MjExNzk2ZWJmNDMiLCJleHAiOjE4OTM2NTQyNzEsInRlbmFudCI6MSwiY29tcGFueSI6Mywic2NvcGUiOlt7InJlc291cmNlIjoiYWxsIiwiYWN0aW9ucyI6ImFsbCJ9XSwiaWF0IjoxNDYxNjUwNjcxfQ.j4zqaDSeuYIw5fy8AkiBTglyLpjV-Cucmlp1qdq9CfA"
         }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+    };
+
+    request(options, function (error, response, body) { //Checkout cart
+        if (error) {
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[resourceNameIsExsists] - [%s] - [%s] - Error.', response, body, error);
             callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        }
+        var jsonResp = JSON.parse(body);
+        if(!jsonResp.Result){
+            DbConn.ResResource
+                .create(
+                {
+                    ResClass: resClass,
+                    ResType: resType,
+                    ResCategory: resCategory,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    ResourceName: resourceName,
+                    OtherData: otherData,
+                    Status: true
+                }
+            ).then(function (cmp) {
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+                    logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+                    callback.end(jsonString);
+                }).error(function (err) {
+                    logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
+                    var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    callback.end(jsonString);
+                });
+        }else{
+            var jsonString = messageFormatter.FormatMessage(new Error("invalid Resource Name."), "invalid Resource Name.", false, resourceName);
             callback.end(jsonString);
-        });
+        }
+    });
+
 }
 
 function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
@@ -42,7 +90,7 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
             ResCategory: resCategory,
             TenantId: tenantId,
             CompanyId: companyId,
-            ResourceName: resourceName,
+            /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
             OtherData: otherData,
             Status: true
         }, {
@@ -432,3 +480,4 @@ module.exports.GetResourceByTaskId=GetResourceByTaskId;
 module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
 module.exports.RemoveAllTasksAssignToResource=RemoveAllTasksAssignToResource;
 module.exports.AddStatusChangeInfo=AddStatusChangeInfo;
+module.exports.ResourceNameIsExsists=resourceNameIsExsists;
