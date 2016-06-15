@@ -19,73 +19,82 @@ function FilterObjFromArray(itemArray, field, value){
     return resultObj;
 }
 
-var GetDailySummaryRecords = function(tenant, company, summaryDate, callback){
-    dbConn.SequelizeConn.query("SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date = date '"+summaryDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date = date '"+summaryDate+"' and \"WindowName\" = 'AGENTREJECT'", { type: dbConn.SequelizeConn.QueryTypes.SELECT})
+var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryToDate, callback){
+    dbConn.SequelizeConn.query("SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'", { type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function(records) {
             if (records) {
                 logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
                 var loginSessions = [];
                 for(var i in records){
                     var record = records[i];
+                    var loginDateInfo = FilterObjFromArray(loginSessions, "loginDate", record.SummaryDate.toDateString());
+                    if(!loginDateInfo){
+                        loginDateInfo = {loginDate:record.SummaryDate.toDateString(), sessionInfos:[]};
+                        loginSessions.push(loginDateInfo);
+                    }
+
                     if(record.WindowName == "AGENTREJECT"){
-                        var rSession = FilterObjFromArray(loginSessions, "resourceId", record.Param2);
+                        var rSession = FilterObjFromArray(loginDateInfo.sessionInfos, "resourceId", record.Param2);
                         if (rSession) {
                             rSession.records.push(record);
                         } else {
-                            loginSessions.push({resourceId: record.Param2, records: [record]});
+                            loginDateInfo.sessionInfos.push({resourceId: record.Param2, records: [record]});
                         }
                     }else {
-                        var session = FilterObjFromArray(loginSessions, "resourceId", record.Param1);
+                        var session = FilterObjFromArray(loginDateInfo.sessionInfos, "resourceId", record.Param1);
                         if (session) {
                             session.records.push(record);
                         } else {
-                            loginSessions.push({resourceId: record.Param1, records: [record]});
+                            loginDateInfo.sessionInfos.push({resourceId: record.Param1, records: [record]});
                         }
                     }
                 }
                 var DailySummary = [];
-                for(var j in loginSessions){
-                    var loginSession = loginSessions[j];
+                for(var t in loginSessions) {
+                    var dateInfo = loginSessions[t];
+                    for (var j in dateInfo.sessionInfos) {
+                        var loginSession = dateInfo.sessionInfos[j];
 
-                    var login = FilterObjFromArray(loginSession.records, "WindowName", "LOGIN");
-                    var connected = FilterObjFromArray(loginSession.records, "WindowName", "CONNECTED");
-                    var rBreak = FilterObjFromArray(loginSession.records, "WindowName", "BREAK");
-                    var agentReject = FilterObjFromArray(loginSession.records, "WindowName", "AGENTREJECT");
-                    var afterWork = FilterObjFromArray(loginSession.records, "WindowName", "AFTERWORK");
+                        var login = FilterObjFromArray(loginSession.records, "WindowName", "LOGIN");
+                        var connected = FilterObjFromArray(loginSession.records, "WindowName", "CONNECTED");
+                        var rBreak = FilterObjFromArray(loginSession.records, "WindowName", "BREAK");
+                        var agentReject = FilterObjFromArray(loginSession.records, "WindowName", "AGENTREJECT");
+                        var afterWork = FilterObjFromArray(loginSession.records, "WindowName", "AFTERWORK");
 
-                    var summary = {};
-                    if(login){
-                        summary.Agent = login.Param1;
-                        summary.StaffTime = login.TotalTime;
-                        summary.Date = login.SummaryDate;
-                        summary.TalkTime = 0;
-                        summary.TotalAnswered = 0;
-                        summary.TotalCalls = 0;
-                        summary.AverageHandlingTime = 0;
-                        summary.BreakTime = 0;
-                        summary.AfterWorkTime = 0;
-                        summary.IdleTime = 0;
-                        if(connected){
-                            summary.TalkTime = connected.TotalTime;
-                            summary.TotalAnswered = connected.TotalCount;
-                            summary.TotalCalls = connected.TotalCount;
-                            if(connected.TotalCount > 0){
-                                summary.AverageHandlingTime = connected.TotalTime/connected.TotalCount;
-                            }else{
-                                summary.AverageHandlingTime = 0;
+                        var summary = {};
+                        if (login) {
+                            summary.Agent = login.Param1;
+                            summary.StaffTime = login.TotalTime;
+                            summary.Date = login.SummaryDate;
+                            summary.TalkTime = 0;
+                            summary.TotalAnswered = 0;
+                            summary.TotalCalls = 0;
+                            summary.AverageHandlingTime = 0;
+                            summary.BreakTime = 0;
+                            summary.AfterWorkTime = 0;
+                            summary.IdleTime = 0;
+                            if (connected) {
+                                summary.TalkTime = connected.TotalTime;
+                                summary.TotalAnswered = connected.TotalCount;
+                                summary.TotalCalls = connected.TotalCount;
+                                if (connected.TotalCount > 0) {
+                                    summary.AverageHandlingTime = connected.TotalTime / connected.TotalCount;
+                                } else {
+                                    summary.AverageHandlingTime = 0;
+                                }
                             }
+                            if (rBreak) {
+                                summary.BreakTime = rBreak.TotalTime;
+                            }
+                            if (agentReject) {
+                                summary.TotalCalls = summary.TotalCalls + agentReject.TotalCount;
+                            }
+                            if (afterWork) {
+                                summary.AfterWorkTime = afterWork.TotalTime;
+                            }
+                            summary.IdleTime = summary.StaffTime - (summary.AfterWorkTime + summary.BreakTime + summary.TalkTime);
+                            DailySummary.push(summary);
                         }
-                        if(rBreak){
-                            summary.BreakTime = rBreak.TotalTime;
-                        }
-                        if(agentReject){
-                            summary.TotalCalls = summary.TotalCalls + agentReject.TotalCount;
-                        }
-                        if(afterWork){
-                            summary.AfterWorkTime = afterWork.TotalTime;
-                        }
-                        summary.IdleTime = summary.StaffTime - (summary.AfterWorkTime + summary.BreakTime + summary.TalkTime);
-                        DailySummary.push(summary);
                     }
                 }
 
