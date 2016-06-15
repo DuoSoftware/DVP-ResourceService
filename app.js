@@ -1521,7 +1521,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
     return next();
 });
 
-RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/Summary/:summaryFromDate/:summaryToDate', authorization({
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/Summary/from/:summaryFromDate/to/:summaryToDate', authorization({
     resource: "productivity",
     action: "read"
 }), function (req, res, next) {

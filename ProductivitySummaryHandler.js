@@ -63,6 +63,12 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 
                         var summary = {};
                         if (login) {
+
+                            var summaryDate = FilterObjFromArray(DailySummary, "Date", login.SummaryDate.toDateString());
+                            if(!summaryDate){
+                                summaryDate = {Date: login.SummaryDate.toDateString(), Summary: []};
+                                DailySummary.push(summaryDate);
+                            }
                             summary.Agent = login.Param1;
                             summary.StaffTime = login.TotalTime;
                             summary.Date = login.SummaryDate;
@@ -93,7 +99,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                                 summary.AfterWorkTime = afterWork.TotalTime;
                             }
                             summary.IdleTime = summary.StaffTime - (summary.AfterWorkTime + summary.BreakTime + summary.TalkTime);
-                            DailySummary.push(summary);
+                            summaryDate.Summary.push(summary);
                         }
                     }
                 }
