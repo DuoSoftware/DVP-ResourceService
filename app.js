@@ -16,6 +16,7 @@ var resourceHandler = require('./ResourceHandler');
 var taskHandler = require('./TaskHandler');
 var taskInfoHandler = require('./TaskInfoHandler');
 var productivityHandler = require('./ProductivityHandler');
+var productivitySummaryHandler = require('./ProductivitySummaryHandler');
 var sharedResourceHandler = require('./SharedResourceHandler');
 
 //-------------------------  Restify Server ------------------------- \\
@@ -1515,6 +1516,29 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/:ResourceId/Productivit
         logger.error('[productivityHandler.GetTransferCallCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[productivityHandler.GetTransferCallCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/Summary/from/:summaryFromDate/to/:summaryToDate', authorization({
+    resource: "productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivitySummaryHandler.GetDailySummaryRecords] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, res);
+    }
+    catch (ex) {
+        logger.error('[productivitySummaryHandler.GetDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivitySummaryHandler.GetDailySummaryRecords] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
