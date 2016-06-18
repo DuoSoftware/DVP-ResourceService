@@ -720,6 +720,32 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/ResourceCount', authorization({
+    resource: "ardsresource",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetResourceCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        resourceHandler.GetResourceCount(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetResourceCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetResourceCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/:RowCount/:PageNo', authorization({
     resource: "ardsresource",
     action: "read"
