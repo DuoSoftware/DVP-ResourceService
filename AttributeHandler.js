@@ -162,4 +162,27 @@ module.exports.GetAttributeById = function (attributeId, tenantId, companyId, ca
     });
 };
 
+module.exports.GetAttributeByGroupId = function (attributeId, tenantId, companyId, callback) {
+
+    DbConn.ResAttributeGroups.find({
+            where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }]}
+    ).then(function (CamObject) {
+            if (CamObject) {
+                logger.info('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+                callback.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+        }).error(function (err) {
+            logger.error('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+};
+
 

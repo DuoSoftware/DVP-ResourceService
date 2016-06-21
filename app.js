@@ -255,6 +255,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId/
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeGroup/:GroupId', authorization({
+    resource: "attribute",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetAttributeByGroupId] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        attributeHandler.GetAttributeByGroupId(req.params.GroupId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetAttributeByGroupId] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetAttributeByGroupId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 //------------------------- End Attribute Handler ------------------------- \\
 
 //------------------------- Group Handler ------------------------- \\
@@ -514,7 +539,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
     return next();
 });
 
-RestServer.put('/DVP/API/' + version + '/ResourceManager/ExsistingGroup/:GroupId/Attribute', authorization({
+RestServer.put('/DVP/API/' + version + '/ResourceManager/ExsistingGroup/:GroupId/Attribute/:AttributeId', authorization({
     resource: "group",
     action: "write"
 }), function (req, res, next) {
