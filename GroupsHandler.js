@@ -305,6 +305,51 @@ function AddAttributeToExsistingGroups(AttributeIds, groupId, tenantId, companyI
 
 }
 
+function AddOneAttributeToExsistingGroups(attributeId, groupId, tenantId, companyId, otherData, callback) {
+
+    DbConn.ResGroups.find({where: [{Status: true}, {GroupId: groupId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.AddOneAttributeToExsistingGroups.GetGroupByGroupId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var startTime = new Date();
+
+           DbConn.ResAttributeGroups
+                .create(
+                {
+                    AttributeId: attributeId,
+                    GroupId: groupId,
+                    TenantId: tenantId,
+                    CompanyId: companyId,
+                    OtherData: otherData,
+                    Status: true
+                }
+            ).then(function (results) {
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, results);
+                    logger.info('[DVP-ResAttributeGroups.AddOneAttributeToExsistingGroups] - [PGSQL] - add attribute successfully.[%s] ', jsonString);
+                    callback.end(jsonString);
+                }).catch(function (err) {
+                    var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+                    logger.error('[DVP-ResAttributeGroups.AddOneAttributeToExsistingGroups] - [%s] - [PGSQL] - add attribute  failed', companyId, err);
+                    callback.end(jsonString);
+                }).finally(function () {
+                    logger.info('UploadContacts - %s - %s ms Done.', attributeId, (new Date() - startTime));
+                });
+        }
+        else {
+            logger.error('[DVP-ResGroups.AddOneAttributeToExsistingGroups.GetGroupByGroupId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('Invalid Group ID'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResAttribute.AddOneAttributeToExsistingGroups.GetGroupByGroupId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+
+    });
+
+
+}
+
 function GetAttributeByGroupId(groupId, tenantId, companyId, callback) {
     DbConn.ResAttributeGroups.findAll({where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
         if (CamObject) {
@@ -384,7 +429,7 @@ function GetGroupDetailsByAttributeId(attributeId, tenantId, companyId, callback
 
 module.exports.CreateGroups = CreateGroups;
 module.exports.EditGroups = EditGroups;
-module.exports.EditGroupAndAttachAttributes=EditGroupAndAttachAttributes,
+module.exports.EditGroupAndAttachAttributes=EditGroupAndAttachAttributes;
 module.exports.DeleteGroups = DeleteGroups;
 module.exports.GetAllGroups = GetAllGroups;
 module.exports.GroupsCount = GroupsCount;
@@ -392,6 +437,7 @@ module.exports.GetAllGroupsPaging = GetAllGroupsPaging;
 module.exports.GetGroupByGroupId = GetGroupByGroupId;
 module.exports.AddAttributeToGroups = AddAttributeToGroups;
 module.exports.AddAttributeToExsistingGroups = AddAttributeToExsistingGroups;
+module.exports.AddOneAttributeToExsistingGroups = AddOneAttributeToExsistingGroups;
 module.exports.GetAttributeByGroupId = GetAttributeByGroupId;
 module.exports.GetAttributeByGroupIdWithDetails = GetAttributeByGroupIdWithDetails;
 module.exports.GetGroupDetailsByAttributeId = GetGroupDetailsByAttributeId;

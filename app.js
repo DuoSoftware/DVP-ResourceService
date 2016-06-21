@@ -514,6 +514,31 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribut
     return next();
 });
 
+RestServer.put('/DVP/API/' + version + '/ResourceManager/ExsistingGroup/:GroupId/Attribute', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.AddOneAttributeToExsistingGroups] - [HTTP]  - Request received -  Data - %s - %s ', JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.AddOneAttributeToExsistingGroups(att.AttributeId, req.params.GroupId, tenantId, companyId, att.OtherData, res);
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AddOneAttributeToExsistingGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AddOneAttributeToExsistingGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId/Attribute', authorization({
     resource: "group",
     action: "read"
