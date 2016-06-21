@@ -162,7 +162,7 @@ module.exports.GetAttributeById = function (attributeId, tenantId, companyId, ca
     });
 };
 
-module.exports.GetAttributeByGroupId = function (attributeId, tenantId, companyId, callback) {
+module.exports.GetAttributeByGroupId = function (groupId, tenantId, companyId, callback) {
 
     DbConn.ResAttributeGroups.find({
             where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }]}
