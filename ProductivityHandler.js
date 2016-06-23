@@ -133,11 +133,11 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
                                                     var sTime = JSON.parse(currentObj);
 
-
+/*
                                                     if( moment(sTime.StateChangeTime)>moment(reuslt)){
                                                         var currentStateSpendTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(sTime.StateChangeTime))).format("HH:mm:ss"); // split it at the colons
                                                         workTime = parseInt(workTime) + parseInt(toSeconds(currentStateSpendTime));
-                                                    }
+                                                    }*/
 
 
 
