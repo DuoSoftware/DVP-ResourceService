@@ -124,7 +124,13 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                         try {
 
                                             if (reuslt) {
-                                                var stfTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt))).format("HH:mm:ss"); // split it at the colons
+
+                                                var now  = "04/09/2013 15:00:00";
+                                                var then = "04/09/2013 14:20:30";
+
+                                               var timetet = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+
+                                                var stfTime =moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
                                                 productivity.StaffedTime = toSeconds(stfTime);
                                                 var workTime = 0;
                                                 try {
@@ -154,7 +160,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                         else {
                                                             if (reuslt) {
                                                                 try {
-                                                                    sTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(reuslt))).format("HH:mm:ss"); // split it at the colons
+                                                                    sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
                                                                     productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);
                                                                     /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
                                                                 }
