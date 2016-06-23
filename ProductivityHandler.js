@@ -160,8 +160,8 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                         else {
                                                             if (reuslt) {
                                                                 try {
-                                                                    sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
-                                                                    productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);
+                                                                    /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
+                                                                    productivity.StaffedTime = parseInt(reuslt) + parseInt(productivity.StaffedTime);
                                                                     /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
                                                                 }
                                                                 catch (ex) {
