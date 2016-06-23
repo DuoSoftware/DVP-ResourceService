@@ -164,7 +164,7 @@ module.exports.GetAttributeById = function (attributeId, tenantId, companyId, ca
 
 module.exports.GetAttributeByGroupId = function (groupId, tenantId, companyId, callback) {
 
-    DbConn.ResAttributeGroups.find({
+    DbConn.ResAttributeGroups.findAll({
             where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }]}
     ).then(function (CamObject) {
             if (CamObject) {
