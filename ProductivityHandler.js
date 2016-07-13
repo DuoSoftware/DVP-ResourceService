@@ -180,7 +180,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                         try {
                                                                             productivity.MissCallCount = 0;
                                                                             productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
-                                                                                return pv + cv;
+                                                                                return parseInt(pv) +parseInt(cv);
                                                                             }, 0);
                                                                         } catch (ex) {
                                                                         }
@@ -295,7 +295,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                             else {
                                 redisClient.mget(ids, function (err, misscalls) {
                                     productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
-                                        return pv + cv;
+                                        return parseInt(pv) + parseInt(cv);
                                     }, 0);
                                     console.log(productivity);
                                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
@@ -370,7 +370,7 @@ module.exports.GetMissCallCount = function (req, res, companyId, tenantId) {
                 }
                 else {
                     var missCallCount = misscalls.reduce(function (pv, cv) {
-                        return pv + cv;
+                        return parseInt(pv) + parseInt(cv);
                     }, 0);
                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, missCallCount);
                     logger.info('[MissCallCount] . [%s] -[%s]', key, jsonString);
