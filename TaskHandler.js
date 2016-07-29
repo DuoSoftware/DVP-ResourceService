@@ -9,7 +9,7 @@ var moment = require('moment');
 var Sequelize = require('sequelize');
 
 
-function CreateTask(tenantId, companyId, taskInfoId, otherData, callback) {
+function CreateTask(tenantId, companyId, taskInfoId, otherData, addToProductivity, callback) {
     DbConn.ResTask
         .create(
         {
@@ -17,7 +17,8 @@ function CreateTask(tenantId, companyId, taskInfoId, otherData, callback) {
             CompanyId: companyId,
             TaskInfoId: taskInfoId,
             OtherData: otherData,
-            Status: true
+            Status: true,
+            AddToProductivity: addToProductivity
         }
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -30,13 +31,14 @@ function CreateTask(tenantId, companyId, taskInfoId, otherData, callback) {
         });
 }
 
-function EditTask(taskId, tenantId, companyId, taskInfoId, otherData, callback) {
+function EditTask(taskId, tenantId, companyId, taskInfoId, otherData, addToProductivity, callback) {
     DbConn.ResTask
         .update(
         {
             TaskInfoId: taskInfoId,
             OtherData: otherData,
-            Status: true
+            Status: true,
+            AddToProductivity: addToProductivity
         },
         {
             where:[{TaskId:taskId},{TenantId: tenantId},{CompanyId: companyId}]
