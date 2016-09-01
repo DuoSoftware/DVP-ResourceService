@@ -1224,7 +1224,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Task', authorization({
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        taskHandler.CreateTask(tenantId, companyId, att.TaskInfoId, att.OtherData, res);
+        taskHandler.CreateTask(tenantId, companyId, att.TaskInfoId, att.OtherData, att.AddToProductivity, res);
 
     }
     catch (ex) {
@@ -1250,7 +1250,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Task/:TaskId', authoriz
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        taskHandler.EditTask(req.params.TaskId, tenantId, companyId, att.TaskName, att.OtherData, res);
+        taskHandler.EditTask(req.params.TaskId, tenantId, companyId, att.TaskName, att.OtherData, att.AddToProductivity, res);
 
     }
     catch (ex) {
