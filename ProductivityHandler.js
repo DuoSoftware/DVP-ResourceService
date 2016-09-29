@@ -51,11 +51,11 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
     var AgentsProductivity = [];
     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
 
-    function toSeconds(time) {
+    /*function toSeconds(time) {
         var sTime = time.split(':'); // split it at the colons
         // minutes are worth 60 seconds. Hours are worth 60 minutes.
         return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
-    }
+    }*/
 
     redisardsClient.keys(id, function (err, resourceIds) {
         if (err) {
@@ -232,7 +232,16 @@ var getProductivityByResourceId = function (companyId, tenantId, resourceId) {
 
 };
 
+function toSeconds(time) {
+    var sTime = time.split(':'); // split it at the colons
+    // minutes are worth 60 seconds. Hours are worth 60 minutes.
+    return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
+}
+
 module.exports.ProductivityByResourceId = function (req, res, companyId, tenantId) {
+
+
+    var id = format("Resource:{0}:{1}:*", companyId, tenantId);
 
     var resourceId = req.params["ResourceId"];
 
@@ -282,17 +291,14 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     productivity.IncomingCallCount = reuslt[3] ? reuslt[3] : 0;
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
-                            console.log(err);
+                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                            logger.error('[TransferCallCount] - [%s]', id, err);
+                            res.end(jsonString);
                         }
                         else {
                             try {
 
                                 if (reuslt) {
-
-                                    var now = "04/09/2013 15:00:00";
-                                    var then = "04/09/2013 14:20:30";
-
-                                    var timetet = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
 
                                     var stfTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
                                     productivity.StaffedTime = toSeconds(stfTime);
@@ -301,7 +307,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                         /*var currentStateSpendTime = currentObj.StateChangeTime;*/
                                         workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime);
 
-                                        var sTime = JSON.parse(currentObj);
+
 
                                         /*
                                          if( moment(sTime.StateChangeTime)>moment(reuslt)){
@@ -338,7 +344,6 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                     }
                                                     else {
                                                         redisClient.mget(ids, function (err, misscalls) {
-                                                            count++;
                                                             try {
                                                                 productivity.MissCallCount = 0;
                                                                 productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
@@ -346,13 +351,10 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                                 }, 0);
                                                             } catch (ex) {
                                                             }
-                                                            AgentsProductivity.push(productivity);
-                                                            if (count == resourceIds.length) {
 
-                                                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                res.end(jsonString);
-                                                            }
+                                                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                                            logger.info('[Productivity] . [%s] -[%s]', productivity, jsonString);
+                                                            res.end(jsonString);
                                                         });
                                                     }
                                                 });
@@ -365,17 +367,15 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                 else {
                                     productivity.StaffedTime = 0;
                                     productivity.IdleTime = 0;
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                    logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                    AgentsProductivity.push(productivity);
-                                    count++;
-                                    //res.end(jsonString);
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                    logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
+                                    res.end(jsonString);
                                 }
                             } catch (ex) {
-                                console.log(ex);
+                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                logger.error('[TransferCallCount] - [%s]', id, ex);
+                                res.end(jsonString);
                             }
-
-
                         }
                     });
                 }
