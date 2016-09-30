@@ -112,10 +112,10 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                 console.log(err);
                             }
                             else {
-                                productivity.OnCallTime = reuslt[0] ? reuslt[0] : 0;
-                                productivity.AcwTime = reuslt[1] ? reuslt[1] : 0;
-                                productivity.BreakTime = reuslt[2] ? reuslt[2] : 0;
-                                productivity.IncomingCallCount = reuslt[3] ? reuslt[3] : 0;
+                                productivity.OnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+                                productivity.AcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+                                productivity.BreakTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+                                productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
                                 redisClient.hget(staffedTime, "time", function (err, reuslt) {
                                     if (err) {
                                         console.log(err);
@@ -285,10 +285,10 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     console.log(err);
                 }
                 else {
-                    productivity.OnCallTime = reuslt[0] ? reuslt[0] : 0;
-                    productivity.AcwTime = reuslt[1] ? reuslt[1] : 0;
-                    productivity.BreakTime = reuslt[2] ? reuslt[2] : 0;
-                    productivity.IncomingCallCount = reuslt[3] ? reuslt[3] : 0;
+                    productivity.OnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+                    productivity.AcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+                    productivity.BreakTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+                    productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
                             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
