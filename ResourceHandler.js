@@ -8,7 +8,37 @@ var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
 var request = require('request');
+var auditTrailsHandler = require('dvp-common/AuditTrail/AuditTrailsHandler.js');
 
+function addAuditTrail(tenantId,companyId,iss,auditData){
+  /*var auditData =  {
+        KeyProperty: keyProperty,
+            OldValue: auditTrails.OldValue,
+        NewValue: auditTrails.NewValue,
+        Description: auditTrails.Description,
+        Author: auditTrails.Author,
+        User: iss,
+        OtherData: auditTrails.OtherData,
+        ObjectType: auditTrails.ObjectType,
+        Action: auditTrails.Action,
+        Application: auditTrails.Application,
+        TenantId: tenantId,
+        CompanyId: companyId
+    }*/
+
+    try{
+        auditTrailsHandler.CreateAuditTrails(tenantId,companyId,iss,auditData, function(err,obj){
+            if(err){
+                var jsonString = messageFormatter.FormatMessage(err, "Fail", false, auditData);
+                logger.error('addAuditTrail -  Fail To Save Audit trail-[%s]', jsonString);
+            }
+        });
+    }
+    catch(ex){
+        var jsonString = messageFormatter.FormatMessage(ex, "Fail", false, auditData);
+        logger.error('addAuditTrail -  insertion  failed-[%s]', jsonString);
+    }
+}
 
 var resourceNameIsExsists = function (resourceName,res) {
 
@@ -33,7 +63,7 @@ var resourceNameIsExsists = function (resourceName,res) {
 
 };
 
-function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
+function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
 
     DbConn.ResResource
         .create(
@@ -50,6 +80,19 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceName",
+                OldValue: resourceName,
+                NewValue: resourceName,
+                Description: "New Resource Created.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "SAVE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
@@ -59,7 +102,7 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
 
 }
 
-function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
+function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
     DbConn.ResResource
         .update(
         {
@@ -79,6 +122,19 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
             logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceName",
+                OldValue: resourceName,
+                NewValue: resourceName,
+                Description: "Update Resource.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "UPDATE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.EditResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
@@ -87,7 +143,7 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
         });
 }
 
-function DeleteResource(resourceId,  callback) {
+function DeleteResource(resourceId,tenantId,companyId,iss,  callback) {
     DbConn.ResResource
         .update(
         {
@@ -100,6 +156,19 @@ function DeleteResource(resourceId,  callback) {
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
             logger.info('[DVP-ResResource.DeleteResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceId",
+                OldValue: resourceId,
+                NewValue: resourceId,
+                Description: "Delete Resource.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "DELETE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.DeleteResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
