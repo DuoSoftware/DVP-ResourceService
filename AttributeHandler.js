@@ -9,7 +9,7 @@ var moment = require('moment');
 var Sequelize = require('sequelize');
 
 
-function CreateAttribute(attribute, attClass, attType, attCategory, tenantId, companyId, otherData, callback) {
+module.exports.CreateAttribute =function (attribute, attClass, attType, attCategory, tenantId, companyId, otherData, callback) {
     DbConn.ResAttribute
         .create(
         {
@@ -31,9 +31,9 @@ function CreateAttribute(attribute, attClass, attType, attCategory, tenantId, co
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
-}
+};
 
-function EditAttribute(attributeId, attribute, attClass, attType, attCategory, tenantId, companyId, otherData, callback) {
+module.exports.EditAttribute=function (attributeId, attribute, attClass, attType, attCategory, tenantId, companyId, otherData, callback) {
     DbConn.ResAttribute
         .update(
         {
@@ -54,9 +54,9 @@ function EditAttribute(attributeId, attribute, attClass, attType, attCategory, t
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
-}
+};
 
-function DeleteAttribute(attributeId, tenantId, companyId, callback) {
+module.exports.DeleteAttribute=function(attributeId, tenantId, companyId, callback) {
     DbConn.ResAttribute
         .update(
         {
@@ -72,11 +72,11 @@ function DeleteAttribute(attributeId, tenantId, companyId, callback) {
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
-}
+};
 
-function GetAllAttributes(tenantId, companyId, callback) {
+module.exports.GetAllAttributes =function(tenantId, companyId, callback) {
 
-    DbConn.ResAttribute.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+    DbConn.ResAttribute.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],order: [['AttributeId', 'DESC']]}).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttribute.GetAllAttributes] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
@@ -93,13 +93,35 @@ function GetAllAttributes(tenantId, companyId, callback) {
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
-}
+};
 
-function GetAllAttributesPaging(tenantId, companyId, rowCount, pageNo, callback) {
+module.exports.GetAllAttributeCount=function(tenantId, companyId, callback) {
+
+    DbConn.ResAttribute.count({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResAttribute.GetAllAttributeCount] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResAttribute.GetAllAttributeCount] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResAttribute.GetAllAttributeCount] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+};
+
+
+module.exports.GetAllAttributesPaging =function(tenantId, companyId, rowCount, pageNo, callback) {
 
     DbConn.ResAttribute.findAll({
         where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], offset: ((pageNo - 1) * rowCount),
-        limit: rowCount,
+        limit: rowCount,order: [['AttributeId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttribute.GetAllAttributesPaging] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -117,9 +139,9 @@ function GetAllAttributesPaging(tenantId, companyId, rowCount, pageNo, callback)
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
-}
+};
 
-function GetAttributeById(attributeId, tenantId, companyId, callback) {
+module.exports.GetAttributeById = function (attributeId, tenantId, companyId, callback) {
 
     DbConn.ResAttribute.find({where: [{Status: true}, {AttributeId: attributeId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
         if (CamObject) {
@@ -138,11 +160,29 @@ function GetAttributeById(attributeId, tenantId, companyId, callback) {
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
-}
+};
 
-module.exports.CreateAttribute = CreateAttribute;
-module.exports.EditAttribute = EditAttribute;
-module.exports.DeleteAttribute = DeleteAttribute;
-module.exports.GetAllAttributes = GetAllAttributes;
-module.exports.GetAllAttributesPaging = GetAllAttributesPaging;
-module.exports.GetAttributeById = GetAttributeById;
+module.exports.GetAttributeByGroupId = function (groupId, tenantId, companyId, callback) {
+
+    DbConn.ResAttributeGroups.findAll({
+            where: [{GroupId: groupId}, {Status: true}, {TenantId: tenantId}, {CompanyId: companyId}], include:[{ model: DbConn.ResAttribute, as: "ResAttribute"   }]}
+    ).then(function (CamObject) {
+            if (CamObject) {
+                logger.info('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+                callback.end(jsonString);
+            }
+            else {
+                logger.error('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+                var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+        }).error(function (err) {
+            logger.error('[DVP-ResAttributeGroups.GetAttributeByGroupId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+};
+
+

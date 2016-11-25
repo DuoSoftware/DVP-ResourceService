@@ -7,9 +7,64 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
+var request = require('request');
+var auditTrailsHandler = require('dvp-common/AuditTrail/AuditTrailsHandler.js');
 
+function addAuditTrail(tenantId,companyId,iss,auditData){
+  /*var auditData =  {
+        KeyProperty: keyProperty,
+            OldValue: auditTrails.OldValue,
+        NewValue: auditTrails.NewValue,
+        Description: auditTrails.Description,
+        Author: auditTrails.Author,
+        User: iss,
+        OtherData: auditTrails.OtherData,
+        ObjectType: auditTrails.ObjectType,
+        Action: auditTrails.Action,
+        Application: auditTrails.Application,
+        TenantId: tenantId,
+        CompanyId: companyId
+    }*/
 
-function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
+    try{
+        auditTrailsHandler.CreateAuditTrails(tenantId,companyId,iss,auditData, function(err,obj){
+            if(err){
+                var jsonString = messageFormatter.FormatMessage(err, "Fail", false, auditData);
+                logger.error('addAuditTrail -  Fail To Save Audit trail-[%s]', jsonString);
+            }
+        });
+    }
+    catch(ex){
+        var jsonString = messageFormatter.FormatMessage(ex, "Fail", false, auditData);
+        logger.error('addAuditTrail -  insertion  failed-[%s]', jsonString);
+    }
+}
+
+var resourceNameIsExsists = function (resourceName,res) {
+
+    var options = {
+        method: 'GET',
+
+        uri: "http://localhost:3636/DVP/API/1.0.0.0/User/"+resourceName+"/exsists", //Query string data
+        headers: {
+            'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkaW51c2hhZGNrIiwianRpIjoiYjExYzg3YjktMzYyNS00ZWE0LWFlZWMtYzE0NGEwNjZlM2I5Iiwic3ViIjoiNTZhOWU3NTlmYjA3MTkwN2EwMDAwMDAxMjVkOWU4MGI1YzdjNGY5ODQ2NmY5MjExNzk2ZWJmNDMiLCJleHAiOjE4OTM2NTQyNzEsInRlbmFudCI6MSwiY29tcGFueSI6Mywic2NvcGUiOlt7InJlc291cmNlIjoiYWxsIiwiYWN0aW9ucyI6ImFsbCJ9XSwiaWF0IjoxNDYxNjUwNjcxfQ.j4zqaDSeuYIw5fy8AkiBTglyLpjV-Cucmlp1qdq9CfA"
+        }
+    };
+
+    request(options, function (error, response, body) { //Checkout cart
+        if (error) {
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            logger.error('[resourceNameIsExsists] - [%s] - [%s] - Error.', response, body, error);
+            res.end(jsonString);
+        }
+        var jsonResp = JSON.parse(body);
+        return jsonResp.Result;
+    });
+
+};
+
+function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
+
     DbConn.ResResource
         .create(
         {
@@ -25,15 +80,29 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceName",
+                OldValue: resourceName,
+                NewValue: resourceName,
+                Description: "New Resource Created.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "SAVE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             callback.end(jsonString);
         });
+
 }
 
-function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, callback) {
+function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
     DbConn.ResResource
         .update(
         {
@@ -42,7 +111,7 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
             ResCategory: resCategory,
             TenantId: tenantId,
             CompanyId: companyId,
-            ResourceName: resourceName,
+            /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
             OtherData: otherData,
             Status: true
         }, {
@@ -53,6 +122,19 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
             logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceName",
+                OldValue: resourceName,
+                NewValue: resourceName,
+                Description: "Update Resource.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "UPDATE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.EditResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
@@ -61,7 +143,7 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
         });
 }
 
-function DeleteResource(resourceId,  callback) {
+function DeleteResource(resourceId,tenantId,companyId,iss,  callback) {
     DbConn.ResResource
         .update(
         {
@@ -74,6 +156,19 @@ function DeleteResource(resourceId,  callback) {
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
             logger.info('[DVP-ResResource.DeleteResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            var auditData =  {
+                KeyProperty: "ResourceId",
+                OldValue: resourceId,
+                NewValue: resourceId,
+                Description: "Delete Resource.",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResource",
+                Action: "DELETE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId,companyId,iss,auditData);
             callback.end(jsonString);
         }).error(function (err) {
             logger.error('[DVP-ResResource.DeleteResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
@@ -84,7 +179,7 @@ function DeleteResource(resourceId,  callback) {
 
 function GetAllResource(tenantId, companyId, callback) {
     DbConn.ResResource.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],order: [['ResourceId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResource] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -99,6 +194,56 @@ function GetAllResource(tenantId, companyId, callback) {
         }
     }).error(function (err) {
         logger.error('[DVP-ResResource.GetAllResource] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function GetResourceCount(tenantId, companyId, callback) {
+    DbConn.ResResource.count({
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}]
+    }).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResResource.GetResourceCount] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResResource.GetResourceCount] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.GetResourceCount] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function GetAllResourcePage(req,tenantId, companyId, callback) {
+
+    var pageNo = req.params.PageNo;
+    var rowCount = req.params.RowCount;
+    DbConn.ResResource.findAll({
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
+        include: [{ model: DbConn.ResResourceTask, as: "ResResourceTask" }],
+        offset: ((pageNo - 1) * rowCount),
+        limit: rowCount,order: [['ResourceId', 'DESC']]
+    }).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResResource.GetAllResourcePage] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResResource.GetAllResourcePage] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.GetAllResourcePage] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
@@ -367,10 +512,30 @@ function ViewAttributeToResourceByResTaskId(params,body,tenantId,companyId,callb
         });
 }
 
+function AddStatusChangeInfo(resourceId,tenantId,companyId,statusType,status,reason,otherData,callback){
+
+    DbConn.ResResourceStatusChangeInfo
+        .create(
+        {
+            ResourceId:resourceId,TenantId:tenantId,CompanyId:companyId,StatusType:statusType,Status:status,Reason:reason,OtherData:otherData
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ResResourceStatusChangeInfo.AddStatusChangeInfo] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResResourceStatusChangeInfo.AddStatusChangeInfo] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
 module.exports.CreateResource = CreateResource;
 module.exports.EditResource = EditResource;
 module.exports.DeleteResource = DeleteResource;
 module.exports.GetAllResource = GetAllResource;
+module.exports.GetResourceCount = GetResourceCount;
+module.exports.GetAllResourcePage = GetAllResourcePage;
 module.exports.GetAllResourceById = GetAllResourceById;
 module.exports.AssignTaskToResource = AssignTaskToResource;
 module.exports.UpdateAssignTaskToResource = UpdateAssignTaskToResource;
@@ -384,3 +549,5 @@ module.exports.ViewAttributeToResource = ViewAttributeToResource;
 module.exports.GetResourceByTaskId=GetResourceByTaskId;
 module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
 module.exports.RemoveAllTasksAssignToResource=RemoveAllTasksAssignToResource;
+module.exports.AddStatusChangeInfo=AddStatusChangeInfo;
+module.exports.ResourceNameIsExsists=resourceNameIsExsists;
