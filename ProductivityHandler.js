@@ -7,8 +7,10 @@ var config = require('config');
 var redis = require('redis');
 var redisip = config.Redis.ip;
 var redisport = config.Redis.port;
+var ardsRedisIp = config.ArdsRedis.ip;
+var ardsRedisPort = config.ArdsRedis.port;
 var redisClient = redis.createClient(redisport, redisip);
-var redisardsClient = redis.createClient(redisport, redisip);
+var redisardsClient = redis.createClient(ardsRedisPort, ardsRedisIp);
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 /*var format = require('string-format');*/
@@ -30,7 +32,7 @@ redisClient.on("connect", function (err) {
 });
 
 //**** ards data con
-redisardsClient.auth(config.Redis.password, function (err) {
+redisardsClient.auth(config.ArdsRedis.password, function (err) {
     /*if (err)
      throw err;*/
     console.log("Redis[ARDS] Auth error  " + err);
@@ -41,7 +43,7 @@ redisardsClient.on("error", function (err) {
 });
 
 redisardsClient.on("connect", function (err) {
-    redisardsClient.select(config.Redis.ardsData, redis.print);
+    redisardsClient.select(config.ArdsRedis.ardsData, redis.print);
 });
 
 

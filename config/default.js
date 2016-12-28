@@ -9,12 +9,19 @@ module.exports = {
   },
   "Redis":
   {
-    "ip": "45.55.142.207",
-    "port": 6389,
+    "ip": "172.16.11.7",
+    "port": 6379,
     "password":"DuoS123",
-      "redisdb":8,
-      "ardsData":6
+      "redisdb":8
   },
+
+    "ArdsRedis":
+    {
+        "ip": "45.55.142.207",
+        "port": 6389,
+        "password":"DuoS123",
+        "ardsData":6
+    },
 
     "Security":
     {
