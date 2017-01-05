@@ -65,29 +65,29 @@ var resourceNameIsExsists = function (resourceName,res) {
 
 function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
 
+    var tmpResource = {
+        ResClass: resClass,
+        ResType: resType,
+        ResCategory: resCategory,
+        TenantId: tenantId,
+        CompanyId: companyId,
+        ResourceName: resourceName,
+        OtherData: otherData,
+        Status: true
+    };
+
     DbConn.ResResource
-        .create(
-        {
-            ResClass: resClass,
-            ResType: resType,
-            ResCategory: resCategory,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            ResourceName: resourceName,
-            OtherData: otherData,
-            Status: true
-        }
+        .create(tmpResource
     ).then(function (cmp) {
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             var auditData =  {
                 KeyProperty: "ResourceName",
-                OldValue: resourceName,
-                NewValue: resourceName,
+                OldValue: tmpResource,
+                NewValue: tmpResource,
                 Description: "New Resource Created.",
                 Author: iss,
                 User: iss,
-                OtherJsonData: JSON.stringify(cmp),
                 ObjectType: "ResResource",
                 Action: "SAVE",
                 Application: "Resource Service"
