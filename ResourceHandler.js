@@ -530,6 +530,24 @@ function AddStatusChangeInfo(resourceId,tenantId,companyId,statusType,status,rea
         });
 }
 
+function AddStatusDurationInfo(resourceId,tenantId,companyId,statusType,status,reason,otherData,sessionId,duration,callback){
+
+    DbConn.ResResourceStatusDurationInfo
+        .create(
+        {
+            TenantId:tenantId,CompanyId:companyId,ResourceId:resourceId,StatusType:statusType,Status:status,Reason:reason,SessionId:sessionId,OtherData:otherData,Duration:duration
+        }
+    ).then(function (cmp) {
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-ResResourceStatusDurationInfo.AddStatusDurationInfo] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-ResResourceStatusDurationInfo.AddStatusDurationInfo] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+}
+
 module.exports.CreateResource = CreateResource;
 module.exports.EditResource = EditResource;
 module.exports.DeleteResource = DeleteResource;
@@ -551,3 +569,4 @@ module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
 module.exports.RemoveAllTasksAssignToResource=RemoveAllTasksAssignToResource;
 module.exports.AddStatusChangeInfo=AddStatusChangeInfo;
 module.exports.ResourceNameIsExsists=resourceNameIsExsists;
+module.exports.AddStatusDurationInfo = AddStatusDurationInfo;
