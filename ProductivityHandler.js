@@ -87,7 +87,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     MissCallCount: 0
                 };
                 var callTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:param2", tenantId, companyId, resourceId);
-                var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:param2", tenantId, companyId, resourceId);
+                var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
                 var acw = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:param2", tenantId, companyId, resourceId);
                 var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
                 var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:param2", tenantId, companyId, resourceId);
