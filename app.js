@@ -18,6 +18,7 @@ var taskInfoHandler = require('./TaskInfoHandler');
 var productivityHandler = require('./ProductivityHandler');
 var productivitySummaryHandler = require('./ProductivitySummaryHandler');
 var sharedResourceHandler = require('./SharedResourceHandler');
+var breakTypeHandler = require('./BreakTypeHandler');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1776,6 +1777,149 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', authorizatio
 });
 
 //-------------------------End TaskInfo Handler ------------------------- \\
+
+
+
+
+//------------------------Resource Break Types--------------------------
+
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BreakTypes', authorization({
+    resource: "breaktype",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[breakTypeHandler.CreateBreakType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+        breakTypeHandler.CreateBreakType(tenantId, companyId, att.BreakType, att.MaxDurationPerDay, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[breakTypeHandler.CreateBreakType] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[breakTypeHandler.CreateBreakType] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.put('/DVP/API/' + version + '/ResourceManager/BreakType/:BreakType', authorization({
+    resource: "breaktype",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[breakTypeHandler.EditBreakTypeStatus] - [HTTP]  - Request received -  Data - %s %s', JSON.stringify(req.body), JSON.stringify(req.params));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+        breakTypeHandler.EditBreakTypeStatus(tenantId, companyId, req.params.BreakType, att.Active, att.MaxDurationPerDay, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[breakTypeHandler.EditBreakTypeStatus] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[breakTypeHandler.EditBreakTypeStatus] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/BreakType/:BreakType', authorization({
+    resource: "breaktype",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[breakTypeHandler.DeleteBreakType] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+        breakTypeHandler.DeleteBreakType(tenantId, companyId, req.params.BreakType, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[breakTypeHandler.DeleteBreakType] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[breakTypeHandler.DeleteBreakType] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes', authorization({
+    resource: "breaktype",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[breakTypeHandler.GetAllBreakTypes] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+        breakTypeHandler.GetAllBreakTypes(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[breakTypeHandler.GetAllBreakTypes] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[breakTypeHandler.GetAllBreakTypes] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes/Active', authorization({
+    resource: "breaktype",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[breakTypeHandler.GetAllActiveBreakTypes] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = parseInt(req.user.tenant);
+        var companyId = parseInt(req.user.company);
+        breakTypeHandler.GetAllActiveBreakTypes(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[breakTypeHandler.GetAllActiveBreakTypes] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[breakTypeHandler.GetAllActiveBreakTypes] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+//------------------------End Break Types-------------------------------
+
+
+
+
+
+
 //------------------------- Crossdomain ------------------------- \\
 
 function Crossdomain(req, res, next) {
