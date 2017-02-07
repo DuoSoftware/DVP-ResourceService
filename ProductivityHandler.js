@@ -86,13 +86,13 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     TransferCallCount: 0,
                     MissCallCount: 0
                 };
-                var callTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:param2", tenantId, companyId, resourceId);
+                var callTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALL", tenantId, companyId, resourceId);
                 var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
-                var acw = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:param2", tenantId, companyId, resourceId);
+                var acw = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWork", tenantId, companyId, resourceId);
                 var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
-                var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:param2", tenantId, companyId, resourceId);
+                var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALL", tenantId, companyId, resourceId);
                 var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
-                var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:param2", tenantId, companyId, resourceId);
+                var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
                 var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
                 var holdTime = format("TOTALTIMEWSPARAM:{0}:{1}:AGENTHOLD:{2}", tenantId, companyId, resourceId);
                 var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
