@@ -538,6 +538,23 @@ function AddStatusDurationInfo(resourceId,tenantId,companyId,statusType,status,r
             TenantId:tenantId,CompanyId:companyId,ResourceId:resourceId,StatusType:statusType,Status:status,Reason:reason,SessionId:sessionId,OtherData:otherData,Duration:duration
         }
     ).then(function (cmp) {
+            if(statusType === 'SloatStatus' && status === 'AfterWork') {
+                DbConn.ResResourceAcwInfo
+                    .create(
+                    {
+                        TenantId: tenantId,
+                        CompanyId: companyId,
+                        ResourceId: resourceId,
+                        SessionId: sessionId,
+                        Duration: duration
+                    }
+                ).then(function () {
+                        logger.info('[DVP-ResResourceAcwInfo.AddStatusDurationInfo] - [PGSQL] - inserted successfully.');
+                    }).error(function (err) {
+                        logger.error('[DVP-ResResourceAcwInfo.AddStatusDurationInfo] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+                    });
+            }
+
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
             logger.info('[DVP-ResResourceStatusDurationInfo.AddStatusDurationInfo] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
