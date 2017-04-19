@@ -9,24 +9,25 @@ var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
 
-function GetAllTasks(tenantId, companyId,callback) {
+function GetAllTasks(callback) {
+    var jsonString;
     DbConn.ResTaskInfo.findAll({
         where: [{Status: true}]
     }).then(function (CamObject) {
         if (CamObject) {
-            logger.info('[DVP-ResTaskInfo.GetAllTask] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+            logger.info('[DVP-ResTaskInfo.GetAllTask] - [PGSQL]  - Data found  -[%s]', JSON.stringify(CamObject));
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
 
             callback.end(jsonString);
         }
         else {
-            logger.error('[DVP-ResTaskInfo.GetAllTask] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            logger.error('[DVP-ResTaskInfo.GetAllTask] - [PGSQL]  - No record found');
+            jsonString = messageFormatter.FormatMessage(undefined, "No record", false, undefined);
             callback.end(jsonString);
         }
     }).error(function (err) {
-        logger.error('[DVP-ResTaskInfo.GetAllTask] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
-        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-ResTaskInfo.GetAllTask] - [PGSQL]  - Error in searching.-[%s]', err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
 }
