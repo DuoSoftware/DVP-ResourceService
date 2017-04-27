@@ -1424,8 +1424,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/System/Task', authoriza
 
         logger.info('[groupsHandler.GetAllSystemTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        if (!req.user ||!req.user.tenant || !req.user.company)
-            throw new Error("invalid tenant or company.");
+        
         taskInfoHandler.GetAllTasks(res);
 
     }
