@@ -1424,7 +1424,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/System/Task', authoriza
 
         logger.info('[groupsHandler.GetAllSystemTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
-        
+
         taskInfoHandler.GetAllTasks(res);
 
     }
@@ -1785,7 +1785,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', authorizatio
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        taskInfoHandler.GetAllTasks(tenantId, companyId, res);
+        taskInfoHandler.GetAllTasks(res);
 
     }
     catch (ex) {
