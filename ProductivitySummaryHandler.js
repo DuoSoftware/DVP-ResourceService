@@ -83,8 +83,10 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             summary.StaffTime = login.TotalTime;
                             summary.Date = login.SummaryDate;
                             summary.TalkTime = 0;
+                            summary.TalkTimeOutbound = 0;
                             summary.TotalAnswered = 0;
                             summary.TotalCalls = 0;
+                            summary.TotalCallsOutbound = 0;
                             summary.AverageHandlingTime = 0;
                             summary.BreakTime = 0;
                             summary.AfterWorkTime = 0;
@@ -92,9 +94,15 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             if (connected && connected.length > 0) {
 
                                 connected.forEach(function (cItem) {
-                                    summary.TalkTime = summary.TalkTime + cItem.TotalTime;
-                                    summary.TotalAnswered = summary.TotalAnswered + cItem.TotalCount;
-                                    summary.TotalCalls = summary.TotalCalls + cItem.TotalCount;
+
+                                    if(cItem.Param2 === 'CALLoutbound'){
+                                        summary.TalkTimeOutbound = summary.TalkTimeOutbound + cItem.TotalTime;
+                                        summary.TotalCallsOutbound = summary.TotalCallsOutbound + cItem.TotalCount;
+                                    }else{
+                                        summary.TalkTime = summary.TalkTime + cItem.TotalTime;
+                                        summary.TotalAnswered = summary.TotalAnswered + cItem.TotalCount;
+                                        summary.TotalCalls = summary.TotalCalls + cItem.TotalCount;
+                                    }
 
                                 });
 
