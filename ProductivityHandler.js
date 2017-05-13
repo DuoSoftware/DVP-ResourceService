@@ -79,10 +79,12 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     AcwTime: 0,
                     BreakTime: 0,
                     OnCallTime: 0,
+                    OutboundCallTime: 0,
                     StaffedTime: 0,
                     IdleTime: 0,
                     HoldTime: 0,
                     IncomingCallCount: 0,
+                    OutgoingCallCount: 0,
                     TransferCallCount: 0,
                     MissCallCount: 0
                 };
@@ -96,6 +98,8 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                 var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
                 var holdTime = format("TOTALTIMEWSPARAM:{0}:{1}:AGENTHOLD:{2}", tenantId, companyId, resourceId);
                 var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
+                var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+                var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
 
                 /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
                  var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
@@ -110,7 +114,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     else {
 
 
-                        var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount];
+                        var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount, outboundCallTime, outgoingCallCount];
                         redisClient.mget(keys, function (err, reuslt) {
                             if (err) {
                                 console.log(err);
@@ -122,6 +126,8 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                 productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
                                 productivity.HoldTime = parseInt(reuslt[4] ? reuslt[4] : 0);
                                 productivity.TransferCallCount = parseInt(reuslt[5] ? reuslt[5] : 0);
+                                productivity.OutboundCallTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+                                productivity.OutgoingCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
                                 redisClient.hget(staffedTime, "time", function (err, reuslt) {
                                     if (err) {
                                         console.log(err);
@@ -256,10 +262,12 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         AcwTime: 0,
         BreakTime: 0,
         OnCallTime: 0,
+        OutboundCallTime: 0,
         StaffedTime: 0,
         IdleTime: 0,
         HoldTime: 0,
         IncomingCallCount: 0,
+        OutgoingCallCount: 0,
         TransferCallCount: 0,
         MissCallCount: 0
     };
@@ -273,6 +281,8 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
     var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
     var holdTime = format("TOTALTIMEWSPARAM:{0}:{1}:AGENTHOLD:{2}", tenantId, companyId, resourceId);
     var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
+    var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+    var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
 
     /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
      var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
@@ -287,7 +297,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         else {
 
 
-            var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount];
+            var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount, outboundCallTime, outgoingCallCount];
             redisClient.mget(keys, function (err, reuslt) {
                 if (err) {
                     console.log(err);
@@ -299,6 +309,8 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
                     productivity.HoldTime = parseInt(reuslt[4] ? reuslt[4] : 0);
                     productivity.TransferCallCount = parseInt(reuslt[5] ? reuslt[5] : 0);
+                    productivity.OutboundCallTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+                    productivity.OutgoingCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
                             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
