@@ -1416,6 +1416,28 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Task/:TaskId/Resources'
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/System/Task', authorization({
+    resource: "tenant",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetAllSystemTasks] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        taskInfoHandler.GetAllTasks(res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetAllSystemTasks] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetAllSystemTasks] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 
 //-------------------------End Task Handler ------------------------- \\
 
@@ -1763,7 +1785,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/TaskInfo', authorizatio
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        taskInfoHandler.GetAllTasks(tenantId, companyId, res);
+        taskInfoHandler.GetAllTasks(res);
 
     }
     catch (ex) {
