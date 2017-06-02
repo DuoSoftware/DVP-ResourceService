@@ -36,6 +36,21 @@ function SetBreakTypeInRedis(obj){
     }
 }
 
+function DeleteBreakTypeFromRedis(tenant, company, breakType){
+    try{
+        var breakTypeKey = util.format('BreakType:%d:%d:%s', tenant, company, breakType);
+        redisardsClient.del(breakTypeKey, function (err, result) {
+            if(err){
+                logger.error('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Failed. [%s] ', err);
+            }else{
+                logger.info('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Success. [%s] ', result);
+            }
+        });
+    }catch(ex){
+        logger.error('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Failed. [%s] ', ex);
+    }
+}
+
 function CreateBreakType(tenantId, companyId, breakType, maxDuration, callback) {
     var jsonString;
 
@@ -124,6 +139,8 @@ function DeleteBreakType(tenantId, companyId, breakType, callback) {
             ]
         }
     ).then(function (bType) {
+            DeleteBreakTypeFromRedis(tenantId, companyId, breakType);
+
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", bType==1, bType);
             logger.info('[DVP-ResResource.DeleteBreakType] - [PGSQL] - delete successfully. [%s] ', jsonString);
             callback.end(jsonString);
