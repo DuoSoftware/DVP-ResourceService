@@ -6,6 +6,7 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var util = require('util');
+var redis = require('redis');
 
 var redisArdsClient = redis.createClient(config.ArdsRedis.port, config.ArdsRedis.ip);
 redisArdsClient.auth(config.ArdsRedis.password, function (err) {
