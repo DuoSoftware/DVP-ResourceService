@@ -19,7 +19,7 @@ redisArdsClient.on("error", function (err) {
 });
 
 redisArdsClient.on("connect", function (err) {
-    redisardsClient.select(config.ArdsRedis.ardsData, redis.print);
+    redisArdsClient.select(config.ArdsRedis.ardsData, redis.print);
 });
 
 function SetBreakTypeInRedis(obj){
