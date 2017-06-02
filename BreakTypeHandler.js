@@ -26,7 +26,7 @@ function SetBreakTypeInRedis(obj){
     try{
         var breakTypeKey = util.format('BreakType:%d:%d:%s', obj.TenantId, obj.CompanyId, obj.BreakType);
         var jsonObj = JSON.stringify(obj);
-        redisardsClient.set(breakTypeKey, jsonObj, function (err, result) {
+        redisArdsClient.set(breakTypeKey, jsonObj, function (err, result) {
             if(err){
                 logger.error('[DVP-ResResource.SetBreakTypeInRedis] - [REDIS] - SET Failed. [%s] ', err);
             }else{
@@ -41,7 +41,7 @@ function SetBreakTypeInRedis(obj){
 function DeleteBreakTypeFromRedis(tenant, company, breakType){
     try{
         var breakTypeKey = util.format('BreakType:%d:%d:%s', tenant, company, breakType);
-        redisardsClient.del(breakTypeKey, function (err, result) {
+        redisArdsClient.del(breakTypeKey, function (err, result) {
             if(err){
                 logger.error('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Failed. [%s] ', err);
             }else{
