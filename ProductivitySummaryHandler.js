@@ -65,14 +65,26 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                     for (var j in dateInfo.sessionInfos) {
                         var loginSession = dateInfo.sessionInfos[j];
 
-                        var login = FilterObjFromArray(loginSession.records, "WindowName", "LOGIN");
+                        var loginRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "LOGIN");
                         var connected = FilterAllObjsFromArray(loginSession.records, "WindowName", "CONNECTED");
                         var rBreak = FilterAllObjsFromArray(loginSession.records, "WindowName", "BREAK");
                         var agentReject = FilterAllObjsFromArray(loginSession.records, "WindowName", "AGENTREJECT");
                         var afterWork = FilterObjFromArray(loginSession.records, "WindowName", "AFTERWORK");
+                        var login = {};
 
                         var summary = {};
-                        if (login) {
+                        if(loginRecords && loginRecords.length> 0){
+                            login.SummaryDate = loginRecords[0].SummaryDate;
+                            login.Param1 = loginRecords[0].Param1;
+                            login.TotalTime = 0;
+
+                            loginRecords.forEach(function (loginR) {
+                                if(loginR && loginR.TotalTime >0){
+                                    login.TotalTime = login.TotalTime + loginR.TotalTime;
+                                }
+                            });
+
+
 
                             var summaryDate = FilterObjFromArray(DailySummary, "Date", login.SummaryDate.toDateString());
                             if(!summaryDate){
@@ -91,6 +103,9 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             summary.BreakTime = 0;
                             summary.AfterWorkTime = 0;
                             summary.IdleTime = 0;
+
+
+
                             if (connected && connected.length > 0) {
 
                                 connected.forEach(function (cItem) {

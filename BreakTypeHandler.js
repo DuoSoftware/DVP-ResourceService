@@ -5,7 +5,53 @@
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
+var util = require('util');
+var redis = require('redis');
+var config = require('config');
 
+var redisArdsClient = redis.createClient(config.ArdsRedis.port, config.ArdsRedis.ip);
+redisArdsClient.auth(config.ArdsRedis.password, function (err) {
+    console.log("Redis[ARDS] Auth error  " + err);
+});
+
+redisArdsClient.on("error", function (err) {
+    console.log("Redis[ARDS] connection error  " + err);
+});
+
+redisArdsClient.on("connect", function (err) {
+    redisArdsClient.select(config.ArdsRedis.ardsData, redis.print);
+});
+
+function SetBreakTypeInRedis(obj){
+    try{
+        var breakTypeKey = util.format('BreakType:%d:%d:%s', obj.TenantId, obj.CompanyId, obj.BreakType);
+        var jsonObj = JSON.stringify(obj);
+        redisArdsClient.set(breakTypeKey, jsonObj, function (err, result) {
+            if(err){
+                logger.error('[DVP-ResResource.SetBreakTypeInRedis] - [REDIS] - SET Failed. [%s] ', err);
+            }else{
+                logger.info('[DVP-ResResource.SetBreakTypeInRedis] - [REDIS] - SET Success. [%s] ', result);
+            }
+        });
+    }catch(ex){
+        logger.error('[DVP-ResResource.SetBreakTypeInRedis] - [REDIS] - SET Failed. [%s] ', ex);
+    }
+}
+
+function DeleteBreakTypeFromRedis(tenant, company, breakType){
+    try{
+        var breakTypeKey = util.format('BreakType:%d:%d:%s', tenant, company, breakType);
+        redisArdsClient.del(breakTypeKey, function (err, result) {
+            if(err){
+                logger.error('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Failed. [%s] ', err);
+            }else{
+                logger.info('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Success. [%s] ', result);
+            }
+        });
+    }catch(ex){
+        logger.error('[DVP-ResResource.RemoveBreakTypeInRedis] - [REDIS] - DEL Failed. [%s] ', ex);
+    }
+}
 
 function CreateBreakType(tenantId, companyId, breakType, maxDuration, callback) {
     var jsonString;
@@ -22,6 +68,8 @@ function CreateBreakType(tenantId, companyId, breakType, maxDuration, callback) 
     DbConn.ResResourceBreakTypes
         .create(tmpBreakType
     ).then(function (bType) {
+            SetBreakTypeInRedis(tmpBreakType);
+
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, bType);
             logger.info('[DVP-ResResource.CreateBreakType] - [PGSQL] - inserted successfully. [%s] ', jsonString);
             callback.end(jsonString);
@@ -55,6 +103,15 @@ function EditBreakTypeStatus(tenantId, companyId, breakType, isActive, maxDurati
             ]
         }
     ).then(function (bType) {
+            var tmpBreakType = {
+                TenantId: tenantId,
+                CompanyId: companyId,
+                BreakType: breakType.trim().replace(/ /g,''),
+                Active: isActive,
+                MaxDurationPerDay: maxDuration
+            };
+            SetBreakTypeInRedis(tmpBreakType);
+
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", bType==1, bType);
             logger.info('[DVP-ResResource.EditBreakTypeStatus] - [PGSQL] - update successfully. [%s] ', jsonString);
             callback.end(jsonString);
@@ -84,6 +141,8 @@ function DeleteBreakType(tenantId, companyId, breakType, callback) {
             ]
         }
     ).then(function (bType) {
+            DeleteBreakTypeFromRedis(tenantId, companyId, breakType);
+
             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", bType==1, bType);
             logger.info('[DVP-ResResource.DeleteBreakType] - [PGSQL] - delete successfully. [%s] ', jsonString);
             callback.end(jsonString);
