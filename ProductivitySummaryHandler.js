@@ -128,11 +128,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 
                                 });
 
-                                if (summary.TotalCalls > 0) {
-                                    summary.AverageHandlingTime = summary.TalkTime / summary.TotalCalls;
-                                } else {
-                                    summary.AverageHandlingTime = 0;
-                                }
+
 
                             }
                             if (rBreak) {
@@ -150,6 +146,13 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             if (afterWork) {
                                 summary.AfterWorkTime = afterWork.TotalTime;
                             }
+
+                            if (summary.TotalCalls > 0) {
+                                summary.AverageHandlingTime = (summary.TalkTime + summary.AfterWorkTime) / summary.TotalCalls;
+                            } else {
+                                summary.AverageHandlingTime = 0;
+                            }
+
                             summary.IdleTime = summary.StaffTime - (summary.AfterWorkTime + summary.BreakTime + summary.TalkTime);
                             summaryDate.Summary.push(summary);
                         }
