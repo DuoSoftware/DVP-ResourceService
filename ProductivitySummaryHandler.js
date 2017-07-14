@@ -29,8 +29,15 @@ function FilterAllObjsFromArray(itemArray, field, value){
     return filterData;
 }
 
-var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryToDate, callback){
-    dbConn.SequelizeConn.query("SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'", { type: dbConn.SequelizeConn.QueryTypes.SELECT})
+var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryToDate, resourceId, callback){
+
+    var query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+
+    if(resourceId)
+    {
+        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\"::date >= date '"+summaryFromDate+"' and \"SummaryDate\"::date <= date '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+    }
+    dbConn.SequelizeConn.query(query, { type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function(records) {
             if (records) {
                 logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
@@ -121,11 +128,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 
                                 });
 
-                                if (summary.TotalCalls > 0) {
-                                    summary.AverageHandlingTime = summary.TalkTime / summary.TotalCalls;
-                                } else {
-                                    summary.AverageHandlingTime = 0;
-                                }
+
 
                             }
                             if (rBreak) {
@@ -143,6 +146,13 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             if (afterWork) {
                                 summary.AfterWorkTime = afterWork.TotalTime;
                             }
+
+                            if (summary.TotalCalls > 0) {
+                                summary.AverageHandlingTime = (summary.TalkTime + summary.AfterWorkTime) / summary.TotalCalls;
+                            } else {
+                                summary.AverageHandlingTime = 0;
+                            }
+
                             summary.IdleTime = summary.StaffTime - (summary.AfterWorkTime + summary.BreakTime + summary.TalkTime);
                             summaryDate.Summary.push(summary);
                         }

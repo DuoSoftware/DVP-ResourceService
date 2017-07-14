@@ -1684,7 +1684,9 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, res);
+
+        var resourceId = req.query.resourceId;
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
     }
     catch (ex) {
         logger.error('[productivitySummaryHandler.GetDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
