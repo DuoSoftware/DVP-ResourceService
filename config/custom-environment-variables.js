@@ -22,12 +22,22 @@ module.exports = {
         "password":"SYS_DASHBOARD_REDIS_PASSWORD",
         "redisdb":"SYS_REDIS_DB_DASHBOARD"
     },
+
+
     "ArdsRedis":
     {
+        "mode":"SYS_REDIS_MODE",
         "ip": "SYS_REDIS_HOST",
         "port": "SYS_REDIS_PORT",
-        "password":"SYS_REDIS_PASSWORD",
-        "ardsData":"SYS_REDIS_DB_ARDS"
+        "user": "SYS_REDIS_USER",
+        "password": "SYS_REDIS_PASSWORD",
+        "db": "SYS_REDIS_DB_ARDS"
+        "sentinels":{
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port":"SYS_REDIS_SENTINEL_PORT",
+            "name":"SYS_REDIS_SENTINEL_NAME"
+        }
+
     },
 
     "Security":
