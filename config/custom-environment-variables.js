@@ -19,7 +19,7 @@ module.exports = {
     {
 
 
-        "mode":"SYS_DASHBOARD_REDIS_MODE",
+        "mode":"SYS_REDIS_MODE",
         "ip": "SYS_DASHBOARD_REDIS_HOST",
         "port": "SYS_DASHBOARD_REDIS_PORT",
         "user": "SYS_DASHBOARD_REDIS_USER",
