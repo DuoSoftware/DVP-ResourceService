@@ -4,46 +4,203 @@
 
 var format = require('stringformat');
 var config = require('config');
-var redis = require('redis');
-var redisip = config.Redis.ip;
-var redisport = config.Redis.port;
-var ardsRedisIp = config.ArdsRedis.ip;
-var ardsRedisPort = config.ArdsRedis.port;
-var redisClient = redis.createClient(redisport, redisip);
-var redisardsClient = redis.createClient(ardsRedisPort, ardsRedisIp);
+var redis = require('ioredis');
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 /*var format = require('string-format');*/
 var moment = require('moment');
 
 
-redisClient.auth(config.Redis.password, function (err) {
-    /*if (err)
-     throw err;*/
-    console.log("Redis Auth error  " + err);
-});
+
+var redisip = config.Redis.ip;
+var redisport = config.Redis.port;
+var redispass = config.Redis.password;
+var redismode = config.Redis.mode;
+var redisdb = config.Redis.db;
+
+
+
+var redisSetting =  {
+    port:redisport,
+    host:redisip,
+    family: 4,
+    password: redispass,
+    db: redisdb,
+    retryStrategy: function (times) {
+        var delay = Math.min(times * 50, 2000);
+        return delay;
+    },
+    reconnectOnError: function (err) {
+
+        return true;
+    }
+};
+
+if(redismode == 'sentinel'){
+
+    if(config.Redis.sentinels && config.Redis.sentinels.hosts && config.Redis.sentinels.port, config.Redis.sentinels.name){
+        var sentinelHosts = config.Redis.sentinels.hosts.split(',');
+        if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
+            var sentinelConnections = [];
+
+            sentinelHosts.forEach(function(item){
+
+                sentinelConnections.push({host: item, port:config.Redis.sentinels.port})
+
+            })
+
+            redisSetting = {
+                sentinels:sentinelConnections,
+                name: config.Redis.sentinels.name,
+                password: redispass
+            }
+
+        }else{
+
+            console.log("No enough sentinel servers found .........");
+        }
+
+    }
+}
+
+var redisClient = undefined;
+
+if(redismode != "cluster") {
+    redisClient = new redis(redisSetting);
+}else{
+
+    var redisHosts = redisip.split(",");
+    if(Array.isArray(redisHosts)){
+
+
+        redisSetting = [];
+        redisHosts.forEach(function(item){
+            redisSetting.push({
+                host: item,
+                port: redisport,
+                family: 4,
+                password: redispass});
+        });
+
+        var redisClient = new redis.Cluster([redisSetting]);
+
+    }else{
+
+        redisClient = new redis(redisSetting);
+    }
+
+
+}
+
 
 redisClient.on("error", function (err) {
     console.log("Redis connection error  " + err);
 });
 
 redisClient.on("connect", function (err) {
-    redisClient.select(config.Redis.redisdb, redis.print);
 });
 
+
+
+
+var ardsredisip = config.ArdsRedis.ip;
+var ardsredisport = config.ArdsRedis.port;
+var ardsredispass = config.ArdsRedis.password;
+var ardsredismode = config.ArdsRedis.mode;
+var ardsredisdb = config.ArdsRedis.db;
+
+
+
+var redisArdsSetting =  {
+    port:ardsredisport,
+    host:ardsredisip,
+    family: 4,
+    password: ardsredispass,
+    db: ardsredisdb,
+    retryStrategy: function (times) {
+        var delay = Math.min(times * 50, 2000);
+        return delay;
+    },
+    reconnectOnError: function (err) {
+
+        return true;
+    }
+};
+
+if(redismode == 'sentinel'){
+
+    if(config.ArdsRedis.sentinels && config.ArdsRedis.sentinels.hosts && config.ArdsRedis.sentinels.port, config.ArdsRedis.sentinels.name){
+        var sentinelHosts = config.ArdsRedis.sentinels.hosts.split(',');
+        if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
+            var sentinelConnections = [];
+
+            sentinelHosts.forEach(function(item){
+
+                sentinelConnections.push({host: item, port:config.ArdsRedis.sentinels.port})
+
+            })
+
+            redisArdsSetting = {
+                sentinels:sentinelConnections,
+                name: config.ArdsRedis.sentinels.name,
+                password: ardsredispass
+            }
+
+        }else{
+
+            console.log("No enough sentinel servers found .........");
+        }
+
+    }
+}
+
+var redisArdsClient = undefined;
+
+if(redismode != "cluster") {
+    redisArdsClient = new redis(redisArdsSetting);
+}else{
+
+    var redisHosts = redisip.split(",");
+    if(Array.isArray(redisHosts)){
+
+
+        redisArdsSetting = [];
+        redisHosts.forEach(function(item){
+            redisArdsSetting.push({
+                host: item,
+                port: ardsredisport,
+                family: 4,
+                password: ardsredispass});
+        });
+
+        var redisArdsClient = new redis.Cluster([redisArdsSetting]);
+
+    }else{
+
+        redisArdsClient = new redis(redisArdsSetting);
+    }
+
+
+}
+
+
+
+
+
+
+
 //**** ards data con
-redisardsClient.auth(config.ArdsRedis.password, function (err) {
+redisArdsClient.auth(config.ArdsRedis.password, function (err) {
     /*if (err)
      throw err;*/
     console.log("Redis[ARDS] Auth error  " + err);
 });
 
-redisardsClient.on("error", function (err) {
+redisArdsClient.on("error", function (err) {
     console.log("Redis[ARDS] connection error  " + err);
 });
 
-redisardsClient.on("connect", function (err) {
-    redisardsClient.select(config.ArdsRedis.ardsData, redis.print);
+redisArdsClient.on("connect", function (err) {
 });
 
 
@@ -59,7 +216,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
         return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
     }*/
 
-    redisardsClient.keys(id, function (err, resourceIds) {
+    redisArdsClient.keys(id, function (err, resourceIds) {
         if (err) {
             logger.error('[TransferCallCount] - [%s]', id, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -105,7 +262,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                  var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
                  var holdTime = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");*/
 
-                redisardsClient.get(currentState, function (err, currentObj) {
+                redisArdsClient.get(currentState, function (err, currentObj) {
                     if (err) {
                         logger.error('[TransferCallCount] - [%s]', id, err);
                         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -288,7 +445,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
      var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
      var holdTime = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");*/
 
-    redisardsClient.get(currentState, function (err, currentObj) {
+    redisArdsClient.get(currentState, function (err, currentObj) {
         if (err) {
             logger.error('[TransferCallCount] - [%s]', id, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
