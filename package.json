@@ -7,7 +7,7 @@
     "collections": "^3.0.0",
     "config": "^1.19.0",
     "cors": "^2.7.1",
-    "dvp-common": "^0.6.5",
+    "dvp-common": "^0.8.4",
     "dvp-dbmodels": "^0.9.8",
     "enum": "^2.3.0",
     "moment": "^2.11.2",
