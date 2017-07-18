@@ -98,7 +98,6 @@ redisClient.on("error", function (err) {
 });
 
 redisClient.on("connect", function (err) {
-    redisClient.select(config.Redis.redisdb, redis.print);
 });
 
 
@@ -112,7 +111,7 @@ var ardsredisdb = config.ArdsRedis.db;
 
 
 
-var redisSetting =  {
+var redisArdsSetting =  {
     port:ardsredisport,
     host:ardsredisip,
     family: 4,
@@ -141,10 +140,10 @@ if(redismode == 'sentinel'){
 
             })
 
-            redisSetting = {
+            redisArdsSetting = {
                 sentinels:sentinelConnections,
                 name: config.ArdsRedis.sentinels.name,
-                password: redispass
+                password: ardsredispass
             }
 
         }else{
@@ -158,27 +157,27 @@ if(redismode == 'sentinel'){
 var redisArdsClient = undefined;
 
 if(redismode != "cluster") {
-    redisArdsClient = new redis(redisSetting);
+    redisArdsClient = new redis(redisArdsSetting);
 }else{
 
     var redisHosts = redisip.split(",");
     if(Array.isArray(redisHosts)){
 
 
-        redisSetting = [];
+        redisArdsSetting = [];
         redisHosts.forEach(function(item){
-            redisSetting.push({
+            redisArdsSetting.push({
                 host: item,
-                port: redisport,
+                port: ardsredisport,
                 family: 4,
-                password: redispass});
+                password: ardsredispass});
         });
 
-        var redisArdsClient = new redis.Cluster([redisSetting]);
+        var redisArdsClient = new redis.Cluster([redisArdsSetting]);
 
     }else{
 
-        redisArdsClient = new redis(redisSetting);
+        redisArdsClient = new redis(redisArdsSetting);
     }
 
 
@@ -202,7 +201,6 @@ redisArdsClient.on("error", function (err) {
 });
 
 redisArdsClient.on("connect", function (err) {
-    redisArdsClient.select(config.ArdsRedis.ardsData, redis.print);
 });
 
 
