@@ -50,7 +50,8 @@ if(redismode == 'sentinel'){
             redisSetting = {
                 sentinels:sentinelConnections,
                 name: config.ArdsRedis.sentinels.name,
-                password: redispass
+                password: redispass,
+                db: redisdb
             }
 
         }else{
@@ -77,7 +78,8 @@ if(redismode != "cluster") {
                 host: item,
                 port: redisport,
                 family: 4,
-                password: redispass});
+                password: redispass,
+                db: redisdb});
         });
 
         var redisArdsClient = new redis.Cluster([redisSetting]);
@@ -100,7 +102,6 @@ redisArdsClient.on("error", function (err) {
 });
 
 redisArdsClient.on("connect", function (err) {
-    redisArdsClient.select(config.ArdsRedis.ardsData, redis.print);
 });
 
 function SetBreakTypeInRedis(obj){
