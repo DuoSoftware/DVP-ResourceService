@@ -20,7 +20,12 @@ module.exports = {
         "ip": "SYS_DASHBOARD_REDIS_HOST",
         "port": "SYS_DASHBOARD_REDIS_PORT",
         "password":"SYS_DASHBOARD_REDIS_PASSWORD",
-        "redisdb":"SYS_REDIS_DB_DASHBOARD"
+        "redisdb":"SYS_REDIS_DB_DASHBOARD",
+     "sentinels":{
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port":"SYS_REDIS_SENTINEL_PORT",
+            "name":"SYS_REDIS_SENTINEL_NAME"
+        }
     },
     "ArdsRedis":
     {
@@ -35,7 +40,12 @@ module.exports = {
         "ip": "SYS_REDIS_HOST",
         "port": "SYS_REDIS_PORT",
         "user": "SYS_REDIS_USER",
-        "password": "SYS_REDIS_PASSWORD"
+        "password": "SYS_REDIS_PASSWORD",
+     "sentinels":{
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port":"SYS_REDIS_SENTINEL_PORT",
+            "name":"SYS_REDIS_SENTINEL_NAME"
+        }
 
     }
 };
