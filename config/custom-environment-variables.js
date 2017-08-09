@@ -25,9 +25,9 @@ module.exports = {
         "user": "SYS_DASHBOARD_REDIS_USER",
         "password": "SYS_DASHBOARD_REDIS_PASSWORD",
         "sentinels":{
-            "hosts": "SYS_DASHBOARD_REDIS_SENTINEL_HOSTS",
-            "port":"SYS_DASHBOARD_REDIS_SENTINEL_PORT",
-            "name":"SYS_DASHBOARD_REDIS_SENTINEL_NAME"
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port":"SYS_REDIS_SENTINEL_PORT",
+            "name":"SYS_REDIS_SENTINEL_NAME"
         }
     },
 
