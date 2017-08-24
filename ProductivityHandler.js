@@ -215,10 +215,10 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
 
     /*function toSeconds(time) {
-        var sTime = time.split(':'); // split it at the colons
-        // minutes are worth 60 seconds. Hours are worth 60 minutes.
-        return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
-    }*/
+     var sTime = time.split(':'); // split it at the colons
+     // minutes are worth 60 seconds. Hours are worth 60 minutes.
+     return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
+     }*/
 
     redisArdsClient.keys(id, function (err, resourceIds) {
         if (err) {
@@ -420,27 +420,31 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
 
     var productivity = {
         ResourceId: resourceId,
-        AcwTime: 0,
+        InboundAcwTime: 0,
+        OutboundAcwTime: 0,
         BreakTime: 0,
-        OnCallTime: 0,
+        InboundOnCallTime: 0,
         OutboundCallTime: 0,
         StaffedTime: 0,
         IdleTime: 0,
-        HoldTime: 0,
+        InboundHoldTime: 0,
+        OutboundHoldTime: 0,
         IncomingCallCount: 0,
         OutgoingCallCount: 0,
         TransferCallCount: 0,
         MissCallCount: 0
     };
-    var callTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+    var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
     var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
-    var acw = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWork", tenantId, companyId, resourceId);
+    var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
+    var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
     var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
     var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
     var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
     var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
     var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
-    var holdTime = format("TOTALTIMEWSPARAM:{0}:{1}:AGENTHOLD:{2}", tenantId, companyId, resourceId);
+    var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
+    var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
     var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
     var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
     var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
@@ -458,7 +462,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         else {
 
 
-            var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount, outboundCallTime, outgoingCallCount];
+            var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount];
             redisClient.mget(keys, function (err, reuslt) {
                 if (err) {
                     console.log(err);
@@ -733,15 +737,22 @@ module.exports.GetBreakTime = function (req, res, companyId, tenantId) {
 module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
 
     var resourceId = req.params["ResourceId"];
-    var key = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:param2", tenantId, companyId, resourceId);
+    var key;
+    var jsonString;
+
+    if(req.query && req.query.direction === 'outbound'){
+        key = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
+    }else{
+        key = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
+    }
     redisClient.get(key, function (err, reuslt) {
         if (err) {
             logger.error('[GetAcwTime] - [%s]', key, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             res.end(jsonString);
         }
         else {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, reuslt);
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, reuslt);
             logger.info('[GetAcwTime] . [%s] -[%s]', key, jsonString);
             res.end(jsonString);
         }
