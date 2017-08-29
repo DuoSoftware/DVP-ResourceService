@@ -300,7 +300,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                 productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
                                 productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
 
-                                productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+                                productivity.OnCallTime = productivity.InboundCallTime;
                                 productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
                                 productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
                                 productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
@@ -502,7 +502,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
                     productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
 
-                    productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+                    productivity.OnCallTime = productivity.InboundCallTime;
                     productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
                     productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
                     productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
