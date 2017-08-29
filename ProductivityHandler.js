@@ -240,24 +240,31 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     AcwTime: 0,
                     BreakTime: 0,
                     OnCallTime: 0,
-                    OutboundCallTime: 0,
                     StaffedTime: 0,
                     IdleTime: 0,
                     HoldTime: 0,
                     IncomingCallCount: 0,
                     OutgoingCallCount: 0,
                     TransferCallCount: 0,
-                    MissCallCount: 0
+                    MissCallCount: 0,
+                    InboundCallTime: 0,
+                    OutboundCallTime: 0,
+                    InboundAcwTime: 0,
+                    OutboundAcwTime: 0,
+                    InboundHoldTime: 0,
+                    OutboundHoldTime: 0
                 };
-                var callTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+                var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
                 var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
-                var acw = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWork", tenantId, companyId, resourceId);
+                var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
+                var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
                 var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
                 var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
                 var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
                 var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
                 var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
-                var holdTime = format("TOTALTIMEWSPARAM:{0}:{1}:AGENTHOLD:{2}", tenantId, companyId, resourceId);
+                var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
+                var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
                 var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
                 var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
                 var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
@@ -275,20 +282,31 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     else {
 
 
-                        var keys = [callTime, acw, breakTime, incomingCallCount, holdTime, transferCount, outboundCallTime, outgoingCallCount];
+                        var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount];
                         redisClient.mget(keys, function (err, reuslt) {
                             if (err) {
                                 console.log(err);
                             }
                             else {
-                                productivity.OnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
-                                productivity.AcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
-                                productivity.BreakTime = parseInt(reuslt[2] ? reuslt[2] : 0);
-                                productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
-                                productivity.HoldTime = parseInt(reuslt[4] ? reuslt[4] : 0);
-                                productivity.TransferCallCount = parseInt(reuslt[5] ? reuslt[5] : 0);
-                                productivity.OutboundCallTime = parseInt(reuslt[6] ? reuslt[6] : 0);
-                                productivity.OutgoingCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+                                var tempInboundOnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+                                var tempOutboundOnCallTime = parseInt(reuslt[8] ? reuslt[8] : 0);
+                                productivity.InboundAcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+                                productivity.OutboundAcwTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+                                productivity.InboundHoldTime = parseInt(reuslt[5] ? reuslt[5] : 0);
+                                productivity.OutboundHoldTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+
+                                productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
+                                productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
+                                productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
+                                productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
+
+                                productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+                                productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
+                                productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
+                                productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
+                                productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
+                                productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+                                productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
                                 redisClient.hget(staffedTime, "time", function (err, reuslt) {
                                     if (err) {
                                         console.log(err);
@@ -308,7 +326,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                 var workTime = 0;
                                                 try {
                                                     /*var currentStateSpendTime = currentObj.StateChangeTime;*/
-                                                    workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime);
+                                                    workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime) + parseInt(productivity.HoldTime);
 
                                                     var sTime = JSON.parse(currentObj);
 
@@ -413,26 +431,30 @@ function toSeconds(time) {
 
 module.exports.ProductivityByResourceId = function (req, res, companyId, tenantId) {
 
-
+    var jsonString;
     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
 
     var resourceId = req.params["ResourceId"];
 
     var productivity = {
         ResourceId: resourceId,
-        InboundAcwTime: 0,
-        OutboundAcwTime: 0,
+        AcwTime: 0,
         BreakTime: 0,
-        InboundOnCallTime: 0,
-        OutboundCallTime: 0,
+        OnCallTime: 0,
         StaffedTime: 0,
         IdleTime: 0,
-        InboundHoldTime: 0,
-        OutboundHoldTime: 0,
+        HoldTime: 0,
         IncomingCallCount: 0,
         OutgoingCallCount: 0,
         TransferCallCount: 0,
-        MissCallCount: 0
+        MissCallCount: 0,
+        InboundCallTime: 0,
+        OutboundCallTime: 0,
+        InboundAcwTime: 0,
+        OutboundAcwTime: 0,
+        InboundHoldTime: 0,
+        OutboundHoldTime: 0
+
     };
     var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
     var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
@@ -456,7 +478,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
     redisArdsClient.get(currentState, function (err, currentObj) {
         if (err) {
             logger.error('[TransferCallCount] - [%s]', id, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
             res.end(jsonString);
         }
         else {
@@ -468,17 +490,28 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     console.log(err);
                 }
                 else {
-                    productivity.OnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
-                    productivity.AcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
-                    productivity.BreakTime = parseInt(reuslt[2] ? reuslt[2] : 0);
-                    productivity.IncomingCallCount = parseInt(reuslt[3] ? reuslt[3] : 0);
-                    productivity.HoldTime = parseInt(reuslt[4] ? reuslt[4] : 0);
-                    productivity.TransferCallCount = parseInt(reuslt[5] ? reuslt[5] : 0);
-                    productivity.OutboundCallTime = parseInt(reuslt[6] ? reuslt[6] : 0);
-                    productivity.OutgoingCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+                    var tempInboundOnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+                    var tempOutboundOnCallTime = parseInt(reuslt[8] ? reuslt[8] : 0);
+                    productivity.InboundAcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+                    productivity.OutboundAcwTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+                    productivity.InboundHoldTime = parseInt(reuslt[5] ? reuslt[5] : 0);
+                    productivity.OutboundHoldTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+
+                    productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
+                    productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
+                    productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
+                    productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
+
+                    productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+                    productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
+                    productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
+                    productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
+                    productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
+                    productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+                    productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
-                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                             logger.error('[TransferCallCount] - [%s]', id, err);
                             res.end(jsonString);
                         }
@@ -492,7 +525,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                     var workTime = 0;
                                     try {
                                         /*var currentStateSpendTime = currentObj.StateChangeTime;*/
-                                        workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime);
+                                        workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime) + parseInt(productivity.HoldTime);
 
 
 
@@ -539,7 +572,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                             } catch (ex) {
                                                             }
 
-                                                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                                            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                                                             logger.info('[Productivity] . [%s] -[%s]', productivity, jsonString);
                                                             res.end(jsonString);
                                                         });
@@ -554,12 +587,12 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                 else {
                                     productivity.StaffedTime = 0;
                                     productivity.IdleTime = 0;
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                    jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                                     logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
                                     res.end(jsonString);
                                 }
                             } catch (ex) {
-                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                                 logger.error('[TransferCallCount] - [%s]', id, ex);
                                 res.end(jsonString);
                             }
