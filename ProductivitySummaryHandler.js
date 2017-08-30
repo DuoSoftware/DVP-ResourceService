@@ -172,8 +172,8 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                                 });
                             }
 
-                            summary.TalkTimeOutbound = (summary.TalkTimeOutbound > summary.TotalHoldTimeOutbound)?summary.TalkTimeOutbound - summary.TotalHoldTimeOutbound: 0;
-                            summary.TalkTimeInbound = (summary.TalkTimeInbound > summary.TotalHoldTimeInbound)?summary.TalkTimeInbound - summary.TotalHoldTimeInbound: 0;
+                            summary.TalkTimeOutbound = (summary.TalkTimeOutbound > summary.TotalHoldTimeOutbound)?summary.TalkTimeOutbound - summary.TotalHoldTimeOutbound: summary.TotalHoldTimeOutbound;
+                            summary.TalkTimeInbound = (summary.TalkTimeInbound > summary.TotalHoldTimeInbound)?summary.TalkTimeInbound - summary.TotalHoldTimeInbound: summary.TotalHoldTimeInbound;
 
                             if (rBreak) {
                                 rBreak.forEach(function (bItem) {
