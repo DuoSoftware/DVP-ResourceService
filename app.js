@@ -19,6 +19,7 @@ var productivityHandler = require('./ProductivityHandler');
 var productivitySummaryHandler = require('./ProductivitySummaryHandler');
 var sharedResourceHandler = require('./SharedResourceHandler');
 var breakTypeHandler = require('./BreakTypeHandler');
+var agentWisePerformance = require('./AgentWisePerformance');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1937,6 +1938,29 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes/Active', aut
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/AgentPerformance', authorization({
+    resource: "breaktype",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('GetAgentPerformance - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        agentWisePerformance.GetAgentPerformance(req,res);
+
+    }
+    catch (ex) {
+
+        logger.error('GetAgentPerformance - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('GetAgentPerformance - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 //------------------------End Break Types-------------------------------
 
 
