@@ -21,14 +21,59 @@ function FilterObjFromArray(itemArray, field, value){
     return resultObj;
 }
 
-function FilterAllObjsFromArray(itemArray, field, value){
-    var filterData = itemArray.filter(function (item) {
-        if(item[field] === value){
-            return item;
-        }
-    });
+function FilterAllObjsFromArray(itemArray){
+    var filterObj = {
+        loginRecords: [],
+        inboundRecords: [],
+        outboundRecords: [],
+        connected: [],
+        rBreak: [],
+        agentReject: [],
+        afterWork: [],
+        holdRecords: []
+    };
 
-    return filterData;
+    if(itemArray && itemArray.length > 0) {
+        itemArray.forEach(function (record) {
+            switch (record.WindowName){
+                case 'LOGIN':
+                    filterObj.loginRecords.push(record);
+                    break;
+                case 'INBOUND':
+                    filterObj.inboundRecords.push(record);
+                    break;
+                case 'OUTBOUND':
+                    filterObj.outboundRecords.push(record);
+                    break;
+                case 'CONNECTED':
+                    filterObj.connected.push(record);
+                    break;
+                case 'BREAK':
+                    filterObj.rBreak.push(record);
+                    break;
+                case 'AGENTREJECT':
+                    filterObj.agentReject.push(record);
+                    break;
+                case 'AFTERWORK':
+                    filterObj.afterWork.push(record);
+                    break;
+                case 'AGENTHOLD':
+                    filterObj.holdRecords.push(record);
+                    break;
+                default :
+                    break;
+            }
+        });
+    }
+
+
+    //var filterData = itemArray.filter(function (item) {
+    //    if(item[field] === value){
+    //        return item;
+    //    }
+    //});
+    //
+    return filterObj;
 }
 
 var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDate){
@@ -130,14 +175,25 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 
                         summaryFuncArray.push(function (callback) {
 
-                            var loginRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "LOGIN");
-                            var inboundRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "INBOUND");
-                            var outboundRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "OUTBOUND");
-                            var connected = FilterAllObjsFromArray(loginSession.records, "WindowName", "CONNECTED");
-                            var rBreak = FilterAllObjsFromArray(loginSession.records, "WindowName", "BREAK");
-                            var agentReject = FilterAllObjsFromArray(loginSession.records, "WindowName", "AGENTREJECT");
-                            var afterWork = FilterAllObjsFromArray(loginSession.records, "WindowName", "AFTERWORK");
-                            var holdRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "AGENTHOLD");
+                            var filterObj = FilterAllObjsFromArray(loginSession.records);
+
+                            var loginRecords = filterObj.loginRecords;
+                            var inboundRecords = filterObj.inboundRecords;
+                            var outboundRecords = filterObj.outboundRecords;
+                            var connected = filterObj.connected;
+                            var rBreak = filterObj.rBreak;
+                            var agentReject = filterObj.agentReject;
+                            var afterWork = filterObj.afterWork;
+                            var holdRecords = filterObj.holdRecords;
+
+                            //var loginRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "LOGIN");
+                            //var inboundRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "INBOUND");
+                            //var outboundRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "OUTBOUND");
+                            //var connected = FilterAllObjsFromArray(loginSession.records, "WindowName", "CONNECTED");
+                            //var rBreak = FilterAllObjsFromArray(loginSession.records, "WindowName", "BREAK");
+                            //var agentReject = FilterAllObjsFromArray(loginSession.records, "WindowName", "AGENTREJECT");
+                            //var afterWork = FilterAllObjsFromArray(loginSession.records, "WindowName", "AFTERWORK");
+                            //var holdRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "AGENTHOLD");
 
                             var login = {};
 
@@ -309,17 +365,21 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                 if(summaryFuncArray && summaryFuncArray.length >0) {
 
                     async.parallelLimit(summaryFuncArray, 10, function (err, results) {
-                        results.forEach(function (summary) {
+                        if(results) {
+                            results.forEach(function (summary) {
 
-                            var summaryDate = FilterObjFromArray(DailySummary, "Date", summary.Date.toDateString());
-                            if (!summaryDate) {
-                                summaryDate = {Date: summary.Date.toDateString(), Summary: []};
-                                DailySummary.push(summaryDate);
-                            }
+                                if(summary) {
+                                    var summaryDate = FilterObjFromArray(DailySummary, "Date", summary.Date.toDateString());
+                                    if (!summaryDate) {
+                                        summaryDate = {Date: summary.Date.toDateString(), Summary: []};
+                                        DailySummary.push(summaryDate);
+                                    }
 
-                            summaryDate.Summary.push(summary);
+                                    summaryDate.Summary.push(summary);
+                                }
 
-                        });
+                            });
+                        }
 
                         jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, DailySummary);
 
