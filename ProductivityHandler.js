@@ -791,3 +791,5 @@ module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
         }
     });
 };
+
+module.exports.redisArdsClient=redisArdsClient;

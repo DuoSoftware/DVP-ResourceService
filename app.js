@@ -20,6 +20,8 @@ var productivitySummaryHandler = require('./ProductivitySummaryHandler');
 var sharedResourceHandler = require('./SharedResourceHandler');
 var breakTypeHandler = require('./BreakTypeHandler');
 var agentWisePerformance = require('./AgentWisePerformance');
+var queueSkillHandler = require('./QueueSkillHandler.js');
+
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1963,6 +1965,16 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ag
 });
 //------------------------End Break Types-------------------------------
 
+
+//------------------------Queue Skills--------------------------
+
+
+RestServer.post('/DVP/API/'+version+'/ResourceManager/QueueSetting',authorization({resource:"breaktype", action:"write"}),queueSkillHandler.addNewQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"read"}),queueSkillHandler.getQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"breaktype", action:"read"}),queueSkillHandler.searchQueueSettings);
+RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
+RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"delete"}),queueSkillHandler.removeQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/GroupNames',authorization({resource:"group", action:"delete"}),groupsHandler.GetAllGroupNames);
 
 
 
