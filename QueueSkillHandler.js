@@ -250,6 +250,10 @@ var getQueueSetting = function (req,res) {
                                            }
                                        }
                                    });
+                               }else{
+                                   logger.info('[DVP-ResourceService.getQueueSetting] - [PGSQL] - Queue Setting record not found in Postgres');
+                                   var jsonString = messageFormatter.FormatMessage(undefined, "Failed", false, undefined);
+                                   res.end(jsonString);
                                }
 
 
