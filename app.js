@@ -1969,12 +1969,12 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ag
 //------------------------Queue Skills--------------------------
 
 
-RestServer.post('/DVP/API/'+version+'/ResourceManager/QueueSetting',authorization({resource:"breaktype", action:"write"}),queueSkillHandler.addNewQueueSetting);
-RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"read"}),queueSkillHandler.getQueueSetting);
-RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"breaktype", action:"read"}),queueSkillHandler.searchQueueSettings);
-RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
-RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"breaktype", action:"delete"}),queueSkillHandler.removeQueueSetting);
-RestServer.get('/DVP/API/'+version+'/ResourceManager/GroupNames',authorization({resource:"group", action:"delete"}),groupsHandler.GetAllGroupNames);
+RestServer.post('/DVP/API/'+version+'/ResourceManager/QueueSetting',authorization({resource:"queue", action:"write"}),queueSkillHandler.addNewQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"read"}),queueSkillHandler.getQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),queueSkillHandler.searchQueueSettings);
+RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
+RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"delete"}),queueSkillHandler.removeQueueSetting);
+//RestServer.get('/DVP/API/'+version+'/ResourceManager/GroupNames',authorization({resource:"group", action:"read"}),groupsHandler.GetAllGroupNames);
 
 
 
