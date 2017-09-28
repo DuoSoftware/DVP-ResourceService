@@ -32,4 +32,15 @@ module.exports.RemoveQueueSettingRecord = function (recordId,callback) {
         callback(e, undefined);
     }
 }
+module.exports.SearchQueueSettingRecord = function (recordId,callback) {
+
+    try {
+
+        redisArdsClient.hget('QueueNameHash',recordId, function (errSet, resSet) {
+            callback(errSet, resSet);
+        });
+    } catch (e) {
+        callback(e, undefined);
+    }
+}
 

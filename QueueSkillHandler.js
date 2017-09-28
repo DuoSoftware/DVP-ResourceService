@@ -192,19 +192,74 @@ var getQueueSetting = function (req,res) {
 
     try {
         if (req.params.qID) {
-            searchQueueSettingRecord(req.params.qID, req.user.company, req.user.tenant, function (errQ, resQ) {
 
-                if (errQ) {
+            redisHandler.SearchQueueSettingRecord(req.params.qID,function (errRec,resRec) {
+
+                if(errRec)
+                {
                     logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Error in searching Queue Setting.', reqId);
-                    var jsonString = messageFormatter.FormatMessage(errQ, "EXCEPTION", false, undefined);
+                    var jsonString = messageFormatter.FormatMessage(errRec, "EXCEPTION", false, undefined);
                     res.end(jsonString);
                 }
-                else {
-                    logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
-                    var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
-                    res.end(jsonString);
+                else
+                {
+                    if(resRec)
+                    {
+                        logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
+                        var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                        res.end(jsonString);
+                    }
+                    else
+                    {
+                        searchQueueSettingRecord(req.params.qID, req.user.company, req.user.tenant, function (errQ, resQ) {
+
+                            if (errQ) {
+                                logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Error in searching Queue Setting.', reqId);
+                                var jsonString = messageFormatter.FormatMessage(errQ, "EXCEPTION", false, undefined);
+                                res.end(jsonString);
+                            }
+                            else {
+                               /* logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
+                                var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                                res.end(jsonString);*/
+                               if(resQ)
+                               {
+
+                                   logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found in Postgres , Adding missing record to Redis', reqId);
+                                   var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                                   res.end(jsonString);
+
+                                   redisHandler.AddNewQueueSettingRecord(req.params.qID,resQ,function (errAdd,resAdd) {
+
+                                       if(errAdd)
+                                       {
+                                           logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Error in saving Queue Setting record to Redis.', reqId);
+
+                                       }
+                                       else
+                                       {
+                                           if(resAdd)
+                                           {
+                                                logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record added to redis successfully', reqId);
+
+                                           }
+                                           else
+                                           {
+                                               logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Failed to Add Queue setting record to redis', reqId);
+
+                                           }
+                                       }
+                                   });
+                               }
+
+
+                            }
+                        });
+                    }
                 }
             });
+
+
         }
         else {
             logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - No record Id found', reqId);
@@ -224,14 +279,10 @@ var searchQueueSettingRecord = function (RecordID,company,tenant,callback) {
     if(RecordID)
     {
         DbConn.ResQueueSettings.find({where:[{RecordID:RecordID},{CompanyId:company},{TenantId:tenant}]}).then(function (resQueue) {
-            if(resQueue)
-            {
-                callback(undefined,resQueue);
-            }
-            else
-            {
-                callback(new Error('Queue Setting record searching failed'),undefined);
-            }
+
+            callback(undefined,resQueue);
+
+
         }).catch(function (errQueue) {
             callback(errQueue,undefined);
         });
@@ -269,19 +320,12 @@ var searchQueueSettings = function (req,res) {
 
     try {
         DbConn.ResQueueSettings.findAll({where: [{CompanyId: req.user.company}, {TenantId: req.user.tenant}]}).then(function (resQueue) {
-            if (resQueue) {
 
                 var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQueue);
                 logger.info('[DVP-ResourceService.searchQueueSettings] - [%s] - Queue Setting records found  ', reqId);
                 res.end(jsonString);
 
 
-            }
-            else {
-                var jsonString = messageFormatter.FormatMessage(new Error("No Queue Setting records found "), "ERROR/EXCEPTION", false, undefined);
-                logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - No Queue Setting records found  ', reqId);
-                res.end(jsonString);
-            }
         }).catch(function (errQueue) {
             var jsonString = messageFormatter.FormatMessage(errQueue, "ERROR/EXCEPTION", false, undefined);
             logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Error in searching Queue Setting records  ', reqId);
@@ -312,15 +356,17 @@ var recordIdGenenrator = function (req,reqId,callback) {
         var recordId = "Queue:";
         recordId = recordId.concat(req.user.company, ":", req.user.tenant);
 
-        if (req.body.serverType && req.body.reqType) {
+        if (req.body.ServerType && req.body.RequestType) {
 
-            recordId = recordId.concat(":",req.body.serverType, ":", req.body.reqType);
+            recordId = recordId.concat(":",req.body.ServerType, ":", req.body.RequestType);
 
         }
 
 
         if (req.body.Skills) {
 
+
+            var skilArr= req.body.Skills.sort();
 
             GetAllAttributeRecords(req.user.tenant,req.user.company,function (errAttrb,resAttrb) {
 
@@ -337,7 +383,7 @@ var recordIdGenenrator = function (req,reqId,callback) {
                             return item.AttributeId
                         });
 
-                        req.body.Skills.forEach(function (item) {
+                        skilArr.forEach(function (item) {
 
                             if(attribArray.indexOf(parseInt(item))!=-1)
                             {
@@ -351,7 +397,7 @@ var recordIdGenenrator = function (req,reqId,callback) {
                     }
                     else
                     {
-                        callback(new Error("No attributes found"),undefined);
+                        callback(undefined,undefined);
                     }
                 }
 
@@ -363,7 +409,7 @@ var recordIdGenenrator = function (req,reqId,callback) {
 
         }
         else {
-            callback(recordId, undefined);
+            callback(new Error("No skills found"), undefined);
         }
     } catch (e) {
         callback(e,undefined);
@@ -472,20 +518,12 @@ var removeQueueSetting = function (req,res) {
 var GetAllAttributeRecords =function(tenantId, companyId, callback) {
 
     DbConn.ResAttribute.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],order: [['AttributeId', 'DESC']]}).then(function (CamObject) {
-        if (CamObject) {
-            logger.info('[DVP-ResAttribute.GetAllAttributes] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
 
             callback(undefined,CamObject);
-        }
-        else {
-            logger.error('[DVP-ResAttribute.GetAllAttributes] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
-            callback(new Error('No Records'),undefined);
-        }
+
     }).error(function (err) {
-        logger.error('[DVP-ResAttribute.GetAllAttributes] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
-        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+
         callback(err,undefined);
     });
 };
