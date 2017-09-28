@@ -206,7 +206,7 @@ var getQueueSetting = function (req,res) {
                     if(resRec)
                     {
                         logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
-                        var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                        var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, JSON.parse(resRec));
                         res.end(jsonString);
                     }
                     else
