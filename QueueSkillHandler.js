@@ -260,42 +260,42 @@ var getQueueSetting = function (req,res) {
                                 res.end(jsonString);
                             }
                             else {
-                               /* logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
-                                var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
-                                res.end(jsonString);*/
-                               if(resQ)
-                               {
+                                /* logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found', reqId);
+                                 var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                                 res.end(jsonString);*/
+                                if(resQ)
+                                {
 
-                                   logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found in Postgres , Adding missing record to Redis', reqId);
-                                   var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
-                                   res.end(jsonString);
+                                    logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record found in Postgres , Adding missing record to Redis', reqId);
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQ);
+                                    res.end(jsonString);
 
-                                   redisHandler.AddNewQueueSettingRecord(req.params.qID,resQ,function (errAdd,resAdd) {
+                                    redisHandler.AddNewQueueSettingRecord(req.params.qID,resQ,function (errAdd,resAdd) {
 
-                                       if(errAdd)
-                                       {
-                                           logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Error in saving Queue Setting record to Redis.', reqId);
+                                        if(errAdd)
+                                        {
+                                            logger.error('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Error in saving Queue Setting record to Redis.', reqId);
 
-                                       }
-                                       else
-                                       {
-                                           if(resAdd)
-                                           {
+                                        }
+                                        else
+                                        {
+                                            if(resAdd)
+                                            {
                                                 logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Queue Setting record added to redis successfully', reqId);
 
-                                           }
-                                           else
-                                           {
-                                               logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Failed to Add Queue setting record to redis', reqId);
+                                            }
+                                            else
+                                            {
+                                                logger.info('[DVP-ResourceService.getQueueSetting] - [%s] - [PGSQL] - Failed to Add Queue setting record to redis', reqId);
 
-                                           }
-                                       }
-                                   });
-                               }else{
-                                   logger.info('[DVP-ResourceService.getQueueSetting] - [PGSQL] - Queue Setting record not found in Postgres');
-                                   var jsonString = messageFormatter.FormatMessage(undefined, "Failed", false, undefined);
-                                   res.end(jsonString);
-                               }
+                                            }
+                                        }
+                                    });
+                                }else{
+                                    logger.info('[DVP-ResourceService.getQueueSetting] - [PGSQL] - Queue Setting record not found in Postgres');
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "Failed", false, undefined);
+                                    res.end(jsonString);
+                                }
 
 
                             }
@@ -355,7 +355,7 @@ var searchQueueSettings = function (req,callback) {
     try {
         DbConn.ResQueueSettings.findAll({where: [{CompanyId: req.user.company}, {TenantId: req.user.tenant}]}).then(function (resQueue) {
 
-                callback(undefined,resQueue);
+            callback(undefined,resQueue);
 
 
         }).catch(function (errQueue) {
@@ -546,7 +546,7 @@ var GetAllAttributeRecords =function(tenantId, companyId, callback) {
     DbConn.ResAttribute.findAll({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}],order: [['AttributeId', 'DESC']]}).then(function (CamObject) {
 
 
-            callback(undefined,CamObject);
+        callback(undefined,CamObject);
 
     }).error(function (err) {
 
@@ -585,7 +585,7 @@ var GetMyQueues = function (req,res) {
 
                     myQueues = resQueues.filter(function (item) {
 
-                       // return (item.Skills).equals();
+                        // return (item.Skills).equals();
                         return (item.Skills.length === underscore.intersection(item.Skills, JSON.parse(req.query.Skills)).length)
                     });
 
@@ -612,6 +612,199 @@ var GetMyQueues = function (req,res) {
 
 };
 
+/*var checkMyQueue = function (req,res) {
+
+    var reqId='';
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+    if(!req.user.company || !req.user.tenant)
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, false);
+        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Unauthorized access  ', reqId);
+        res.end(jsonString);
+
+    }
+
+
+
+    if(req.params.qID && req.query.Skills)
+    {
+        searchQueueSettingRecord(req.params.qID,req.user.company,req.user.tenant,function (errSearch,resSearch) {
+
+            if(errSearch)
+            {
+                var jsonString = messageFormatter.FormatMessage(new Error("Error in searching  queue setting record"), "ERROR/EXCEPTION", false, false);
+                logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching queue setting Record  ', reqId);
+                res.end(jsonString);
+            }
+            else
+            {
+                if(resSearch)
+                {
+                    var isMyQueue=resSearch.Skills.length === underscore.intersection(resSearch.Skills, JSON.parse(req.query.Skills)).length;
+
+                    if(isMyQueue)
+                    {
+                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, true);
+                        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is identified as My Queue ', reqId);
+                        res.end(jsonString);
+                    }
+                    else
+                    {
+                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, false);
+                        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is not identified as My Queue ', reqId);
+                        res.end(jsonString);
+                    }
+
+                }
+                else
+                {
+                    var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, false);
+                    logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No queue setting record found  ', reqId);
+                    res.end(jsonString);
+                }
+            }
+        });
+    }
+    else
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("Record Id or Skill set missing"), "ERROR/EXCEPTION", false, false);
+        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Record Id or Skill set missing  ', reqId);
+        res.end(jsonString);
+    }
+
+
+}*/
+
+var checkMyQueue = function (req,res) {
+
+    var reqId='';
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+    if(!req.user.company || !req.user.tenant)
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, false);
+        logger.error('[DVP-ResourceService.checkMySkills] - [%s] - Unauthorized access  ', reqId);
+        res.end(jsonString);
+
+    }
+
+
+
+    if(req.params.resId  && req.params.qID)
+    {
+
+
+        DbConn.ResResource
+            .find({
+                where: [{ResourceId:req.params.resId},{TenantId:req.user.tenant},{CompanyId:req.user.company},{Status: true}],
+                include:[{model: DbConn.ResResourceTask,  as: "ResResourceTask" , include:[{model:DbConn.ResResourceAttributeTask , as: "ResResourceAttributeTask" }]}]
+
+            }).then(function (resAttrib) {
+            if(resAttrib)
+            {
+
+                if(resAttrib.ResResourceTask.length>0)
+                {
+                    var skillArr=[];
+                    resAttrib.ResResourceTask.forEach(function (item) {
+
+                        if(item.ResResourceAttributeTask.length>0)
+                        {
+                            item.ResResourceAttributeTask.forEach(function (skill) {
+
+                                skillArr.push(skill.AttributeId.toString());
+                            });
+                        }
+                    });
+                }
+
+                if(skillArr.length>0)
+                {
+                    searchQueueSettingRecord(req.params.qID,req.user.company,req.user.tenant,function (errSearch,resSearch) {
+
+                        if(errSearch)
+                        {
+                            var jsonString = messageFormatter.FormatMessage(new Error("Error in searching  queue setting record"), "ERROR/EXCEPTION", false, false);
+                            logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching queue setting Record  ', reqId);
+                            res.end(jsonString);
+                        }
+                        else
+                        {
+                            if(resSearch)
+                            {
+                                var isMyQueue=resSearch.Skills.length === underscore.intersection(resSearch.Skills, skillArr).length;
+
+                                if(isMyQueue)
+                                {
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, true);
+                                    logger.info('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is identified as My Queue ', reqId);
+                                    res.end(jsonString);
+                                }
+                                else
+                                {
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, false);
+                                    logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is not identified as My Queue ', reqId);
+                                    res.end(jsonString);
+                                }
+
+                            }
+                            else
+                            {
+                                var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, false);
+                                logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No queue setting record found  ', reqId);
+                                res.end(jsonString);
+                            }
+                        }
+                    });
+
+
+                }
+                else
+                {
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, undefined);
+                    logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No Skills found  ', reqId);
+                    res.end(jsonString);
+                }
+
+            }
+            else
+            {
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, false);
+                logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No resource attributes found  ', reqId);
+                res.end(jsonString);
+            }
+
+        },function (errAttrib) {
+            var jsonString = messageFormatter.FormatMessage(errAttrib, "ERROR", false, false);
+            logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching data  ', reqId);
+            res.end(jsonString);
+        });
+
+
+
+    }
+    else
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("Record Id or Skill set missing"), "ERROR/EXCEPTION", false, false);
+        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Record Id or Skill set missing  ', reqId);
+        res.end(jsonString);
+    }
+
+
+}
 
 
 module.exports.addNewQueueSetting=addNewQueueSetting;
@@ -620,3 +813,4 @@ module.exports.searchQueueSettings=searchQueueSettings;
 module.exports.updateQueueSettingProperties=updateQueueSettingProperties;
 module.exports.removeQueueSetting=removeQueueSetting;
 module.exports.GetMyQueues=GetMyQueues;
+module.exports.checkMyQueue=checkMyQueue;
