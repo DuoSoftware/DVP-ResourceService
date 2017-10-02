@@ -1971,9 +1971,43 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ag
 
 RestServer.post('/DVP/API/'+version+'/ResourceManager/QueueSetting',authorization({resource:"queue", action:"write"}),queueSkillHandler.addNewQueueSetting);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"read"}),queueSkillHandler.getQueueSetting);
-RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),queueSkillHandler.searchQueueSettings);
+//RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),queueSkillHandler.searchQueueSettings);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),function (req,res,next) {
+
+    var reqId='';
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+
+    logger.debug('[DVP-ResourceService.getQueueSetting] - [%s] - [HTTP] - Request received',reqId);
+
+    queueSkillHandler.searchQueueSettings(req,function (errSearch,resSearch) {
+
+        if(errSearch)
+        {
+            var jsonString = messageFormatter.FormatMessage(errSearch, "ERROR/EXCEPTION", false, undefined);
+            logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Unauthorized access  ', reqId);
+            res.end(jsonString);
+        }
+        else
+        {
+            var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resSearch);
+            logger.info('[DVP-ResourceService.searchQueueSettings] - [%s] - Queue Setting records found  ', reqId);
+            res.end(jsonString);
+        }
+    });
+
+});
 RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
 RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"delete"}),queueSkillHandler.removeQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/MyQueues',authorization({resource:"queue", action:"read"}),queueSkillHandler.GetMyQueues);
+
+
 //RestServer.get('/DVP/API/'+version+'/ResourceManager/GroupNames',authorization({resource:"group", action:"read"}),groupsHandler.GetAllGroupNames);
 
 

@@ -7,7 +7,37 @@ var attributeHandler = require('./AttributeHandler');
 var redisHandler = require('./RedisHandler');
 var DbConn = require('dvp-dbmodels');
 var uuid = require('node-uuid');
+var underscore = require('underscore');
 
+
+
+// Warn if overriding existing method
+if(Array.prototype.equals)
+    console.warn("Overriding existing Array.prototype.equals. Possible causes: New API defines the method, there's a framework conflict or you've got double inclusions in your code.");
+// attach the .equals method to Array's prototype to call it on any array
+Array.prototype.equals = function (array) {
+    // if the other array is a falsy value, return
+    if (!array)
+        return false;
+
+    // compare lengths - can save a lot of time
+    if (this.length != array.length)
+        return false;
+
+    for (var i = 0, l=this.length; i < l; i++) {
+        // Check if we have nested arrays
+        if (this[i] instanceof Array && array[i] instanceof Array) {
+            // recurse into the nested arrays
+            if (!this[i].equals(array[i]))
+                return false;
+        }
+        else if (this[i] != array[i]) {
+            // Warning - two different object instances will never be equal: {x:20} != {x:20}
+            return false;
+        }
+    }
+    return true;
+}
 
 
 
@@ -34,7 +64,7 @@ var addNewQueueSetting = function (req, res) {
 
 
     try {
-        if (req.body.QueueName && req.body.MaxWaitTime && req.body.Skills && req.body.CallAbandonedThreshold) {
+        if (req.body.QueueName && req.body.MaxWaitTime && req.body.Skills && req.body.CallAbandonedThreshold && req.body.ServerType && req.body.RequestType) {
 
             recordIdGenenrator(req, reqId, function (errRecId, resRecId) {
 
@@ -54,7 +84,9 @@ var addNewQueueSetting = function (req, res) {
                                 QueueName: req.body.QueueName,
                                 MaxWaitTime: req.body.MaxWaitTime,
                                 CallAbandonedThreshold:req.body.CallAbandonedThreshold,
-                                PublishPosition:req.body.PublishPosition
+                                PublishPosition:req.body.PublishPosition,
+                                ServerType:req.body.ServerType,
+                                RequestType:req.body.RequestType
                             }
                         ).then(function (resQueue) {
 
@@ -130,6 +162,15 @@ var updateQueueSettingProperties = function (req,res) {
     {
         delete req.body.RecordID;
     }
+    if(req.body.RequestType)
+    {
+        delete req.body.RequestType;
+    }
+    if(req.body.ServerType)
+    {
+        delete req.body.ServerType;
+    }
+
 
 
 
@@ -300,48 +341,29 @@ var searchQueueSettingRecord = function (RecordID,company,tenant,callback) {
 
 }
 
-var searchQueueSettings = function (req,res) {
+var searchQueueSettings = function (req,callback) {
 
-    var reqId='';
-    try
-    {
-        reqId = uuid.v1();
-    }
-    catch(ex)
-    {
 
-    }
-
-    logger.debug('[DVP-ResourceService.getQueueSetting] - [%s] - [HTTP] - Request received',reqId);
 
     if(!req.user.company || !req.user.tenant)
     {
-        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, undefined);
-        logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Unauthorized access  ', reqId);
-        res.end(jsonString);
+        callback(new Error("Invalid Authorization details found "),undefined);
+
     }
 
 
     try {
         DbConn.ResQueueSettings.findAll({where: [{CompanyId: req.user.company}, {TenantId: req.user.tenant}]}).then(function (resQueue) {
 
-                var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resQueue);
-                logger.info('[DVP-ResourceService.searchQueueSettings] - [%s] - Queue Setting records found  ', reqId);
-                res.end(jsonString);
+                callback(undefined,resQueue);
 
 
         }).catch(function (errQueue) {
-            var jsonString = messageFormatter.FormatMessage(errQueue, "ERROR/EXCEPTION", false, undefined);
-            logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Error in searching Queue Setting records  ', reqId);
-            res.end(jsonString);
+            callback(errQueue,undefined);
         });
     } catch (e) {
-        var jsonString = messageFormatter.FormatMessage(e, "ERROR/EXCEPTION", false, undefined);
-        logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Exception in operation  ', reqId);
-        res.end(jsonString);
+        callback(e,undefined);
     }
-
-
 
 
 }
@@ -532,6 +554,64 @@ var GetAllAttributeRecords =function(tenantId, companyId, callback) {
     });
 };
 
+var GetMyQueues = function (req,res) {
+
+    var reqId='';
+    var myQueues=[];
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+
+    if(JSON.parse(req.query.Skills))
+    {
+        searchQueueSettings(req,function (errQueues,resQueues) {
+
+            if(errQueues)
+            {
+                var jsonString = messageFormatter.FormatMessage(new Error("Error in searching all queue setting records"), "ERROR/EXCEPTION", false, undefined);
+                logger.error('[DVP-ResourceService.GetMyQueues] - [%s] - Error in searching all queue setting Record  ', reqId);
+                res.end(jsonString);
+            }
+            else
+            {
+                if(resQueues)
+                {
+
+
+                    myQueues = resQueues.filter(function (item) {
+
+                       // return (item.Skills).equals();
+                        return (item.Skills.length === underscore.intersection(item.Skills, JSON.parse(req.query.Skills)).length)
+                    });
+
+                    var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, myQueues);
+                    logger.info('[DVP-ResourceService.GetMyQueues] - [%s] - Queue setting records found  ', reqId);
+                    res.end(jsonString);
+                }
+                else
+                {
+                    var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, undefined);
+                    logger.error('[DVP-ResourceService.GetMyQueues] - [%s] - No queue setting records found  ', reqId);
+                    res.end(jsonString);
+                }
+            }
+        });
+    }
+    else
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("No skills received to compare"), "ERROR/EXCEPTION", false, undefined);
+        logger.error('[DVP-ResourceService.GetMyQueues] - [%s] - No skills received to compare  ', reqId);
+        res.end(jsonString);
+    }
+
+
+};
+
 
 
 module.exports.addNewQueueSetting=addNewQueueSetting;
@@ -539,3 +619,4 @@ module.exports.getQueueSetting=getQueueSetting;
 module.exports.searchQueueSettings=searchQueueSettings;
 module.exports.updateQueueSettingProperties=updateQueueSettingProperties;
 module.exports.removeQueueSetting=removeQueueSetting;
+module.exports.GetMyQueues=GetMyQueues;
