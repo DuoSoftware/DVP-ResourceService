@@ -411,3 +411,4 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 };
 
 module.exports.GetDailySummaryRecords = GetDailySummaryRecords;
+module.exports.GetFirstLoginForTheDate = GetFirstLoginForTheDate;
