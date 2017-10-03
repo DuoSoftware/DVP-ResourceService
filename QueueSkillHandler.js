@@ -718,13 +718,19 @@ var checkMyQueue = function (req,res) {
     {
 
     }
+    var queueObj = {
+        isMyQueue:false,
+        queueDetails:{}
+    }
+
     if(!req.user.company || !req.user.tenant)
     {
-        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, false);
+        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, queueObj);
         logger.error('[DVP-ResourceService.checkMySkills] - [%s] - Unauthorized access  ', reqId);
         res.end(jsonString);
 
     }
+
 
 
 
@@ -774,13 +780,15 @@ var checkMyQueue = function (req,res) {
 
                                 if(isMyQueue)
                                 {
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, true);
+                                    queueObj.isMyQueue=true;
+                                    queueObj.queueDetails=resSearch;
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, queueObj);
                                     logger.info('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is identified as My Queue ', reqId);
                                     res.end(jsonString);
                                 }
                                 else
                                 {
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, false);
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, queueObj);
                                     logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is not identified as My Queue ', reqId);
                                     res.end(jsonString);
                                 }
@@ -788,7 +796,7 @@ var checkMyQueue = function (req,res) {
                             }
                             else
                             {
-                                var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, false);
+                                var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, queueObj);
                                 logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No queue setting record found  ', reqId);
                                 res.end(jsonString);
                             }
@@ -799,7 +807,7 @@ var checkMyQueue = function (req,res) {
                 }
                 else
                 {
-                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, undefined);
+                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, queueObj);
                     logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No Skills found  ', reqId);
                     res.end(jsonString);
                 }
@@ -807,13 +815,13 @@ var checkMyQueue = function (req,res) {
             }
             else
             {
-                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, false);
+                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, queueObj);
                 logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No resource attributes found  ', reqId);
                 res.end(jsonString);
             }
 
         },function (errAttrib) {
-            var jsonString = messageFormatter.FormatMessage(errAttrib, "ERROR", false, false);
+            var jsonString = messageFormatter.FormatMessage(errAttrib, "ERROR", false, queueObj);
             logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching data  ', reqId);
             res.end(jsonString);
         });
@@ -823,7 +831,7 @@ var checkMyQueue = function (req,res) {
     }
     else
     {
-        var jsonString = messageFormatter.FormatMessage(new Error("Record Id or Skill set missing"), "ERROR/EXCEPTION", false, false);
+        var jsonString = messageFormatter.FormatMessage(new Error("Record Id or Skill set missing"), "ERROR/EXCEPTION", false, queueObj);
         logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Record Id or Skill set missing  ', reqId);
         res.end(jsonString);
     }
