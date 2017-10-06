@@ -592,7 +592,7 @@ var GetMyQueues = function (req,res) {
 
     }
 
-    if(JSON.parse(req.query.Skills))
+    if(req.query.Skills)
     {
         searchQueueSettings(req,function (errQueues,resQueues) {
 
@@ -736,20 +736,48 @@ var checkMyQueue = function (req,res) {
 
     if(req.params.resId  && req.params.qID)
     {
+        var queryObj ={
+            where:{},
+            include:{}
+        };
+
+        if(req.query.tasks)
+        {
+
+            var taskObj =
+                {
+                    $or:[]
+                }
+
+            JSON.parse(req.query.tasks).forEach(function (item) {
+
+                    taskObj.$or.push({TaskId:item});
+                });
+
+
+            queryObj.where = [{ResourceId:req.params.resId},{TenantId:req.user.tenant},{CompanyId:req.user.company},{Status: true}];
+            queryObj.include= [{model: DbConn.ResResourceTask, where:[taskObj],  as: "ResResourceTask" , include:[{model:DbConn.ResResourceAttributeTask , as: "ResResourceAttributeTask" }]}];
+
+
+        }
+        else
+        {
+            queryObj.where= [{ResourceId:req.params.resId},{TenantId:req.user.tenant},{CompanyId:req.user.company},{Status: true}];
+            queryObj.include= [{model: DbConn.ResResourceTask,  as: "ResResourceTask" , include:[{model:DbConn.ResResourceAttributeTask , as: "ResResourceAttributeTask" }]}];
+
+        }
+
 
 
         DbConn.ResResource
-            .find({
-                where: [{ResourceId:req.params.resId},{TenantId:req.user.tenant},{CompanyId:req.user.company},{Status: true}],
-                include:[{model: DbConn.ResResourceTask,  as: "ResResourceTask" , include:[{model:DbConn.ResResourceAttributeTask , as: "ResResourceAttributeTask" }]}]
-
-            }).then(function (resAttrib) {
+            .find(queryObj).then(function (resAttrib) {
             if(resAttrib)
             {
+                var skillArr=[];
 
                 if(resAttrib.ResResourceTask.length>0)
                 {
-                    var skillArr=[];
+
                     resAttrib.ResResourceTask.forEach(function (item) {
 
                         if(item.ResResourceAttributeTask.length>0)
@@ -760,57 +788,65 @@ var checkMyQueue = function (req,res) {
                             });
                         }
                     });
-                }
 
-                if(skillArr.length>0)
-                {
-                    searchQueueSettingRecord(req.params.qID,req.user.company,req.user.tenant,function (errSearch,resSearch) {
+                    if(skillArr.length>0)
+                    {
+                        searchQueueSettingRecord(req.params.qID,req.user.company,req.user.tenant,function (errSearch,resSearch) {
 
-                        if(errSearch)
-                        {
-                            var jsonString = messageFormatter.FormatMessage(new Error("Error in searching  queue setting record"), "ERROR/EXCEPTION", false, false);
-                            logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching queue setting Record  ', reqId);
-                            res.end(jsonString);
-                        }
-                        else
-                        {
-                            if(resSearch)
+                            if(errSearch)
                             {
-                                var isMyQueue=resSearch.Skills.length === underscore.intersection(resSearch.Skills, skillArr).length;
-
-                                if(isMyQueue)
-                                {
-                                    queueObj.isMyQueue=true;
-                                    queueObj.queueDetails=resSearch;
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, queueObj);
-                                    logger.info('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is identified as My Queue ', reqId);
-                                    res.end(jsonString);
-                                }
-                                else
-                                {
-                                    var jsonString = messageFormatter.FormatMessage(undefined, "ERROR", false, queueObj);
-                                    logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is not identified as My Queue ', reqId);
-                                    res.end(jsonString);
-                                }
-
+                                var jsonString = messageFormatter.FormatMessage(new Error("Error in searching  queue setting record"), "ERROR/EXCEPTION", false, false);
+                                logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Error in searching queue setting Record  ', reqId);
+                                res.end(jsonString);
                             }
                             else
                             {
-                                var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, queueObj);
-                                logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No queue setting record found  ', reqId);
-                                res.end(jsonString);
+                                if(resSearch)
+                                {
+                                    var isMyQueue=resSearch.Skills.length === underscore.intersection(resSearch.Skills, skillArr).length;
+
+                                    if(isMyQueue)
+                                    {
+                                        queueObj.isMyQueue=true;
+                                        queueObj.queueDetails=resSearch;
+                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, queueObj);
+                                        logger.info('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is identified as My Queue ', reqId);
+                                        res.end(jsonString);
+                                    }
+                                    else
+                                    {
+                                        var jsonString = messageFormatter.FormatMessage(undefined, "ERROR", false, queueObj);
+                                        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - Queue is not identified as My Queue ', reqId);
+                                        res.end(jsonString);
+                                    }
+
+                                }
+                                else
+                                {
+                                    var jsonString = messageFormatter.FormatMessage(undefined, "ERROR/EXCEPTION", false, queueObj);
+                                    logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No queue setting record found  ', reqId);
+                                    res.end(jsonString);
+                                }
                             }
-                        }
-                    });
+                        });
 
 
+                    }
+                    else
+                    {
+                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, queueObj);
+                        logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No Skills found  ', reqId);
+                        res.end(jsonString);
+                    }
                 }
                 else
                 {
-                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", false, queueObj);
+                    var jsonString = messageFormatter.FormatMessage(new Error("No Skills records found"), "ERROR", false, queueObj);
                     logger.error('[DVP-ResourceService.checkMyQueue] - [%s] - No Skills found  ', reqId);
                     res.end(jsonString);
                 }
+
+
 
             }
             else

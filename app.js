@@ -2006,7 +2006,7 @@ RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorizatio
 RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
 RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"delete"}),queueSkillHandler.removeQueueSetting);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/MyQueues',authorization({resource:"queue", action:"read"}),queueSkillHandler.GetMyQueues);
-RestServer.get('/DVP/API/'+version+'/ResourceManager/IsMyQueue/:qID/Resource/:resId',authorization({resource:"queue", action:"read"}),queueSkillHandler.checkMyQueue);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/IsMyQueue/:qID/Resource/:resId/ByTasks',authorization({resource:"queue", action:"read"}),queueSkillHandler.checkMyQueue);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/Queue/:qID/assignedAttributes',authorization({resource:"queue", action:"read"}),queueSkillHandler.loadQueueAttributes);
 
 
