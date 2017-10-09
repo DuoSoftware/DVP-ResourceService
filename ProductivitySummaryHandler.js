@@ -142,8 +142,8 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
             if (records) {
                 logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
                 var loginSessions = [];
-                for(var i in records){
-                    var record = records[i];
+
+                records.forEach(function (record) {
                     var loginDateInfo = FilterObjFromArray(loginSessions, "loginDate", record.SummaryDate.toDateString());
                     if(!loginDateInfo){
                         loginDateInfo = {loginDate:record.SummaryDate.toDateString(), sessionInfos:[]};
@@ -165,7 +165,11 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             loginDateInfo.sessionInfos.push({resourceId: record.Param1, records: [record]});
                         }
                     }
-                }
+                });
+                //for(var i in records){
+                //    var record = records[i];
+                //
+                //}
 
                 var DailySummary = [];
 
@@ -424,3 +428,4 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 };
 
 module.exports.GetDailySummaryRecords = GetDailySummaryRecords;
+module.exports.GetFirstLoginForTheDate = GetFirstLoginForTheDate;

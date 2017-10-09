@@ -7,6 +7,7 @@ var config = require('config');
 var redis = require('ioredis');
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var productivitySummary = require('./ProductivitySummaryHandler');
 /*var format = require('string-format');*/
 var moment = require('moment');
 
@@ -237,6 +238,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
                 var productivity = {
                     ResourceId: resourceId,
+                    LoginTime: undefined,
                     AcwTime: 0,
                     BreakTime: 0,
                     OnCallTime: 0,
@@ -368,7 +370,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                 }
                                                                 else {
                                                                     redisClient.mget(ids, function (err, misscalls) {
-                                                                        count++;
+
                                                                         try {
                                                                             productivity.MissCallCount = 0;
                                                                             productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
@@ -376,13 +378,40 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                             }, 0);
                                                                         } catch (ex) {
                                                                         }
-                                                                        AgentsProductivity.push(productivity);
-                                                                        if (count == resourceIds.length) {
 
-                                                                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                            logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                            res.end(jsonString);
+                                                                        if(req.query.productivityStartDate && req.query.productivityEndDate){
+                                                                            productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function(firstLoginRecord){
+                                                                                count++;
+                                                                                productivity.LoginTime = firstLoginRecord? firstLoginRecord.createdAt: undefined;
+                                                                                AgentsProductivity.push(productivity);
+                                                                                if (count == resourceIds.length) {
+
+                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                    res.end(jsonString);
+                                                                                }
+                                                                            }).catch(function(err){
+                                                                                count++;
+                                                                                AgentsProductivity.push(productivity);
+                                                                                if (count == resourceIds.length) {
+
+                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                    res.end(jsonString);
+                                                                                }
+
+                                                                            });
+                                                                        }else{
+                                                                            count++;
+                                                                            AgentsProductivity.push(productivity);
+                                                                            if (count == resourceIds.length) {
+
+                                                                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                res.end(jsonString);
+                                                                            }
                                                                         }
+
                                                                     });
                                                                 }
                                                             });
@@ -794,3 +823,5 @@ module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
         }
     });
 };
+
+module.exports.redisArdsClient=redisArdsClient;
