@@ -14,7 +14,7 @@ module.exports.GetAgentPerformance = function (req, res) {
     var jsonString;
     var resourceId = req.params.ResourceId;
 
-    var query = "SELECT date_trunc('day', \"createdAt\") AS \"Day\" ,SUM(\"TotalTime\") AS \"TotalTime\",SUM(\"TotalCount\") AS \"TotalCount\" FROM public.\"Dashboard_DailySummaries\" WHERE \"Param2\" = '" + resourceId + "' GROUP BY 1 ORDER BY 1 DESC LIMIT 2";
+    var query = "SELECT date_trunc('day', \"createdAt\") AS \"Day\" ,SUM(\"TotalTime\") AS \"TotalTime\",SUM(\"TotalCount\") AS \"TotalCount\" FROM public.\"Dashboard_DailySummaries\" WHERE \"Param1\" = '" + resourceId + "' GROUP BY 1 ORDER BY 1 DESC LIMIT 2";
 
     dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function (workDates) {
