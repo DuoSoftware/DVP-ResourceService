@@ -19,6 +19,9 @@ var productivityHandler = require('./ProductivityHandler');
 var productivitySummaryHandler = require('./ProductivitySummaryHandler');
 var sharedResourceHandler = require('./SharedResourceHandler');
 var breakTypeHandler = require('./BreakTypeHandler');
+var agentWisePerformance = require('./AgentWisePerformance');
+var queueSkillHandler = require('./QueueSkillHandler.js');
+
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -1937,8 +1940,79 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes/Active', aut
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/AgentPerformance', authorization({
+    resource: "breaktype",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('GetAgentPerformance - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        agentWisePerformance.GetAgentPerformance(req,res);
+
+    }
+    catch (ex) {
+
+        logger.error('GetAgentPerformance - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('GetAgentPerformance - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 //------------------------End Break Types-------------------------------
 
+
+//------------------------Queue Skills--------------------------
+
+
+RestServer.post('/DVP/API/'+version+'/ResourceManager/QueueSetting',authorization({resource:"queue", action:"write"}),queueSkillHandler.addNewQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"read"}),queueSkillHandler.getQueueSetting);
+//RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),queueSkillHandler.searchQueueSettings);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/QueueSettings',authorization({resource:"queue", action:"read"}),function (req,res,next) {
+
+    var reqId='';
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+
+    logger.debug('[DVP-ResourceService.getQueueSetting] - [%s] - [HTTP] - Request received',reqId);
+
+    queueSkillHandler.searchQueueSettings(req,function (errSearch,resSearch) {
+
+        if(errSearch)
+        {
+            var jsonString = messageFormatter.FormatMessage(errSearch, "ERROR/EXCEPTION", false, undefined);
+            logger.error('[DVP-ResourceService.searchQueueSettings] - [%s] - Unauthorized access  ', reqId);
+            res.end(jsonString);
+        }
+        else
+        {
+            var jsonString = messageFormatter.FormatMessage(undefined, "Success", true, resSearch);
+            logger.info('[DVP-ResourceService.searchQueueSettings] - [%s] - Queue Setting records found  ', reqId);
+            res.end(jsonString);
+        }
+    });
+
+});
+RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"write"}),queueSkillHandler.updateQueueSettingProperties);
+RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"delete"}),queueSkillHandler.removeQueueSetting);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/MyQueues',authorization({resource:"queue", action:"read"}),queueSkillHandler.GetMyQueues);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/IsMyQueue/:qID/Resource/:resId/ByTasks',authorization({resource:"queue", action:"read"}),queueSkillHandler.checkMyQueue);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/Queue/:qID/assignedAttributes',authorization({resource:"queue", action:"read"}),queueSkillHandler.loadQueueAttributes);
+
+
+
+
+//RestServer.get('/DVP/API/'+version+'/ResourceManager/GroupNames',authorization({resource:"group", action:"read"}),groupsHandler.GetAllGroupNames);
 
 
 
