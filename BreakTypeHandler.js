@@ -36,7 +36,7 @@ var redisSetting =  {
 
 if(redismode == 'sentinel'){
 
-    if(config.ArdsRedis.sentinels && config.ArdsRedis.sentinels.hosts && config.ArdsRedis.sentinels.port, config.ArdsRedis.sentinels.name){
+    if(config.ArdsRedis.sentinels && config.ArdsRedis.sentinels.hosts && config.ArdsRedis.sentinels.port && config.ArdsRedis.sentinels.name){
         var sentinelHosts = config.ArdsRedis.sentinels.hosts.split(',');
         if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
             var sentinelConnections = [];
