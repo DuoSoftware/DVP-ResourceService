@@ -7,6 +7,7 @@ var config = require('config');
 var redis = require('ioredis');
 var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var productivitySummary = require('./ProductivitySummaryHandler');
 /*var format = require('string-format');*/
 var moment = require('moment');
 
@@ -38,7 +39,7 @@ var redisSetting =  {
 
 if(redismode == 'sentinel'){
 
-    if(config.Redis.sentinels && config.Redis.sentinels.hosts && config.Redis.sentinels.port, config.Redis.sentinels.name){
+    if(config.Redis.sentinels && config.Redis.sentinels.hosts && config.Redis.sentinels.port && config.Redis.sentinels.name){
         var sentinelHosts = config.Redis.sentinels.hosts.split(',');
         if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
             var sentinelConnections = [];
@@ -237,6 +238,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
                 var productivity = {
                     ResourceId: resourceId,
+                    LoginTime: undefined,
                     AcwTime: 0,
                     BreakTime: 0,
                     OnCallTime: 0,
@@ -252,7 +254,8 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     InboundAcwTime: 0,
                     OutboundAcwTime: 0,
                     InboundHoldTime: 0,
-                    OutboundHoldTime: 0
+                    OutboundHoldTime: 0,
+                    OutboundAnswerCount: 0
                 };
                 var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
                 var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
@@ -268,6 +271,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                 var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
                 var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
                 var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+                var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound", tenantId, companyId, resourceId);
 
                 /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
                  var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
@@ -282,7 +286,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     else {
 
 
-                        var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount];
+                        var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount, outgoingAnswerCount];
                         redisClient.mget(keys, function (err, reuslt) {
                             if (err) {
                                 console.log(err);
@@ -297,6 +301,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
                                 productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
                                 productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
+                                productivity.OutboundAnswerCount = parseInt(reuslt[10] ? reuslt[10] : 0);
                                 productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
                                 productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
 
@@ -365,7 +370,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                 }
                                                                 else {
                                                                     redisClient.mget(ids, function (err, misscalls) {
-                                                                        count++;
+
                                                                         try {
                                                                             productivity.MissCallCount = 0;
                                                                             productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
@@ -373,13 +378,40 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                             }, 0);
                                                                         } catch (ex) {
                                                                         }
-                                                                        AgentsProductivity.push(productivity);
-                                                                        if (count == resourceIds.length) {
 
-                                                                            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                            logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                            res.end(jsonString);
+                                                                        if(req.query.productivityStartDate && req.query.productivityEndDate){
+                                                                            productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function(firstLoginRecord){
+                                                                                count++;
+                                                                                productivity.LoginTime = firstLoginRecord? firstLoginRecord.createdAt: undefined;
+                                                                                AgentsProductivity.push(productivity);
+                                                                                if (count == resourceIds.length) {
+
+                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                    res.end(jsonString);
+                                                                                }
+                                                                            }).catch(function(err){
+                                                                                count++;
+                                                                                AgentsProductivity.push(productivity);
+                                                                                if (count == resourceIds.length) {
+
+                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                    res.end(jsonString);
+                                                                                }
+
+                                                                            });
+                                                                        }else{
+                                                                            count++;
+                                                                            AgentsProductivity.push(productivity);
+                                                                            if (count == resourceIds.length) {
+
+                                                                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                res.end(jsonString);
+                                                                            }
                                                                         }
+
                                                                     });
                                                                 }
                                                             });
@@ -791,3 +823,5 @@ module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
         }
     });
 };
+
+module.exports.redisArdsClient=redisArdsClient;

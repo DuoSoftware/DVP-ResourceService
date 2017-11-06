@@ -8,6 +8,7 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
+var uuid = require('node-uuid');
 
 
 function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData,percentage, callback) {
@@ -427,6 +428,44 @@ function GetGroupDetailsByAttributeId(attributeId, tenantId, companyId, callback
     });
 }
 
+function GetAllGroupNames(req, res) {
+
+    var reqId='';
+    try
+    {
+        reqId = uuid.v1();
+    }
+    catch(ex)
+    {
+
+    }
+
+    if(!req.user.company || !req.user.tenant)
+    {
+        var jsonString = messageFormatter.FormatMessage(new Error("Invalid Authorization details found "), "ERROR/EXCEPTION", false, undefined);
+        logger.error('[DVP-ResGroups.GetAllGroupNames] - [%s] - Unauthorized access  ', reqId);
+        res.end(jsonString);
+    }
+
+    DbConn.ResGroups.findAll({where: [{Status: true}, {TenantId: req.user.tenant}, {CompanyId: req.user.company}],attributes: ['GroupName', 'GroupId'],order: [['GroupId', 'DESC']]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.GetAllGroupNames] - [%s] - [PGSQL]  - Data found  - %s-[%s]', req.user.tenant, req.user.company, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            res.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResGroups.GetAllGroupNames] - [PGSQL]  - No record found for %s - %s  ', req.user.tenant, req.user.company);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            res.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.GetAllGroupNames] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', req.user.tenant, req.user.company, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        res.end(jsonString);
+    });
+}
+
 module.exports.CreateGroups = CreateGroups;
 module.exports.EditGroups = EditGroups;
 module.exports.EditGroupAndAttachAttributes=EditGroupAndAttachAttributes;
@@ -443,4 +482,5 @@ module.exports.GetAttributeByGroupIdWithDetails = GetAttributeByGroupIdWithDetai
 module.exports.GetGroupDetailsByAttributeId = GetGroupDetailsByAttributeId;
 module.exports.DeleteAttributeFromGroup = DeleteAttributeFromGroup;
 module.exports.DeleteAttributesFromGroup = DeleteAttributesFromGroup;
+module.exports.GetAllGroupNames = GetAllGroupNames;
 
