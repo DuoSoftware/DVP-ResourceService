@@ -30,7 +30,8 @@ function FilterAllObjsFromArray(itemArray){
         rBreak: [],
         agentReject: [],
         afterWork: [],
-        holdRecords: []
+        holdRecords: [],
+        outboundAnswered: []
     };
 
     if(itemArray && itemArray.length > 0) {
@@ -47,6 +48,9 @@ function FilterAllObjsFromArray(itemArray){
                     break;
                 case 'CONNECTED':
                     filterObj.connected.push(record);
+                    break;
+                case 'CALLANSWERED':
+                    filterObj.outboundAnswered.push(record);
                     break;
                 case 'BREAK':
                     filterObj.rBreak.push(record);
@@ -127,11 +131,11 @@ var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDat
 
 var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryToDate, resourceId, callback){
     var jsonString;
-    var query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK' or \"WindowName\" = 'INBOUND' or \"WindowName\" = 'OUTBOUND' or \"WindowName\" = 'AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+    var query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK' or \"WindowName\" = 'INBOUND' or \"WindowName\" = 'CALLANSWERED' or \"WindowName\" = 'OUTBOUND' or \"WindowName\" = 'AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
 
     if(resourceId)
     {
-        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK' or \"WindowName\" = 'INBOUND' or \"WindowName\" = 'OUTBOUND' or \"WindowName\" = 'AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in (	SELECT \"WindowName\"	FROM \"Dashboard_DailySummaries\"		WHERE \"WindowName\" = 'LOGIN' or \"WindowName\" = 'CONNECTED' or \"WindowName\" = 'AFTERWORK' or \"WindowName\" = 'BREAK' or \"WindowName\" = 'INBOUND' or \"WindowName\" = 'CALLANSWERED' or \"WindowName\" = 'OUTBOUND' or \"WindowName\" = 'AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
     }
     dbConn.SequelizeConn.query(query, { type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function(records) {
@@ -189,6 +193,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                             var agentReject = filterObj.agentReject;
                             var afterWork = filterObj.afterWork;
                             var holdRecords = filterObj.holdRecords;
+                            var outboundAnsRecords = filterObj.outboundAnswered;
 
                             //var loginRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "LOGIN");
                             //var inboundRecords = FilterAllObjsFromArray(loginSession.records, "WindowName", "INBOUND");
@@ -244,6 +249,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                                     summary.AvgTalkTimeInbound = 0;
                                     summary.AvgTalkTimeOutbound = 0;
                                     summary.TotalAnswered = 0;
+                                    summary.TotalAnsweredOutbound = 0;
                                     summary.TotalCallsInbound = 0;
                                     summary.TotalCallsOutbound = 0;
                                     summary.AverageHandlingTimeInbound = 0;
@@ -271,6 +277,17 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                                                 summary.TotalHoldInbound = summary.TotalHoldInbound + hItem.TotalCount;
                                                 summary.TotalHoldTimeInbound = summary.TotalHoldTimeInbound + hItem.TotalTime;
                                             }
+                                        });
+                                    }
+
+                                    if (outboundAnsRecords && outboundAnsRecords.length > 0) {
+
+                                        outboundAnsRecords.forEach(function (outAnsItem) {
+
+                                            if(outAnsItem.Param2 === 'outbound'){
+                                                summary.TotalAnsweredOutbound = summary.TotalAnsweredOutbound + outAnsItem.TotalCount;
+                                            }
+
                                         });
                                     }
 
