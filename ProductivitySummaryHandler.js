@@ -375,6 +375,8 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
                                     callback(undefined, undefined);
 
                                 });
+                            }else{
+                                callback(undefined, undefined);
                             }
 
                         });
