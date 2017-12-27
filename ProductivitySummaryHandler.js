@@ -135,7 +135,7 @@ var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryT
 
     if(resourceId)
     {
-        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND',CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
     }
     dbConn.SequelizeConn.query(query, { type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function(records) {
