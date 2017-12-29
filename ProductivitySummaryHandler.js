@@ -87,7 +87,7 @@ var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDat
 
         var loginSessionQuery = {
             where: [{ResourceId: resourceId, Reason: 'Register', createdAt: {between: [summaryFromDate, summaryToDate]}}],
-            order: '"createdAt" ASC',
+            order: [['createdAt', 'ASC']],
             limit: 1
         };
 
@@ -98,7 +98,7 @@ var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDat
             }else{
                 var lastLoginSessionQuery = {
                     where: [{ResourceId: resourceId, Reason: 'Register', createdAt: {lt: summaryFromDate}}],
-                    order: '"createdAt" DESC',
+                    order: [['createdAt', 'DESC']],
                     limit: 1
                 };
 
