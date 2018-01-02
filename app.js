@@ -1019,7 +1019,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/S
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, res);
+        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.StatusType, att.Status, att.Reason, att.OtherData, res);
 
     }
     catch (ex) {
@@ -1045,7 +1045,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/S
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddStatusDurationInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, att.SessionId, att.Duration, res);
+        resourceHandler.AddStatusDurationInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.StatusType, att.Status, att.Reason, att.OtherData, att.SessionId, att.Duration, res);
 
     }
     catch (ex) {
@@ -1071,7 +1071,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddTaskRejectInfo(req.params.ResourceId, tenantId, companyId, att.Task, att.Reason, att.OtherData, att.SessionId, res);
+        resourceHandler.AddTaskRejectInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.Task, att.Reason, att.OtherData, att.SessionId, res);
 
     }
     catch (ex) {
