@@ -10,42 +10,42 @@ var Sequelize = require('sequelize');
 var request = require('request');
 var auditTrailsHandler = require('dvp-common/AuditTrail/AuditTrailsHandler.js');
 
-function addAuditTrail(tenantId,companyId,iss,auditData){
-  /*var auditData =  {
-        KeyProperty: keyProperty,
-            OldValue: auditTrails.OldValue,
-        NewValue: auditTrails.NewValue,
-        Description: auditTrails.Description,
-        Author: auditTrails.Author,
-        User: iss,
-        OtherData: auditTrails.OtherData,
-        ObjectType: auditTrails.ObjectType,
-        Action: auditTrails.Action,
-        Application: auditTrails.Application,
-        TenantId: tenantId,
-        CompanyId: companyId
-    }*/
+function addAuditTrail(tenantId, companyId, iss, auditData) {
+    /*var auditData =  {
+          KeyProperty: keyProperty,
+              OldValue: auditTrails.OldValue,
+          NewValue: auditTrails.NewValue,
+          Description: auditTrails.Description,
+          Author: auditTrails.Author,
+          User: iss,
+          OtherData: auditTrails.OtherData,
+          ObjectType: auditTrails.ObjectType,
+          Action: auditTrails.Action,
+          Application: auditTrails.Application,
+          TenantId: tenantId,
+          CompanyId: companyId
+      }*/
 
-    try{
-        auditTrailsHandler.CreateAuditTrails(tenantId,companyId,iss,auditData, function(err,obj){
-            if(err){
+    try {
+        auditTrailsHandler.CreateAuditTrails(tenantId, companyId, iss, auditData, function (err, obj) {
+            if (err) {
                 var jsonString = messageFormatter.FormatMessage(err, "Fail", false, auditData);
                 logger.error('addAuditTrail -  Fail To Save Audit trail-[%s]', jsonString);
             }
         });
     }
-    catch(ex){
+    catch (ex) {
         var jsonString = messageFormatter.FormatMessage(ex, "Fail", false, auditData);
         logger.error('addAuditTrail -  insertion  failed-[%s]', jsonString);
     }
 }
 
-var resourceNameIsExsists = function (resourceName,res) {
+var resourceNameIsExsists = function (resourceName, res) {
 
     var options = {
         method: 'GET',
 
-        uri: "http://localhost:3636/DVP/API/1.0.0.0/User/"+resourceName+"/exsists", //Query string data
+        uri: "http://localhost:3636/DVP/API/1.0.0.0/User/" + resourceName + "/exsists", //Query string data
         headers: {
             'Authorization': "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkaW51c2hhZGNrIiwianRpIjoiYjExYzg3YjktMzYyNS00ZWE0LWFlZWMtYzE0NGEwNjZlM2I5Iiwic3ViIjoiNTZhOWU3NTlmYjA3MTkwN2EwMDAwMDAxMjVkOWU4MGI1YzdjNGY5ODQ2NmY5MjExNzk2ZWJmNDMiLCJleHAiOjE4OTM2NTQyNzEsInRlbmFudCI6MSwiY29tcGFueSI6Mywic2NvcGUiOlt7InJlc291cmNlIjoiYWxsIiwiYWN0aW9ucyI6ImFsbCJ9XSwiaWF0IjoxNDYxNjUwNjcxfQ.j4zqaDSeuYIw5fy8AkiBTglyLpjV-Cucmlp1qdq9CfA"
         }
@@ -63,7 +63,7 @@ var resourceNameIsExsists = function (resourceName,res) {
 
 };
 
-function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
+function CreateResource(resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, iss, callback) {
 
     var tmpResource = {
         ResClass: resClass,
@@ -78,108 +78,108 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
 
     DbConn.ResResource
         .create(tmpResource
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            var auditData =  {
-                KeyProperty: "ResourceName",
-                OldValue: tmpResource,
-                NewValue: tmpResource,
-                Description: "New Resource Created.",
-                Author: iss,
-                User: iss,
-                ObjectType: "ResResource",
-                Action: "SAVE",
-                Application: "Resource Service"
-            };
-            addAuditTrail(tenantId,companyId,iss,auditData);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        var auditData = {
+            KeyProperty: "ResourceName",
+            OldValue: tmpResource,
+            NewValue: tmpResource,
+            Description: "New Resource Created.",
+            Author: iss,
+            User: iss,
+            ObjectType: "ResResource",
+            Action: "SAVE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.CreateResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceName, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 
 }
 
-function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData,iss, callback) {
+function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, iss, callback) {
     DbConn.ResResource
         .update(
-        {
-            ResClass: resClass,
-            ResType: resType,
-            ResCategory: resCategory,
-            TenantId: tenantId,
-            CompanyId: companyId,
-            /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
-            OtherData: otherData,
-            Status: true
-        }, {
-            where: {
-                ResourceId: resourceId
+            {
+                ResClass: resClass,
+                ResType: resType,
+                ResCategory: resCategory,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
+                OtherData: otherData,
+                Status: true
+            }, {
+                where: {
+                    ResourceId: resourceId
+                }
             }
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
-            logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            var auditData =  {
-                KeyProperty: "ResourceName",
-                OldValue: resourceName,
-                NewValue: resourceName,
-                Description: "Update Resource.",
-                Author: iss,
-                User: iss,
-                OtherJsonData: JSON.stringify(cmp),
-                ObjectType: "ResResource",
-                Action: "UPDATE",
-                Application: "Resource Service"
-            };
-            addAuditTrail(tenantId,companyId,iss,auditData);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResource.EditResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp == 1, cmp);
+        logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        var auditData = {
+            KeyProperty: "ResourceName",
+            OldValue: resourceName,
+            NewValue: resourceName,
+            Description: "Update Resource.",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResource",
+            Action: "UPDATE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.EditResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function DeleteResource(resourceId,tenantId,companyId,iss,  callback) {
+function DeleteResource(resourceId, tenantId, companyId, iss, callback) {
     DbConn.ResResource
         .update(
-        {
-            Status: false
-        }, {
-            where: {
-                ResourceId: resourceId
+            {
+                Status: false
+            }, {
+                where: {
+                    ResourceId: resourceId
+                }
             }
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp==1, cmp);
-            logger.info('[DVP-ResResource.DeleteResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            var auditData =  {
-                KeyProperty: "ResourceId",
-                OldValue: resourceId,
-                NewValue: resourceId,
-                Description: "Delete Resource.",
-                Author: iss,
-                User: iss,
-                OtherJsonData: JSON.stringify(cmp),
-                ObjectType: "ResResource",
-                Action: "DELETE",
-                Application: "Resource Service"
-            };
-            addAuditTrail(tenantId,companyId,iss,auditData);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResource.DeleteResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp == 1, cmp);
+        logger.info('[DVP-ResResource.DeleteResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        var auditData = {
+            KeyProperty: "ResourceId",
+            OldValue: resourceId,
+            NewValue: resourceId,
+            Description: "Delete Resource.",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResource",
+            Action: "DELETE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.DeleteResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
 function GetAllResource(tenantId, companyId, callback) {
     DbConn.ResResource.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],order: [['ResourceId', 'DESC']]
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], order: [['ResourceId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResource] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -221,15 +221,15 @@ function GetResourceCount(tenantId, companyId, callback) {
     });
 }
 
-function GetAllResourcePage(req,tenantId, companyId, callback) {
+function GetAllResourcePage(req, tenantId, companyId, callback) {
 
     var pageNo = req.params.PageNo;
     var rowCount = req.params.RowCount;
     DbConn.ResResource.findAll({
         where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}],
-        include: [{ model: DbConn.ResResourceTask, as: "ResResourceTask" }],
+        include: [{model: DbConn.ResResourceTask, as: "ResResourceTask"}],
         offset: ((pageNo - 1) * rowCount),
-        limit: rowCount,order: [['ResourceId', 'DESC']]
+        limit: rowCount, order: [['ResourceId', 'DESC']]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResourcePage] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -249,10 +249,10 @@ function GetAllResourcePage(req,tenantId, companyId, callback) {
     });
 }
 
-function GetAllResourceById(resourceId,tenantId, companyId, callback) {
+function GetAllResourceById(resourceId, tenantId, companyId, callback) {
 
     DbConn.ResResource.find({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true},{ResourceId: resourceId}]
+        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}, {ResourceId: resourceId}]
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResourceById] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
@@ -272,252 +272,272 @@ function GetAllResourceById(resourceId,tenantId, companyId, callback) {
     });
 }
 
-function AssignTaskToResource(resourceId,taskId,tenantId,companyId,concurrency,refInfo,otherData,callback){
+function AssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, callback) {
 
     DbConn.ResResourceTask
         .create(
-        {
-            ResourceId:resourceId,TaskId:taskId,TenantId:tenantId,CompanyId:companyId,Concurrency:concurrency,RefInfo:refInfo,OtherData:otherData,
-            Status: true
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+            {
+                ResourceId: resourceId,
+                TaskId: taskId,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                Concurrency: concurrency,
+                RefInfo: refInfo,
+                OtherData: otherData,
+                Status: true
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function UpdateAssignTaskToResource(resourceId,taskId,tenantId,companyId,concurrency,refInfo,otherData,callback){
+function UpdateAssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, callback) {
 
     DbConn.ResResourceTask
         .update(
-        {
-            Concurrency:concurrency,RefInfo:refInfo,OtherData:otherData,Status: true
-        }
-        ,
-        {
-            where:[{ResourceId:resourceId},{TaskId:taskId},{TenantId: tenantId},{CompanyId: companyId}]
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+            {
+                Concurrency: concurrency, RefInfo: refInfo, OtherData: otherData, Status: true
+            }
+            ,
+            {
+                where: [{ResourceId: resourceId}, {TaskId: taskId}, {TenantId: tenantId}, {CompanyId: companyId}]
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function GetTaskByResourceId(resourceId,tenantId,companyId,callback){
+function GetTaskByResourceId(resourceId, tenantId, companyId, callback) {
     DbConn.ResResourceTask.findAll(
         {
-            where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            include: [{ model: DbConn.ResResource,  as: "ResResource" },{ model: DbConn.ResTask, as: "ResTask" ,include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]}]
-
+            where: [{ResourceId: resourceId}, {TenantId: tenantId}, {CompanyId: companyId}, {Status: true}],
+            include: [{model: DbConn.ResResource, as: "ResResource"}, {
+                model: DbConn.ResTask,
+                as: "ResTask",
+                include: [{model: DbConn.ResTaskInfo, as: "ResTaskInfo"}]
+            }]
 
 
         }
     ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.GetTaskByResourceId] - [%s] - [PGSQL] -  failed-[%s]', resourceId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.GetTaskByResourceId] - [PGSQL] -  successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.GetTaskByResourceId] - [%s] - [PGSQL] -  failed-[%s]', resourceId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function GetResourceByTaskId(taskId,tenantId,companyId,callback){
+function GetResourceByTaskId(taskId, tenantId, companyId, callback) {
     DbConn.ResResourceTask.findAll(
         {
-            where :[{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            include: [{ model: DbConn.ResResource,  as: "ResResource" },
-                { model: DbConn.ResTask, as: "ResTask"   }
+            where: [{TaskId: taskId}, {TenantId: tenantId}, {CompanyId: companyId}, {Status: true}],
+            include: [{model: DbConn.ResResource, as: "ResResource"},
+                {model: DbConn.ResTask, as: "ResTask"}
             ]
         }
     ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.GetResourceByTaskId] - [PGSQL] -  successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.GetResourceByTaskId] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.GetResourceByTaskId] - [PGSQL] -  successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.GetResourceByTaskId] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function RemoveTaskFromResource(resourceId,taskId,tenantId,companyId,callback){
+function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, callback) {
     DbConn.ResResourceTask.destroy(
         {
-            where :[{ResourceId:resourceId},{TaskId:taskId},{TenantId:tenantId},{CompanyId:companyId}]
+            where: [{ResourceId: resourceId}, {TaskId: taskId}, {TenantId: tenantId}, {CompanyId: companyId}]
 
         }
     ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function RemoveAllTasksAssignToResource(resourceId,tenantId,companyId,callback){
+function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, callback) {
     DbConn.ResResourceTask.destroy(
         {
-            where :[{ResourceId:resourceId},{TenantId:tenantId},{CompanyId:companyId}]
+            where: [{ResourceId: resourceId}, {TenantId: tenantId}, {CompanyId: companyId}]
         }
     ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function AddAttributeToResource(params,body,tenantId,companyId,callback){
+function AddAttributeToResource(params, body, tenantId, companyId, callback) {
 
     DbConn.ResResourceAttributeTask
         .create(
-        {
-            Percentage: body.Percentage,
-            AttributeId: params.AttributeId,
-            ResTaskId: params.ResTaskId,
-            TenantId:  tenantId,
-            CompanyId:  companyId,
-            OtherData: body.OtherData,
-            Status: true
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ResResourceAttributeTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ResResourceAttributeTask] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+            {
+                Percentage: body.Percentage,
+                AttributeId: params.AttributeId,
+                ResTaskId: params.ResTaskId,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                OtherData: body.OtherData,
+                Status: true
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResResourceAttributeTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResResourceAttributeTask] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function EditAttributeToResource(params,body,tenantId,companyId,callback){
+function EditAttributeToResource(params, body, tenantId, companyId, callback) {
 
     DbConn.ResResourceAttributeTask
         .update(
-        {
-            Percentage: body.Percentage,
-            AttributeId: params.AttributeId,
-            ResTaskId: params.ResTaskId,
-            TenantId:  tenantId,
-            CompanyId:  companyId,
-            OtherData: body.OtherData,
-            Status: true
-        },{
-        where: {
-            ResAttId: params.ResAttId
-        }
-    }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-EditAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-EditAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+            {
+                Percentage: body.Percentage,
+                AttributeId: params.AttributeId,
+                ResTaskId: params.ResTaskId,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                OtherData: body.OtherData,
+                Status: true
+            }, {
+                where: {
+                    ResAttId: params.ResAttId
+                }
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-EditAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-EditAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function DeleteAttributeToResource(params,body,tenantId,companyId,callback){
+function DeleteAttributeToResource(params, body, tenantId, companyId, callback) {
 
     DbConn.ResResourceAttributeTask
         .destroy(
-        {
-            where: {
-                ResAttId: params.ResAttId
+            {
+                where: {
+                    ResAttId: params.ResAttId
+                }
             }
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-DeleteAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-DeleteAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-DeleteAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-DeleteAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function ViewAttributeToResource(params,tenantId,companyId,callback){
+function ViewAttributeToResource(params, tenantId, companyId, callback) {
 
     DbConn.ResResourceAttributeTask
         .findAll({
-            where: [{TenantId:tenantId},{CompanyId:companyId},{Status: true}]
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ViewAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ViewAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+                where: [{TenantId: tenantId}, {CompanyId: companyId}, {Status: true}]
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ViewAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ViewAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function ViewAttributeToResourceByResAttId(params,body,tenantId,companyId,callback){
+function ViewAttributeToResourceByResAttId(params, body, tenantId, companyId, callback) {
 
     DbConn.ResResourceAttributeTask
         .findAll({
-            where: [{ResAttId:params.ResAttId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            include: [{ model: DbConn.ResAttribute,  as: "ResAttribute" }]
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ViewAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ViewAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+                where: [{ResAttId: params.ResAttId}, {TenantId: tenantId}, {CompanyId: companyId}, {Status: true}],
+                include: [{model: DbConn.ResAttribute, as: "ResAttribute"}]
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ViewAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ViewAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function ViewAttributeToResourceByResTaskId(params,body,tenantId,companyId,callback){
+function ViewAttributeToResourceByResTaskId(params, body, tenantId, companyId, callback) {
 
     DbConn.ResResourceTask
         .find({
-            where: [{ResTaskId:params.ResTaskId},{TenantId:tenantId},{CompanyId:companyId},{Status: true}],
-            //include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
-            include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask",include: [{ model: DbConn.ResAttribute,  as: "ResAttribute"}] }]
-            //include: [{ model: DbConn.ResResource,  as: "ResResource" },{ model: DbConn.ResTask, as: "ResTask" ,include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]}]
-        }
-    ).then(function (cmp) {
-            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-            logger.info('[DVP-ViewAttributeToResourceByResTaskId] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-            callback.end(jsonString);
-        }).error(function (err) {
-            logger.error('[DVP-ViewAttributeToResourceByResTaskId] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-            callback.end(jsonString);
-        });
+                where: [{ResTaskId: params.ResTaskId}, {TenantId: tenantId}, {CompanyId: companyId}, {Status: true}],
+                //include: [{ model: DbConn.ResResourceAttributeTask,  as: "ResResourceAttributeTask" },{ model: DbConn.ResAttribute, as: "ResAttribute" }]
+                include: [{
+                    model: DbConn.ResResourceAttributeTask,
+                    as: "ResResourceAttributeTask",
+                    include: [{model: DbConn.ResAttribute, as: "ResAttribute"}]
+                }]
+                //include: [{ model: DbConn.ResResource,  as: "ResResource" },{ model: DbConn.ResTask, as: "ResTask" ,include: [{ model: DbConn.ResTaskInfo, as: "ResTaskInfo" }]}]
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ViewAttributeToResourceByResTaskId] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ViewAttributeToResourceByResTaskId] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
 }
 
-function AddStatusChangeInfo(resourceId,tenantId,companyId, businessUnit,statusType,status,reason,otherData,callback){
+function AddStatusChangeInfo(resourceId, tenantId, companyId, businessUnit, statusType, status, reason, otherData, callback) {
 
     DbConn.ResResourceStatusChangeInfo
         .create(
             {
-                ResourceId:resourceId,TenantId:tenantId,CompanyId:companyId, BusinessUnit: businessUnit,StatusType:statusType,Status:status,Reason:reason,OtherData:otherData
+                ResourceId: resourceId,
+                TenantId: tenantId,
+                CompanyId: companyId,
+                BusinessUnit: businessUnit,
+                StatusType: statusType,
+                Status: status,
+                Reason: reason,
+                OtherData: otherData
             }
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -530,15 +550,24 @@ function AddStatusChangeInfo(resourceId,tenantId,companyId, businessUnit,statusT
     });
 }
 
-function AddStatusDurationInfo(resourceId,tenantId,companyId, businessUnit,statusType,status,reason,otherData,sessionId,duration,callback){
+function AddStatusDurationInfo(resourceId, tenantId, companyId, businessUnit, statusType, status, reason, otherData, sessionId, duration, callback) {
 
     DbConn.ResResourceStatusDurationInfo
         .create(
             {
-                TenantId:tenantId,CompanyId:companyId, BusinessUnit: businessUnit,ResourceId:resourceId,StatusType:statusType,Status:status,Reason:reason,SessionId:sessionId,OtherData:otherData,Duration:duration
+                TenantId: tenantId,
+                CompanyId: companyId,
+                BusinessUnit: businessUnit,
+                ResourceId: resourceId,
+                StatusType: statusType,
+                Status: status,
+                Reason: reason,
+                SessionId: sessionId,
+                OtherData: otherData,
+                Duration: duration
             }
         ).then(function (cmp) {
-        if(statusType === 'SloatStatus' && status === 'AfterWork') {
+        if (statusType === 'SloatStatus' && status === 'AfterWork') {
             DbConn.ResResourceAcwInfo
                 .create(
                     {
@@ -566,12 +595,19 @@ function AddStatusDurationInfo(resourceId,tenantId,companyId, businessUnit,statu
     });
 }
 
-function AddTaskRejectInfo(resourceId,tenantId,companyId, businessUnit,task,reason,otherData,sessionId,callback){
+function AddTaskRejectInfo(resourceId, tenantId, companyId, businessUnit, task, reason, otherData, sessionId, callback) {
 
     DbConn.ResResourceTaskRejectInfo
         .create(
             {
-                TenantId:tenantId,CompanyId:companyId, BusinessUnit: businessUnit,ResourceId:resourceId,Task:task,Reason:reason,SessionId:sessionId,OtherData:otherData
+                TenantId: tenantId,
+                CompanyId: companyId,
+                BusinessUnit: businessUnit,
+                ResourceId: resourceId,
+                Task: task,
+                Reason: reason,
+                SessionId: sessionId,
+                OtherData: otherData
             }
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
@@ -584,23 +620,21 @@ function AddTaskRejectInfo(resourceId,tenantId,companyId, businessUnit,task,reas
     });
 }
 
-function CheckResourceExists(resourceName,tenantId,companyId,callback){
+function CheckResourceExists(resourceName, tenantId, companyId, callback) {
     var jsonString;
-    DbConn.ResResource
-        .find(
-            {
-                TenantId:tenantId,CompanyId:companyId, ResourceName: resourceName
-            }
-        ).then(function (resource) {
-            if(resource){
-                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, resource);
-                logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - find resource successfully. [%s] ', jsonString);
-                callback.end(jsonString);
-            }else {
-                jsonString = messageFormatter.FormatMessage(undefined, "No Resource Found", false, undefined);
-                logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - no resource found. [%s] ', jsonString);
-                callback.end(jsonString);
-            }
+    DbConn.ResResource.find({
+            where: [{TenantId: tenantId}, {CompanyId: companyId}, {ResourceName: resourceName}]
+        }
+    ).then(function (resource) {
+        if (resource) {
+            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, resource);
+            logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - find resource successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        } else {
+            jsonString = messageFormatter.FormatMessage(undefined, "No Resource Found", false, undefined);
+            logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - no resource found. [%s] ', jsonString);
+            callback.end(jsonString);
+        }
 
     }).error(function (err) {
         logger.error('[DVP-ResResource.CheckResourceExists] - [%s] - [PGSQL] - find resource failed-[%s]', resourceName, err);
@@ -625,11 +659,11 @@ module.exports.DeleteAttributeToResource = DeleteAttributeToResource;
 module.exports.ViewAttributeToResourceByResAttId = ViewAttributeToResourceByResAttId;
 module.exports.ViewAttributeToResourceByResTaskId = ViewAttributeToResourceByResTaskId;
 module.exports.ViewAttributeToResource = ViewAttributeToResource;
-module.exports.GetResourceByTaskId=GetResourceByTaskId;
-module.exports.RemoveTaskFromResource=RemoveTaskFromResource;
-module.exports.RemoveAllTasksAssignToResource=RemoveAllTasksAssignToResource;
-module.exports.AddStatusChangeInfo=AddStatusChangeInfo;
-module.exports.ResourceNameIsExsists=resourceNameIsExsists;
+module.exports.GetResourceByTaskId = GetResourceByTaskId;
+module.exports.RemoveTaskFromResource = RemoveTaskFromResource;
+module.exports.RemoveAllTasksAssignToResource = RemoveAllTasksAssignToResource;
+module.exports.AddStatusChangeInfo = AddStatusChangeInfo;
+module.exports.ResourceNameIsExsists = resourceNameIsExsists;
 module.exports.AddStatusDurationInfo = AddStatusDurationInfo;
 module.exports.AddTaskRejectInfo = AddTaskRejectInfo;
 module.exports.CheckResourceExists = CheckResourceExists;
