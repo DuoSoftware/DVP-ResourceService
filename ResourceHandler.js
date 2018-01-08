@@ -584,6 +584,31 @@ function AddTaskRejectInfo(resourceId,tenantId,companyId, businessUnit,task,reas
     });
 }
 
+function CheckResourceExists(resourceName,tenantId,companyId,callback){
+    var jsonString;
+    DbConn.ResResource
+        .find(
+            {
+                TenantId:tenantId,CompanyId:companyId, ResourceName: resourceName
+            }
+        ).then(function (resource) {
+            if(resource){
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, resource);
+                logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - find resource successfully. [%s] ', jsonString);
+                callback.end(jsonString);
+            }else {
+                jsonString = messageFormatter.FormatMessage(undefined, "No Resource Found", false, undefined);
+                logger.info('[DVP-ResResource.CheckResourceExists] - [PGSQL] - no resource found. [%s] ', jsonString);
+                callback.end(jsonString);
+            }
+
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.CheckResourceExists] - [%s] - [PGSQL] - find resource failed-[%s]', resourceName, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
 module.exports.CreateResource = CreateResource;
 module.exports.EditResource = EditResource;
 module.exports.DeleteResource = DeleteResource;
@@ -607,3 +632,4 @@ module.exports.AddStatusChangeInfo=AddStatusChangeInfo;
 module.exports.ResourceNameIsExsists=resourceNameIsExsists;
 module.exports.AddStatusDurationInfo = AddStatusDurationInfo;
 module.exports.AddTaskRejectInfo = AddTaskRejectInfo;
+module.exports.CheckResourceExists = CheckResourceExists;
