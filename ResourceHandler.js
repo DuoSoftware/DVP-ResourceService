@@ -623,7 +623,7 @@ function AddTaskRejectInfo(resourceId, tenantId, companyId, businessUnit, task, 
 function CheckResourceExists(resourceName, tenantId, companyId, callback) {
     var jsonString;
     DbConn.ResResource.find({
-            where: [{TenantId: tenantId}, {CompanyId: companyId}, {ResourceName: resourceName}]
+            where: [{TenantId: tenantId}, {CompanyId: companyId}, {ResourceName: resourceName}, {Status: true}]
         }
     ).then(function (resource) {
         if (resource) {
