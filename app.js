@@ -761,7 +761,8 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.GetAllResource(tenantId, companyId, res);
+        var consolidated = (req.params.consolidated&&req.params.consolidated==='true');
+        resourceHandler.GetAllResource(tenantId, companyId,consolidated, res);
 
     }
     catch (ex) {
@@ -1726,6 +1727,33 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/ConsolidatedSummary/from/:summaryFromDate/to/:summaryToDate', authorization({
+    resource: "productivity",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var resourceId = null;
+        if(req.query.resourceId){
+            resourceId = req.query.resourceId.replace(new RegExp('"', 'g'), "'").replace('[','').replace(']','');
+        }
+
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, null, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
+    }
+    catch (ex) {
+        logger.error('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 //-------------------------Productivity Handler end------------------------- \\
 
 //-------------------------Shared Resource Handler ------------------------- \\
@@ -1941,7 +1969,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes', authorizat
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes/Active', authorization({
-    resource: "breaktype",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {

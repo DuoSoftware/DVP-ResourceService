@@ -12,19 +12,19 @@ var auditTrailsHandler = require('dvp-common/AuditTrail/AuditTrailsHandler.js');
 
 function addAuditTrail(tenantId, companyId, iss, auditData) {
     /*var auditData =  {
-          KeyProperty: keyProperty,
-              OldValue: auditTrails.OldValue,
-          NewValue: auditTrails.NewValue,
-          Description: auditTrails.Description,
-          Author: auditTrails.Author,
-          User: iss,
-          OtherData: auditTrails.OtherData,
-          ObjectType: auditTrails.ObjectType,
-          Action: auditTrails.Action,
-          Application: auditTrails.Application,
-          TenantId: tenantId,
-          CompanyId: companyId
-      }*/
+     KeyProperty: keyProperty,
+     OldValue: auditTrails.OldValue,
+     NewValue: auditTrails.NewValue,
+     Description: auditTrails.Description,
+     Author: auditTrails.Author,
+     User: iss,
+     OtherData: auditTrails.OtherData,
+     ObjectType: auditTrails.ObjectType,
+     Action: auditTrails.Action,
+     Application: auditTrails.Application,
+     TenantId: tenantId,
+     CompanyId: companyId
+     }*/
 
     try {
         auditTrailsHandler.CreateAuditTrails(tenantId, companyId, iss, auditData, function (err, obj) {
@@ -177,10 +177,16 @@ function DeleteResource(resourceId, tenantId, companyId, iss, callback) {
     });
 }
 
-function GetAllResource(tenantId, companyId, callback) {
-    DbConn.ResResource.findAll({
-        where: [{CompanyId: companyId}, {TenantId: tenantId}, {Status: true}], order: [['ResourceId', 'DESC']]
-    }).then(function (CamObject) {
+function GetAllResource(tenantId, companyId, consolidated, callback) {
+
+    var query = {
+        where: [{TenantId: tenantId}], order: [['ResourceId', 'DESC']]
+    };
+    if (!consolidated) {
+        query.where.push({CompanyId: companyId},{Status: true});
+    }
+
+    DbConn.ResResource.findAll(query).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResResource.GetAllResource] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
