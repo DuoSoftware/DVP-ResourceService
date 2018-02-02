@@ -761,6 +761,32 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
+        resourceHandler.GetAllResource(tenantId, companyId,false, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetAllResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetAllResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/consolidatedResources', authorization({
+    resource: "consolidatedreports",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetAllResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
         var consolidated = (req.params.consolidated&&req.params.consolidated==='true');
         resourceHandler.GetAllResource(tenantId, companyId,consolidated, res);
 
@@ -1728,7 +1754,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/ConsolidatedSummary/from/:summaryFromDate/to/:summaryToDate', authorization({
-    resource: "productivity",
+    resource: "consolidatedreports",
     action: "read"
 }), function (req, res, next) {
     try {
