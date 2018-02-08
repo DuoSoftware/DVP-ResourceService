@@ -761,7 +761,34 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources', authorizati
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.GetAllResource(tenantId, companyId, res);
+        resourceHandler.GetAllResource(tenantId, companyId,false, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetAllResource] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetAllResource] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/consolidatedResources', authorization({
+    resource: "consolidatedreports",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetAllResource] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var consolidated = (req.params.consolidated&&req.params.consolidated==='true');
+        resourceHandler.GetAllResource(tenantId, companyId,consolidated, res);
 
     }
     catch (ex) {
@@ -1019,7 +1046,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/S
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, res);
+        resourceHandler.AddStatusChangeInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.StatusType, att.Status, att.Reason, att.OtherData, res);
 
     }
     catch (ex) {
@@ -1045,7 +1072,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/S
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddStatusDurationInfo(req.params.ResourceId, tenantId, companyId, att.StatusType, att.Status, att.Reason, att.OtherData, att.SessionId, att.Duration, res);
+        resourceHandler.AddStatusDurationInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.StatusType, att.Status, att.Reason, att.OtherData, att.SessionId, att.Duration, res);
 
     }
     catch (ex) {
@@ -1071,7 +1098,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddTaskRejectInfo(req.params.ResourceId, tenantId, companyId, att.Task, att.Reason, att.OtherData, att.SessionId, res);
+        resourceHandler.AddTaskRejectInfo(req.params.ResourceId, tenantId, companyId, att.BusinessUnit, att.Task, att.Reason, att.OtherData, att.SessionId, res);
 
     }
     catch (ex) {
@@ -1104,6 +1131,32 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/profile/:profileName', 
         logger.error('[groupsHandler.GetResourceByTaskId] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GetResourceByTaskId] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceName/Exists', authorization({
+    resource: "ardsresource",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[resourceHandler.CheckResourceExists] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        resourceHandler.CheckResourceExists(req.params.ResourceName, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[resourceHandler.CheckResourceExists] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[resourceHandler.CheckResourceExists] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -1700,6 +1753,33 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/ConsolidatedSummary/from/:summaryFromDate/to/:summaryToDate', authorization({
+    resource: "consolidatedreports",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var resourceId = null;
+        if(req.query.resourceId){
+            resourceId = req.query.resourceId.replace(new RegExp('"', 'g'), "'").replace('[','').replace(']','');
+        }
+
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, null, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
+    }
+    catch (ex) {
+        logger.error('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 //-------------------------Productivity Handler end------------------------- \\
 
 //-------------------------Shared Resource Handler ------------------------- \\
@@ -1915,7 +1995,7 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes', authorizat
 });
 
 RestServer.get('/DVP/API/' + version + '/ResourceManager/BreakTypes/Active', authorization({
-    resource: "breaktype",
+    resource: "productivity",
     action: "read"
 }), function (req, res, next) {
     try {
@@ -2007,6 +2087,7 @@ RestServer.put('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authoriz
 RestServer.del('/DVP/API/'+version+'/ResourceManager/QueueSetting/:qID',authorization({resource:"queue", action:"delete"}),queueSkillHandler.removeQueueSetting);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/MyQueues',authorization({resource:"queue", action:"read"}),queueSkillHandler.GetMyQueues);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/IsMyQueue/:qID/Resource/:resId/ByTasks',authorization({resource:"queue", action:"read"}),queueSkillHandler.checkMyQueue);
+RestServer.get('/DVP/API/'+version+'/ResourceManager/MyQueueData/:resId',authorization({resource:"queue", action:"read"}),queueSkillHandler.getMyQueueData);
 RestServer.get('/DVP/API/'+version+'/ResourceManager/Queue/:qID/assignedAttributes',authorization({resource:"queue", action:"read"}),queueSkillHandler.loadQueueAttributes);
 
 
