@@ -380,29 +380,29 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                             } catch (ex) {
                                                                             }
 
-                                                                            // if (req.query.productivityStartDate && req.query.productivityEndDate) {
-                                                                            //     productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
-                                                                            //         count++;
-                                                                            //         productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
-                                                                            //         AgentsProductivity.push(productivity);
-                                                                            //         if (count == resourceIds.length) {
-                                                                            //
-                                                                            //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                            //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                            //             res.end(jsonString);
-                                                                            //         }
-                                                                            //     }).catch(function (err) {
-                                                                            //         count++;
-                                                                            //         AgentsProductivity.push(productivity);
-                                                                            //         if (count == resourceIds.length) {
-                                                                            //
-                                                                            //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                            //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                            //             res.end(jsonString);
-                                                                            //         }
-                                                                            //
-                                                                            //     });
-                                                                            // } else {
+                                                                            if (req.query.productivityStartDate && req.query.productivityEndDate) {
+                                                                                productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
+                                                                                    count++;
+                                                                                    productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
+                                                                                    AgentsProductivity.push(productivity);
+                                                                                    if (count == resourceIds.length) {
+
+                                                                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                        logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                        res.end(jsonString);
+                                                                                    }
+                                                                                }).catch(function (err) {
+                                                                                    count++;
+                                                                                    AgentsProductivity.push(productivity);
+                                                                                    if (count == resourceIds.length) {
+
+                                                                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                        logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                        res.end(jsonString);
+                                                                                    }
+
+                                                                                });
+                                                                            } else {
                                                                                 count++;
                                                                                 AgentsProductivity.push(productivity);
                                                                                 if (count == resourceIds.length) {

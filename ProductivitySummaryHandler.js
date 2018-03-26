@@ -124,18 +124,18 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
                     }
 
                 }).catch(function (err) {
-                    logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+                    logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', err);
                     deferred.resolve(undefined);
                 });
             }
 
         }).catch(function (err) {
-            logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+            logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', err);
             deferred.resolve(undefined);
         });
 
     } catch (ex) {
-        logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(ex));
+        logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', ex);
         deferred.resolve(undefined);
     }
 
