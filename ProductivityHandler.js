@@ -411,7 +411,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                                     logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
                                                                                     res.end(jsonString);
                                                                                 }
-                                                                            //}
+                                                                            }
 
                                                                         });
                                                                     }
