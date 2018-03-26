@@ -85,7 +85,7 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
 
     try {
 
-        /*var loginSessionQuery = {
+        var loginSessionQuery = {
             where: [{
                 ResourceId: resourceId,
                 Reason: 'Register',
@@ -93,8 +93,8 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
             }],
             order: [['createdAt', 'ASC']],
             limit: 1
-        };*/
-        var loginSessionQuery = {
+        };
+        /*var loginSessionQuery = {
             where: [{
                 ResourceId: { $in: ["49", "123"] },
                 Reason: 'Register',
@@ -102,7 +102,7 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
             }],
             order: [['createdAt', 'ASC']],
             limit: 1
-        };
+        };*/
 
         dbConn.ResResourceStatusChangeInfo.find(loginSessionQuery).then(function (loginRecord) {
 
