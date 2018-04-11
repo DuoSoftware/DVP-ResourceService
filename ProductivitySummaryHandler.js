@@ -86,7 +86,7 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
 
     try {
 
-        /*var loginSessionQuery = {
+        var loginSessionQuery = {
             where: [{
                 ResourceId: resourceId,
                 Reason: 'Register',
@@ -94,8 +94,8 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
             }],
             order: [['createdAt', 'ASC']],
             limit: 1
-        };*/
-        var loginSessionQuery = {
+        };
+        /*var loginSessionQuery = {
             where: [{
                 ResourceId: {$in: ["49", "123"]},
                 Reason: 'Register',
@@ -103,7 +103,7 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
             }],
             order: [['createdAt', 'ASC']],
             limit: 1
-        };
+        };*/
 
         dbConn.ResResourceStatusChangeInfo.find(loginSessionQuery).then(function (loginRecord) {
 
@@ -125,18 +125,18 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
                     }
 
                 }).catch(function (err) {
-                    logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+                    logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', err);
                     deferred.resolve(undefined);
                 });
             }
 
         }).catch(function (err) {
-            logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+            logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', err);
             deferred.resolve(undefined);
         });
 
     } catch (ex) {
-        logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(ex));
+        logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', ex);
         deferred.resolve(undefined);
     }
 
@@ -490,7 +490,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
     var query = "";
 
     if (company) {
-        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
+        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
         if (resourceId) {
             query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
         }
