@@ -8,6 +8,7 @@ var request = require('request');
 var util = require('util');
 var Q = require('q');
 var async = require('async');
+var org = require('dvp-mongomodels/model/Organisation');
 
 function FilterObjFromArray(itemArray, field, value) {
     var resultObj;
@@ -96,7 +97,7 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
         };*/
         var loginSessionQuery = {
             where: [{
-                ResourceId: { $in: ["49", "123"] },
+                ResourceId: {$in: ["49", "123"]},
                 Reason: 'Register',
                 createdAt: {between: [summaryFromDate, summaryToDate]}
             }],
@@ -451,6 +452,39 @@ var GetFirstLoginForTheDate = function (resourceId, summaryFromDate, summaryToDa
     });
 };*/
 
+var companyInformation = [];
+var GetCompanyName = function (companyId) {
+
+    var found = companyInformation.find(function (element) {
+        return element.id.toString() === companyId;
+    });
+    if (found) {
+        return found.CompanyName;
+    }
+    else {
+
+        org.find({tenant:1}).select("-_id companyName tenant id")
+            .exec(function (err, report) {
+                if (err) {
+                    var jsonString = messageFormatter.FormatMessage(err, "Fail to find reportQueryFilter", false, null);
+                    console.log(jsonString);
+                } else {
+                    if(report){
+                        companyInformation = report.map(function (item) {
+                            return{
+                                CompanyName : item.companyName,
+                                id:item.id
+                            }
+                        })
+                    }
+                }
+            });
+        return "N/A";
+    }
+
+};
+
+
 var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, callback) {
     var jsonString;
     var query = "";
@@ -569,7 +603,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
 
                                     summary.Date = login.SummaryDate;
-                                    summary.Company = login.Company ;
+                                    summary.Company = login.Company;
+                                    summary.CompanyName = GetCompanyName(summary.Company);
                                     summary.Agent = login.Param1;
                                     summary.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
                                     summary.StaffTime = login.TotalTime;
@@ -760,5 +795,6 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
     });
 };
 
+module.exports.GetCompanyName = GetCompanyName;
 module.exports.GetDailySummaryRecords = GetDailySummaryRecords;
 module.exports.GetFirstLoginForTheDate = GetFirstLoginForTheDate;
