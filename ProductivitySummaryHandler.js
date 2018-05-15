@@ -111,13 +111,13 @@ var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDat
                     }
 
                 }).catch(function (err) {
-                    logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+                    logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
                     deferred.resolve(undefined);
                 });
             }
 
         }).catch(function (err) {
-            logger.info('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
+            logger.error('[DVP-ResResource.GetDailySummaryRecords.getFirstLoginForTheDate] - [PGSQL]  - Error  -[%s]', JSON.stringify(err));
             deferred.resolve(undefined);
         });
 
@@ -131,11 +131,9 @@ var GetFirstLoginForTheDate = function(resourceId, summaryFromDate, summaryToDat
 
 var GetDailySummaryRecords = function(tenant, company, summaryFromDate, summaryToDate, resourceId, callback){
     var jsonString;
-    var query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
-
-    if(resourceId)
-    {
-        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '"+company+"' and \"Tenant\" = '"+tenant+"' and \"Param1\" = '"+resourceId+"' and \"SummaryDate\" between '"+summaryFromDate+"' and '"+summaryToDate+"' and \"WindowName\" = 'AGENTREJECT'";
+    var query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
+    if (resourceId) {
+        query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
     }
     dbConn.SequelizeConn.query(query, { type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function(records) {
