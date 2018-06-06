@@ -728,7 +728,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
                                     summary.IdleTimeInbound = summary.InboundTime - (summary.AfterWorkTimeInbound + summary.BreakTime + summary.TalkTimeInbound + summary.TotalHoldTimeInbound);
                                     summary.IdleTimeOutbound = summary.OutboundTime - (summary.AfterWorkTimeOutbound + summary.BreakTime + summary.TalkTimeOutbound + summary.TotalHoldTimeOutbound);
-                                    summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
+                                    //summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
+                                    summary.IdleTimeOffline = summary.StaffTime - (summary.InboundTime + summary.OutboundTime);
 
                                     summary.IdleTimeInbound = (summary.IdleTimeInbound > 0) ? summary.IdleTimeInbound : 0;
                                     summary.IdleTimeOutbound = (summary.IdleTimeOutbound > 0) ? summary.IdleTimeOutbound : 0;
