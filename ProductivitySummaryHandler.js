@@ -632,6 +632,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     summary.TotalHoldOutbound = 0;
                                     summary.TotalHoldTimeOutbound = 0;
                                     summary.AvgHoldTimeOutbound = 0;
+                                    summary.TotalIdleTime = 0;
 
 
                                     if (holdRecords) {
@@ -726,10 +727,11 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                         summary.AvgTalkTimeOutbound = 0;
                                     }
 
-                                    summary.IdleTimeInbound = summary.InboundTime - (summary.AfterWorkTimeInbound + summary.BreakTime + summary.TalkTimeInbound + summary.TotalHoldTimeInbound);
-                                    summary.IdleTimeOutbound = summary.OutboundTime - (summary.AfterWorkTimeOutbound + summary.BreakTime + summary.TalkTimeOutbound + summary.TotalHoldTimeOutbound);
+                                    summary.IdleTimeInbound = summary.InboundTime - (summary.AfterWorkTimeInbound  + summary.TalkTimeInbound + summary.TotalHoldTimeInbound);
+                                    summary.IdleTimeOutbound = summary.OutboundTime - (summary.AfterWorkTimeOutbound  + summary.TalkTimeOutbound + summary.TotalHoldTimeOutbound);
                                     //summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
                                     summary.IdleTimeOffline = summary.StaffTime - (summary.InboundTime + summary.OutboundTime);
+                                    summary.TotalIdleTime=(summary.IdleTimeInbound+summary.IdleTimeOutbound+summary.IdleTimeOffline) - summary.BreakTime;
 
                                     summary.IdleTimeInbound = (summary.IdleTimeInbound > 0) ? summary.IdleTimeInbound : 0;
                                     summary.IdleTimeOutbound = (summary.IdleTimeOutbound > 0) ? summary.IdleTimeOutbound : 0;
