@@ -21,7 +21,7 @@ var sharedResourceHandler = require('./SharedResourceHandler');
 var breakTypeHandler = require('./BreakTypeHandler');
 var agentWisePerformance = require('./AgentWisePerformance');
 var queueSkillHandler = require('./QueueSkillHandler.js');
-
+var node_uuid = require('node-uuid');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -134,25 +134,23 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Attribute', authorizat
     resource: "attribute",
     action: "write"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
-
-        logger.info('[attributeHandler.CreateAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
-
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
 
         var att = req.body;
-
-        attributeHandler.CreateAttribute(att.Attribute, att.AttClass, att.AttType, att.AttCategory, tenantId, companyId, att.OtherData, res);
+        logger.info("CreateAttribute method",{req_id: req_id,action:"Invoke CreateAttribute method ",tenant_id:tenantId,company_id:companyId,req_data: req.body,res_data:undefined});
+        attributeHandler.CreateAttribute(att.Attribute, att.AttClass, att.AttType, att.AttCategory, tenantId, companyId, att.OtherData, res,req_id);
 
     }
     catch (ex) {
-
-        logger.error('[attributeHandler.CreateAttribute] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        logger.error("CreateAttribute method Error Occurred",{req_id: req_id,action:"Invoke CreateAttribute method Error Occurred",tenant_id:tenantId,company_id:companyId,req_data: req.body,res_data:undefined,Exception:ex.message});
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.CreateAttribute] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -162,23 +160,25 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
     resource: "attribute",
     action: "write"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
 
-        logger.info('[attributeHandler.EditAttribute] - [HTTP]  - Request received -  Data - %s  - %s', JSON.stringify(req.body), JSON.stringify(req.params));
 
         var att = req.body;
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
-        attributeHandler.EditAttribute(req.params.AttributeId, att.Attribute, att.AttClass, att.AttType, att.AttCategory, tenantId, companyId, att.OtherData, res);
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
+        logger.info("Invoke Edit Attribute method",{req_id: req_id,action:"Invoke Edit Attribute method",tenant_id:tenantId,company_id:companyId,req_data: att,res_data:undefined,Exception:undefined});
+
+        attributeHandler.EditAttribute(req.params.AttributeId, att.Attribute, att.AttClass, att.AttType, att.AttCategory, tenantId, companyId, att.OtherData, res,req_id);
 
     }
     catch (ex) {
-
-        logger.error('[attributeHandler.EditAttribute] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        logger.error("Fail to Edit Attribute. Error Occurred",{req_id: req_id,action:"Fail to Edit Attribute. Error Occurred",tenant_id:tenantId,company_id:companyId,req_data: undefined,res_data:undefined,Exception:ex.message});
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.EditAttribute] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -188,24 +188,25 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Attribute/:AttributeId'
     resource: "attribute",
     action: "delete"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
-
-        logger.info('[attributeHandler.DeleteAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         var att = req.params;
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
-        attributeHandler.DeleteAttribute(att.AttributeId, tenantId, companyId, res);
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
+        logger.info("Invoke Delete Attribute method",{req_id: req_id,action:"Invoke Delete Attribute method",tenant_id:tenantId,company_id:companyId,req_data: att,res_data:undefined,Exception:undefined});
+        attributeHandler.DeleteAttribute(att.AttributeId, tenantId, companyId, res,req_id);
 
     }
     catch (ex) {
-
-        logger.error('[attributeHandler.DeleteAttribute] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        logger.error("Fail to Delete Attribute. Error Occurred",{req_id: req_id,action:"Fail to Delete Attribute. Error Occurred",tenant_id:tenantId,company_id:companyId,req_data: undefined,res_data:undefined,Exception:ex.message});
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.DeleteAttribute] - Request response : %s ', jsonString);
         res.end(jsonString);
+        logger.error()
     }
     return next();
 });
@@ -214,21 +215,21 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes', authorizat
     resource: "attribute",
     action: "read"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
-
-        logger.info('[attributeHandler.GetAllAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
 
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
-        attributeHandler.GetAllAttributes(tenantId, companyId, res);
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
+        logger.info("Invoke Get All Attributes method",{req_id: req_id,action:"Invoke Get All Attributes method",tenant_id:tenantId,company_id:companyId,req_data: undefined,res_data:undefined,Exception:undefined});
+        attributeHandler.GetAllAttributes(tenantId, companyId, res,req_id);
     }
     catch (ex) {
-
-        logger.error('[attributeHandler.GetAllAttribute] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        logger.error("Fail To Get All Attributes",{req_id: req_id,action:"Fail To Get All Attributes",tenant_id:tenantId,company_id:companyId,req_data: undefined,res_data:undefined,exception_message:ex.message});
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.GetAllAttribute] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -238,21 +239,24 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/AttributeCount', author
     resource: "attribute",
     action: "read"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
 
-        logger.info('[attributeHandler.GetAllAttributeCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        logger.info("Invoke Get All Attributes Count method",{req_id: req_id,action:"Invoke Get All Attributes Count method",tenant_id:tenantId,company_id:companyId,req_data: req.params,res_data:undefined,Exception:undefined});
 
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
-        attributeHandler.GetAllAttributeCount(tenantId, companyId, res);
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
+        attributeHandler.GetAllAttributeCount(tenantId, companyId, res,req_id);
     }
     catch (ex) {
 
-        logger.error('[attributeHandler.GetAllAttributeCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        logger.error("Fail to Get All Attributes Count",{req_id: req_id,action:"Fail to Get All Attributes Count",tenant_id:tenantId,company_id:companyId,req_data: undefined,res_data:undefined,Exception:ex.message});
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.GetAllAttributeCount] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -262,21 +266,25 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Attributes/:RowCount/:P
     resource: "attribute",
     action: "read"
 }), function (req, res, next) {
+    var tenantId ;
+    var companyId;
+    var req_id = node_uuid.v1();
     try {
 
-        logger.info('[attributeHandler.GetAllAttribute] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        logger.info("Invoke Get All Attributes Paging method",{req_id: req_id,action:"Invoke Get All Attributes Count method",tenant_id:tenantId,company_id:companyId,req_data: req.params,res_data:undefined,Exception:undefined});
+
         var att = req.params;
         if (!req.user ||!req.user.tenant || !req.user.company)
             throw new Error("invalid tenant or company.");
-        var tenantId = req.user.tenant;
-        var companyId = req.user.company;
+        tenantId = req.user.tenant;
+        companyId = req.user.company;
         attributeHandler.GetAllAttributesPaging(tenantId, companyId, att.RowCount, att.PageNo, res);
     }
     catch (ex) {
 
-        logger.error('[attributeHandler.GetAllAttribute] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        logger.error("Fail Get All Attributes Paging method",{req_id: req_id,action:"Fail Get All Attributes Paging method Exception occurred",tenant_id:tenantId,company_id:companyId,req_data: req.params,res_data:undefined,Exception:ex.message});
+
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
-        logger.debug('[attributeHandler.GetAllAttribute] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
