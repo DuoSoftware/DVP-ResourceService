@@ -129,7 +129,7 @@ module.exports.GetAllAttributesPaging =function(tenantId, companyId, rowCount, p
     }).then(function (CamObject) {
         if (CamObject) {
             logger.info('[DVP-ResAttribute.GetAllAttributesPaging] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
-            logger.info("Invoke Get All Attributes Paging method-DB",{req_id: req_id,action:"Invoke Get All Attributes Count method-DB",tenant_id:tenantId,company_id:companyId,req_data: req.params,res_data:JSON.stringify(CamObject),Exception:undefined});
+            //logger.info("Invoke Get All Attributes Paging method-DB",{action:"Invoke Get All Attributes Count method-DB",tenant_id:tenantId,company_id:companyId,req_data: req.params,res_data:JSON.stringify(CamObject),Exception:undefined});
 
             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
 

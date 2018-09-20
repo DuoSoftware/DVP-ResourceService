@@ -8,6 +8,7 @@ var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
 var Sequelize = require('sequelize');
+const Op = Sequelize.Op;
 var uuid = require('node-uuid');
 
 
@@ -155,6 +156,28 @@ function GroupsCount(tenantId, companyId, callback) {
         callback.end(jsonString);
     });
 }
+
+function AllowedGroupsCount(tenantId, companyId, callback) {
+
+    DbConn.ResGroups.count({where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}, {GroupName: {[Op.notIn]:["Business Unit","User Group"]}}]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.AllowedGroupsCount] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResGroups.AllowedGroupsCount] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.AllowedGroupsCount] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
 function GetAllGroupsPaging(tenantId, companyId, rowCount, pageNo, callback) {
 
     DbConn.ResGroups.findAll({
@@ -179,6 +202,30 @@ function GetAllGroupsPaging(tenantId, companyId, rowCount, pageNo, callback) {
     });
 }
 
+function GetAllowedGroupsPaging(tenantId, companyId, rowCount, pageNo, callback) {
+
+    DbConn.ResGroups.findAll({
+        where: [{Status: true}, {TenantId: tenantId}, {CompanyId: companyId}, {GroupName: {[Op.notIn]:["Business Unit","User Group"]}}],order: [['GroupId', 'DESC']], offset: ((pageNo - 1) * rowCount),
+        limit: rowCount,
+    }).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.GetAllowedGroupsPaging] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResGroups.GetAllowedGroupsPaging] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.GetAllowedGroupsPaging] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
 function GetGroupByGroupId(groupId, tenantId, companyId, callback) {
 
     DbConn.ResGroups.find({where: [{Status: true}, {GroupId: groupId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
@@ -195,6 +242,27 @@ function GetGroupByGroupId(groupId, tenantId, companyId, callback) {
         }
     }).error(function (err) {
         logger.error('[DVP-ResAttribute.GetGroupByGroupId] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function GetGroupByGroupName(groupName, tenantId, companyId, callback) {
+
+    DbConn.ResGroups.find({where: [{Status: true}, {GroupName: groupName}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
+        if (CamObject) {
+            logger.info('[DVP-ResGroups.GetGroupByGroupName] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(CamObject));
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, CamObject);
+
+            callback.end(jsonString);
+        }
+        else {
+            logger.error('[DVP-ResGroups.GetGroupByGroupName] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
+            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        }
+    }).error(function (err) {
+        logger.error('[DVP-ResAttribute.GetGroupByGroupName] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
@@ -483,4 +551,7 @@ module.exports.GetGroupDetailsByAttributeId = GetGroupDetailsByAttributeId;
 module.exports.DeleteAttributeFromGroup = DeleteAttributeFromGroup;
 module.exports.DeleteAttributesFromGroup = DeleteAttributesFromGroup;
 module.exports.GetAllGroupNames = GetAllGroupNames;
+module.exports.GetAllowedGroupsPaging = GetAllowedGroupsPaging;
+module.exports.AllowedGroupsCount = AllowedGroupsCount;
+module.exports.GetGroupByGroupName = GetGroupByGroupName;
 

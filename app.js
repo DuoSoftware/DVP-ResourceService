@@ -450,6 +450,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupsCount', authoriza
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AllowedGroupsCount', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.AllowedGroupsCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.AllowedGroupsCount(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AllowedGroupsCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AllowedGroupsCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageNo', authorization({
     resource: "group",
     action: "read"
@@ -475,6 +500,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageN
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AllowedGroups/:RowCount/:PageNo', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.AllowedGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.GetAllowedGroupsPaging(tenantId, companyId, req.params.RowCount, req.params.PageNo, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AllowedGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AllowedGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
     resource: "group",
     action: "read"
@@ -495,6 +545,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
         logger.error('[groupsHandler.GetAllGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GetAllGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/Name/:GroupName', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetGroupByName] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.GetGroupByGroupName(req.params.GroupName, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetGroupByName] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetGroupByName] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
