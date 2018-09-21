@@ -37,6 +37,47 @@ function CreateGroups(groupName, groupClass, groupType, groupCategory, tenantId,
         });
 }
 
+function CreateUserGroupsSkill(userGroupId, userGroupName, attributeId, attributeGrpId, tenantId, companyId, callback) {
+    DbConn.ResAttributeUserGroup
+        .create(
+            {
+                GroupId: userGroupId,
+                GroupName: userGroupName,
+                AttributeId: attributeId,
+                AttributeGroupId: attributeGrpId,
+                TenantId: tenantId,
+                CompanyId: companyId
+            }
+        ).then(function (cmp) {
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResGroups.CreateGroups] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.CreateGroups] - [%s] - [PGSQL] - insertion  failed-[%s]', groupName, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function DeleteSkillForUserGroup(grpId, skillId, companyId, tenantId, callback)
+{
+    DbConn.ResAttributeUserGroup
+        .destroy(
+            {
+                where : [{GroupId:grpId},{AttributeId:skillId},{CompanyId:companyId},{TenantId:tenantId}]
+            }
+        ).then(function (cmp)
+    {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+        logger.info('[DVP-ResGroups.DeleteSkillForUserGroup] - [PGSQL] - delete successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.DeleteSkillForUserGroup] - [%s] - [PGSQL] - delete  failed-[%s]', id, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, null);
+        callback.end(jsonString);
+    });
+}
+
 function EditGroups(groupId, groupName, groupClass, groupType, groupCategory, tenantId, companyId, otherData,percentage, callback) {
     DbConn.ResGroups
         .update(
@@ -132,6 +173,20 @@ function GetAllGroups(tenantId, companyId, callback) {
     }).error(function (err) {
         logger.error('[DVP-ResGroups.GetAllGroups] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function GetSkillsForUserGroup(userGrpId, tenantId, companyId, callback) {
+
+    DbConn.ResAttributeUserGroup.findAll({where: [{GroupId: userGrpId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (attrGrpList) {
+        logger.info('[DVP-ResGroups.GetAllGroups] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(attrGrpList));
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, attrGrpList);
+        callback.end(jsonString);
+    }).error(function (err) {
+        var emptyArr = [];
+        logger.error('[DVP-ResGroups.GetAllGroups] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
         callback.end(jsonString);
     });
 }
@@ -554,4 +609,7 @@ module.exports.GetAllGroupNames = GetAllGroupNames;
 module.exports.GetAllowedGroupsPaging = GetAllowedGroupsPaging;
 module.exports.AllowedGroupsCount = AllowedGroupsCount;
 module.exports.GetGroupByGroupName = GetGroupByGroupName;
+module.exports.CreateUserGroupsSkill = CreateUserGroupsSkill;
+module.exports.DeleteSkillForUserGroup = DeleteSkillForUserGroup;
+module.exports.GetSkillsForUserGroup = GetSkillsForUserGroup;
 

@@ -323,6 +323,58 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization(
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/UserGroup/Skill', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.CreateUserGroupSkill] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.CreateUserGroupsSkill(att.GroupId, att.GroupName, att.AttributeId, att.AttributeGroupId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.CreateGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.CreateGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/UserGroup/:grpId/Skill/:skillId', authorization({
+    resource: "group",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.DeleteUserGroupSkill] - [HTTP]  - Request received -  Data - %s', req.params.id);
+
+        var grpId = req.params.grpId;
+        var skillId = req.params.skillId;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.DeleteSkillForUserGroup(grpId, skillId, companyId, tenantId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, null);
+        logger.debug('[groupsHandler.DeleteUserGroupSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
     resource: "group",
     action: "write"
@@ -420,6 +472,32 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization(
         logger.error('[groupsHandler.GetAllGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GetAllGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/UserGroupSkill/:groupId', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetSkillsForUserGroup] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var grpId = req.params.groupId;
+        groupsHandler.GetSkillsForUserGroup(grpId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetSkillsForUserGroup] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForUserGroup] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
