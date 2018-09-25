@@ -483,9 +483,10 @@ var GetCompanyName = function (companyId) {
 };
 
 
-var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, callback) {
+var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
     var jsonString;
     var query = "";
+    //BusinessUnit
 
     if (company) {
         query = "SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" in ('LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD') union SELECT * FROM \"Dashboard_DailySummaries\" WHERE \"Company\" = '" + company + "' and \"Tenant\" = '" + tenant + "' and \"Param1\" = '" + resourceId + "' and \"SummaryDate\" between '" + summaryFromDate + "' and '" + summaryToDate + "' and \"WindowName\" = 'AGENTREJECT' ORDER BY \"SummaryDate\" DESC";
@@ -599,7 +600,6 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
                                     var summary = {};
 
-
                                     summary.Date = login.SummaryDate;
                                     summary.Company = login.Company;
                                     summary.CompanyName = GetCompanyName(summary.Company);
@@ -632,14 +632,52 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     summary.AvgHoldTimeOutbound = 0;
 
 
+                                    if(bu && (bu != "default" || bu != "all")){
+
+                                        summary[bu] = {};
+                                        summary[bu].TalkTimeInbound = 0;
+                                        summary[bu].TalkTimeOutbound = 0;
+                                        summary[bu].AvgTalkTimeInbound = 0;
+                                        summary[bu].AvgTalkTimeOutbound = 0;
+                                        summary[bu].TotalAnswered = 0;
+                                        summary[bu].TotalAnsweredOutbound = 0;
+                                        summary[bu].TotalCallsInbound = 0;
+                                        summary[bu].TotalCallsOutbound = 0;
+                                        summary[bu].AverageHandlingTimeInbound = 0;
+                                        summary[bu].AverageHandlingTimeOutbound = 0;
+                                        summary[bu].AfterWorkTimeInbound = 0;
+                                        summary[bu].AfterWorkTimeOutbound = 0;
+                                        summary[bu].TotalHoldInbound = 0;
+                                        summary[bu].TotalHoldTimeInbound = 0;
+                                        summary[bu].AvgHoldTimeInbound = 0;
+                                        summary[bu].TotalHoldOutbound = 0;
+                                        summary[bu].TotalHoldTimeOutbound = 0;
+                                        summary[bu].AvgHoldTimeOutbound = 0;
+
+
+                                    }
+
+
+
                                     if (holdRecords) {
                                         holdRecords.forEach(function (hItem) {
                                             if (hItem.Param2 === 'outbound') {
                                                 summary.TotalHoldOutbound = summary.TotalHoldOutbound + hItem.TotalCount;
                                                 summary.TotalHoldTimeOutbound = summary.TotalHoldTimeOutbound + hItem.TotalTime;
+                                                if(hItem.BusinessUnit == bu ){
+
+                                                    summary[bu].TotalHoldOutbound = summary.TotalHoldOutbound + hItem.TotalCount;
+                                                    summary[bu].TotalHoldTimeOutbound = summary.TotalHoldTimeOutbound + hItem.TotalTime;
+                                                }
                                             } else if (hItem.Param2 === 'inbound') {
                                                 summary.TotalHoldInbound = summary.TotalHoldInbound + hItem.TotalCount;
                                                 summary.TotalHoldTimeInbound = summary.TotalHoldTimeInbound + hItem.TotalTime;
+
+                                                if(hItem.BusinessUnit == bu ){
+
+                                                    summary[bu].TotalHoldInbound = summary.TotalHoldInbound + hItem.TotalCount;
+                                                    summary[bu].TotalHoldTimeInbound = summary.TotalHoldTimeInbound + hItem.TotalTime;
+                                                }
                                             }
                                         });
                                     }
@@ -650,6 +688,11 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
                                             if (outAnsItem.Param2 === 'outbound') {
                                                 summary.TotalAnsweredOutbound = summary.TotalAnsweredOutbound + outAnsItem.TotalCount;
+
+                                                if(hItem.BusinessUnit == bu ){
+
+                                                    summary[bu].TotalAnsweredOutbound = summary[bu].TotalAnsweredOutbound + outAnsItem.TotalCount;
+                                                }
                                             }
 
                                         });
@@ -662,17 +705,41 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                             if (cItem.Param2 === 'CALLoutbound') {
                                                 summary.TalkTimeOutbound = summary.TalkTimeOutbound + cItem.TotalTime;
                                                 summary.TotalCallsOutbound = summary.TotalCallsOutbound + cItem.TotalCount;
+
+                                                if(cItem.BusinessUnit == bu ){
+                                                    summary[bu].TalkTimeOutbound = summary[bu].TalkTimeOutbound + cItem.TotalTime;
+                                                    summary[bu].TotalCallsOutbound = summary[bu].TotalCallsOutbound + cItem.TotalCount;
+                                                }
+
                                             } else if (cItem.Param2 === 'CALLinbound') {
                                                 summary.TalkTimeInbound = summary.TalkTimeInbound + cItem.TotalTime;
                                                 summary.TotalAnswered = summary.TotalAnswered + cItem.TotalCount;
                                                 summary.TotalCallsInbound = summary.TotalCallsInbound + cItem.TotalCount;
+
+                                                if(cItem.BusinessUnit == bu ){
+                                                    summary[bu].TalkTimeInbound = summary[bu].TalkTimeInbound + cItem.TotalTime;
+                                                    summary[bu].TotalAnswered = summary[bu].TotalAnswered + cItem.TotalCount;
+                                                    summary[bu].TotalCallsInbound = summary[bu].TotalCallsInbound + cItem.TotalCount;
+                                                }
                                             }
 
                                         });
                                     }
 
-                                    summary.TalkTimeOutbound = (summary.TalkTimeOutbound > summary.TotalHoldTimeOutbound) ? summary.TalkTimeOutbound - summary.TotalHoldTimeOutbound : summary.TotalHoldTimeOutbound;
-                                    summary.TalkTimeInbound = (summary.TalkTimeInbound > summary.TotalHoldTimeInbound) ? summary.TalkTimeInbound - summary.TotalHoldTimeInbound : summary.TotalHoldTimeInbound;
+                                    summary.TalkTimeOutbound = (summary.TalkTimeOutbound > summary.TotalHoldTimeOutbound) ?
+                                        summary.TalkTimeOutbound - summary.TotalHoldTimeOutbound : summary.TotalHoldTimeOutbound;
+                                    summary.TalkTimeInbound = (summary.TalkTimeInbound > summary.TotalHoldTimeInbound) ?
+                                        summary.TalkTimeInbound - summary.TotalHoldTimeInbound : summary.TotalHoldTimeInbound;
+
+                                    if(bu && (bu != "default" || bu != "all")){
+
+                                        summary[bu].TalkTimeOutbound = (summary[bu].TalkTimeOutbound > summary[bu].TotalHoldTimeOutbound) ?
+                                            summary[bu].TalkTimeOutbound - summary[bu].TotalHoldTimeOutbound : summary[bu].TotalHoldTimeOutbound;
+                                        summary[bu].TalkTimeInbound = (summary[bu].TalkTimeInbound > summary[bu].TotalHoldTimeInbound) ?
+                                            summary[bu].TalkTimeInbound - summary[bu].TotalHoldTimeInbound : summary[bu].TotalHoldTimeInbound;
+
+                                    }
+
 
                                     if (rBreak) {
                                         rBreak.forEach(function (bItem) {
@@ -683,6 +750,11 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     if (agentReject) {
                                         agentReject.forEach(function (rItem) {
                                             summary.TotalCallsInbound = summary.TotalCallsInbound + rItem.TotalCount;
+                                            if(rItem.BusinessUnit == bu ){
+                                                summary[bu].TotalCallsInbound = summary[bu].TotalCallsInbound + rItem.TotalCount;
+                                            }
+
+
                                         });
 
                                     }
@@ -690,25 +762,35 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                         afterWork.forEach(function (aItem) {
                                             if (aItem.Param2 === 'AfterWorkCALLoutbound') {
                                                 summary.AfterWorkTimeOutbound = summary.AfterWorkTimeOutbound + aItem.TotalTime;
+
+                                                if(aItem.BusinessUnit == bu ){
+                                                    summary[bu].AfterWorkTimeOutbound = summary[bu].AfterWorkTimeOutbound + aItem.TotalTime;
+                                                }
+
                                             } else if (aItem.Param2 === 'AfterWorkCALLinbound') {
                                                 summary.AfterWorkTimeInbound = summary.AfterWorkTimeInbound + aItem.TotalTime;
+
+                                                if(aItem.BusinessUnit == bu ){
+                                                    summary[bu].AfterWorkTimeInbound = summary[bu].AfterWorkTimeInbound + aItem.TotalTime;
+                                                }
                                             }
                                         });
                                     }
 
-                                    if (summary.TotalCallsInbound > 0) {
+                                    if (summary.TotalHoldInbound > 0 ) {
                                         summary.AvgHoldTimeInbound = summary.TotalHoldTimeInbound / summary.TotalHoldInbound;
+
                                     } else {
                                         summary.AvgHoldTimeInbound = 0;
                                     }
 
-                                    if (summary.TotalHoldOutbound > 0) {
+                                    if (summary.TotalHoldOutbound > 0 ) {
                                         summary.AvgHoldTimeOutbound = summary.TotalHoldTimeOutbound / summary.TotalHoldOutbound;
                                     } else {
                                         summary.AvgHoldTimeOutbound = 0;
                                     }
 
-                                    if (summary.TotalCallsInbound > 0) {
+                                    if (summary.TotalCallsInbound > 0 ) {
                                         summary.AverageHandlingTimeInbound = (summary.TalkTimeInbound + summary.AfterWorkTimeInbound + summary.TotalHoldTimeInbound) / summary.TotalCallsInbound;
                                         summary.AvgTalkTimeInbound = summary.TalkTimeInbound / summary.TotalCallsInbound;
                                     } else {
@@ -716,7 +798,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                         summary.AvgTalkTimeInbound = 0;
                                     }
 
-                                    if (summary.TotalCallsOutbound > 0) {
+                                    if (summary.TotalCallsOutbound > 0 ) {
                                         summary.AverageHandlingTimeOutbound = (summary.TalkTimeOutbound + summary.AfterWorkTimeOutbound + summary.TotalHoldTimeOutbound) / summary.TotalCallsOutbound;
                                         summary.AvgTalkTimeOutbound = summary.TalkTimeOutbound / summary.TotalCallsOutbound;
                                     } else {
@@ -733,6 +815,56 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     summary.IdleTimeOutbound = (summary.IdleTimeOutbound > 0) ? summary.IdleTimeOutbound : 0;
                                     summary.IdleTimeOffline = (summary.IdleTimeOffline > 0) ? summary.IdleTimeOffline : 0;
 
+
+
+                                    if(bu && (bu != "default" || bu != "all")){
+
+
+                                        if (summary[bu].TotalHoldInbound > 0) {
+                                            summary[bu].AvgHoldTimeInbound = summary[bu].TotalHoldTimeInbound / summary[bu].TotalHoldInbound;
+
+                                        } else {
+                                            summary[bu].AvgHoldTimeInbound = 0;
+                                        }
+
+                                        if (summary[bu].TotalHoldOutbound > 0 ) {
+                                            summary[bu].AvgHoldTimeOutbound = summary[bu].TotalHoldTimeOutbound / summary[bu].TotalHoldOutbound;
+                                        } else {
+                                            summary[bu].AvgHoldTimeOutbound = 0;
+                                        }
+
+                                        if (summary[bu].TotalCallsInbound > 0 ) {
+                                            summary[bu].AverageHandlingTimeInbound = (summary[bu].TalkTimeInbound + summary[bu].AfterWorkTimeInbound +
+                                                summary[bu].TotalHoldTimeInbound) / summary[bu].TotalCallsInbound;
+                                            summary[bu].AvgTalkTimeInbound = summary[bu].TalkTimeInbound / summary[bu].TotalCallsInbound;
+                                        } else {
+                                            summary[bu].AverageHandlingTimeInbound = 0;
+                                            summary[bu].AvgTalkTimeInbound = 0;
+                                        }
+
+                                        if (summary[bu].TotalCallsOutbound > 0 ) {
+                                            summary[bu].AverageHandlingTimeOutbound = (summary[bu].TalkTimeOutbound + summary[bu].AfterWorkTimeOutbound + summary[bu].TotalHoldTimeOutbound)
+                                                / summary[bu].TotalCallsOutbound;
+                                            summary[bu].AvgTalkTimeOutbound = summary[bu].TalkTimeOutbound / summary[bu].TotalCallsOutbound;
+                                        } else {
+                                            summary[bu].AverageHandlingTimeOutbound = 0;
+                                            summary[bu].AvgTalkTimeOutbound = 0;
+                                        }
+
+                                        summary[bu].IdleTimeInbound = summary[bu].InboundTime - (summary[bu].AfterWorkTimeInbound +
+                                            summary[bu].BreakTime + summary[bu].TalkTimeInbound + summary[bu].TotalHoldTimeInbound);
+                                        summary[bu].IdleTimeOutbound = summary[bu].OutboundTime - (summary[bu].AfterWorkTimeOutbound +
+                                            summary[bu].BreakTime + summary[bu].TalkTimeOutbound + summary[bu].TotalHoldTimeOutbound);
+                                        //summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
+                                        summary[bu].IdleTimeOffline = summary[bu].StaffTime - (summary[bu].InboundTime + summary[bu].OutboundTime);
+
+                                        summary[bu].IdleTimeInbound = (summary[bu].IdleTimeInbound > 0) ? summary[bu].IdleTimeInbound : 0;
+                                        summary[bu].IdleTimeOutbound = (summary[bu].IdleTimeOutbound > 0) ? summary[bu].IdleTimeOutbound : 0;
+                                        summary[bu].IdleTimeOffline = (summary[bu].IdleTimeOffline > 0) ? summary[bu].IdleTimeOffline : 0;
+
+
+
+                                    }
 
                                     callback(undefined, summary);
 

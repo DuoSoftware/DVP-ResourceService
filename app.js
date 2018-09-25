@@ -1904,7 +1904,8 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
         var companyId = req.user.company;
 
         var resourceId = req.query.resourceId;
-        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
+        var bu = req.query.bu;
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, resourceId, bu, res);
     }
     catch (ex) {
         logger.error('[productivitySummaryHandler.GetDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
