@@ -323,6 +323,72 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization(
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnit/Skill', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.CreateBusinessUnitSkill] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.CreateBusinessUnitSkill(att.BUId, att.UnitName, att.AttributeId, att.AttributeGroupId, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.CreateBusinessUnitSkill] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.CreateBusinessUnitSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/BusinessUnit/:buId/Skill/:skillId', authorization({
+    resource: "group",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.DeleteBusinessUnitSkill] - [HTTP]  - Request received -  Data - %s', req.params.id);
+        var buId = req.params.buId;
+        var skillId = req.params.skillId;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.DeleteSkillForBusinessUnit(buId, skillId, companyId, tenantId, res);
+    }
+    catch (ex) {
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, null);
+        logger.debug('[groupsHandler.DeleteBusinessUnitSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkill/:buId', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var buId = req.params.buId;
+        groupsHandler.GetSkillsForBusinessUnit(buId, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForBusinessUnit] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.post('/DVP/API/' + version + '/ResourceManager/UserGroup/Skill', authorization({
     resource: "group",
     action: "write"
