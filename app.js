@@ -389,6 +389,28 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkill/:buId
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkills', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var buIds = req.body;
+        groupsHandler.GetSkillsForBusinessUnits(buIds, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForBusinessUnit] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.post('/DVP/API/' + version + '/ResourceManager/UserGroup/Skill', authorization({
     resource: "group",
     action: "write"

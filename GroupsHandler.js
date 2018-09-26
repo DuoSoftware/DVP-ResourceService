@@ -483,6 +483,19 @@ function GetSkillsForBusinessUnit(buId, tenantId, companyId, callback) {
     });
 }
 
+function GetSkillsForBusinessUnits(buIds, tenantId, companyId, callback) {
+    DbConn.ResAttributeBusinessUnit.findAll({where: [{BUId: {[Op.in]:buIds}}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (attrBuList) {
+        logger.info('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(attrBuList));
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, attrBuList);
+        callback.end(jsonString);
+    }).error(function (err) {
+        var emptyArr = [];
+        logger.error('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
+        callback.end(jsonString);
+    });
+}
+
 function AddOneAttributeToExsistingGroups(attributeId, groupId, tenantId, companyId, otherData, callback) {
 
     DbConn.ResGroups.find({where: [{Status: true}, {GroupId: groupId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
@@ -669,4 +682,5 @@ module.exports.GetGroupByGroupName = GetGroupByGroupName;
 module.exports.CreateUserGroupsSkill = CreateUserGroupsSkill;
 module.exports.DeleteSkillForUserGroup = DeleteSkillForUserGroup;
 module.exports.GetSkillsForUserGroup = GetSkillsForUserGroup;
+module.exports.GetSkillsForBusinessUnits = GetSkillsForBusinessUnits;
 
