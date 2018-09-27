@@ -429,6 +429,73 @@ function AddAttributeToExsistingGroups(AttributeIds, groupId, tenantId, companyI
 
 }
 
+function CreateBusinessUnitSkill(buId, unitName, attributeId, attributeGrpId, tenantId, companyId, callback) {
+    DbConn.ResAttributeBusinessUnit
+        .create(
+            {
+                BUId: buId,
+                UnitName: unitName,
+                AttributeId: attributeId,
+                AttributeGroupId: attributeGrpId,
+                TenantId: tenantId,
+                CompanyId: companyId
+            }
+        ).then(function (rslt) {
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, rslt);
+        logger.info('[DVP-ResGroups.CreateBusinessUnitSkill] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.CreateBusinessUnitSkill] - [%s] - [PGSQL] - insertion  failed-[%s]', unitName, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+}
+
+function DeleteSkillForBusinessUnit(buId, skillId, companyId, tenantId, callback)
+{
+    DbConn.ResAttributeBusinessUnit
+        .destroy(
+            {
+                where : [{BUId:buId},{AttributeId:skillId},{CompanyId:companyId},{TenantId:tenantId}]
+            }
+        ).then(function (rslt)
+    {
+        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, rslt);
+        logger.info('[DVP-ResGroups.DeleteSkillForBusinessUnit] - [PGSQL] - delete successfully. [%s] ', jsonString);
+        callback.end(jsonString);
+    }).error(function (err) {
+        logger.error('[DVP-ResGroups.DeleteSkillForBusinessUnit] - [%s] - [PGSQL] - delete  failed-[%s]', buId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, null);
+        callback.end(jsonString);
+    });
+}
+
+function GetSkillsForBusinessUnit(buId, tenantId, companyId, callback) {
+    DbConn.ResAttributeBusinessUnit.findAll({where: [{BUId: buId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (attrBuList) {
+        logger.info('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(attrBuList));
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, attrBuList);
+        callback.end(jsonString);
+    }).error(function (err) {
+        var emptyArr = [];
+        logger.error('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
+        callback.end(jsonString);
+    });
+}
+
+function GetSkillsForBusinessUnits(buIds, tenantId, companyId, callback) {
+    DbConn.ResAttributeBusinessUnit.findAll({where: [{BUId: {[Op.in]:buIds}}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (attrBuList) {
+        logger.info('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenantId, companyId, JSON.stringify(attrBuList));
+        var jsonString = messageFormatter.FormatMessage(null, "SUCCESS", true, attrBuList);
+        callback.end(jsonString);
+    }).error(function (err) {
+        var emptyArr = [];
+        logger.error('[DVP-ResGroups.GetSkillsForBusinessUnit] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenantId, companyId, err);
+        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, emptyArr);
+        callback.end(jsonString);
+    });
+}
+
 function AddOneAttributeToExsistingGroups(attributeId, groupId, tenantId, companyId, otherData, callback) {
 
     DbConn.ResGroups.find({where: [{Status: true}, {GroupId: groupId}, {TenantId: tenantId}, {CompanyId: companyId}]}).then(function (CamObject) {
@@ -589,6 +656,9 @@ function GetAllGroupNames(req, res) {
     });
 }
 
+module.exports.GetSkillsForBusinessUnit = GetSkillsForBusinessUnit;
+module.exports.CreateBusinessUnitSkill = CreateBusinessUnitSkill;
+module.exports.DeleteSkillForBusinessUnit = DeleteSkillForBusinessUnit;
 module.exports.CreateGroups = CreateGroups;
 module.exports.EditGroups = EditGroups;
 module.exports.EditGroupAndAttachAttributes=EditGroupAndAttachAttributes;
@@ -612,4 +682,5 @@ module.exports.GetGroupByGroupName = GetGroupByGroupName;
 module.exports.CreateUserGroupsSkill = CreateUserGroupsSkill;
 module.exports.DeleteSkillForUserGroup = DeleteSkillForUserGroup;
 module.exports.GetSkillsForUserGroup = GetSkillsForUserGroup;
+module.exports.GetSkillsForBusinessUnits = GetSkillsForBusinessUnits;
 
