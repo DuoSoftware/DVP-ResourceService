@@ -19,6 +19,7 @@
     "request": "^2.69.0",
     "restify": "^4.0.3",
     "restify-jwt": "^0.4.0",
+    "sequelize": "^4.39.0",
     "string-format": "^0.5.0",
     "string-format-js": "^0.1.8",
     "stringformat": "0.0.5",

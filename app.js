@@ -410,6 +410,28 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkills', a
     }
     return next();
 });
+var DbConn = require('dvp-dbmodels');
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnitGroupSkills', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+
+
+    try {
+        logger.info('[groupsHandler.BusinessUnitGroupSkills] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        groupsHandler.GetBusinessUnitGroupSkills(req, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.BusinessUnitGroupSkills] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.BusinessUnitGroupSkills] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
 
 RestServer.post('/DVP/API/' + version + '/ResourceManager/UserGroup/Skill', authorization({
     resource: "group",
