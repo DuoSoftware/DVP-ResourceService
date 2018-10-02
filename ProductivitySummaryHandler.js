@@ -632,7 +632,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     summary.AvgHoldTimeOutbound = 0;
 
 
-                                    if(bu && (bu != "default" || bu != "all")){
+                                    if(bu && (bu != "default" && bu.toLowerCase() != "all")){
 
                                         summary[bu] = {};
                                         summary[bu].TalkTimeInbound = 0;
@@ -666,8 +666,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                                 summary.TotalHoldTimeOutbound = summary.TotalHoldTimeOutbound + hItem.TotalTime;
                                                 if(hItem.BusinessUnit == bu ){
 
-                                                    summary[bu].TotalHoldOutbound = summary.TotalHoldOutbound + hItem.TotalCount;
-                                                    summary[bu].TotalHoldTimeOutbound = summary.TotalHoldTimeOutbound + hItem.TotalTime;
+                                                    summary[bu].TotalHoldOutbound = summary[bu].TotalHoldOutbound + hItem.TotalCount;
+                                                    summary[bu].TotalHoldTimeOutbound = summary[bu].TotalHoldTimeOutbound + hItem.TotalTime;
                                                 }
                                             } else if (hItem.Param2 === 'inbound') {
                                                 summary.TotalHoldInbound = summary.TotalHoldInbound + hItem.TotalCount;
@@ -675,8 +675,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
                                                 if(hItem.BusinessUnit == bu ){
 
-                                                    summary[bu].TotalHoldInbound = summary.TotalHoldInbound + hItem.TotalCount;
-                                                    summary[bu].TotalHoldTimeInbound = summary.TotalHoldTimeInbound + hItem.TotalTime;
+                                                    summary[bu].TotalHoldInbound = summary[bu].TotalHoldInbound + hItem.TotalCount;
+                                                    summary[bu].TotalHoldTimeInbound = summary[bu].TotalHoldTimeInbound + hItem.TotalTime;
                                                 }
                                             }
                                         });
@@ -731,7 +731,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                     summary.TalkTimeInbound = (summary.TalkTimeInbound > summary.TotalHoldTimeInbound) ?
                                         summary.TalkTimeInbound - summary.TotalHoldTimeInbound : summary.TotalHoldTimeInbound;
 
-                                    if(bu && (bu != "default" || bu != "all")){
+                                    if(bu && (bu != "default" && bu.toLowerCase() != "all")){
 
                                         summary[bu].TalkTimeOutbound = (summary[bu].TalkTimeOutbound > summary[bu].TotalHoldTimeOutbound) ?
                                             summary[bu].TalkTimeOutbound - summary[bu].TotalHoldTimeOutbound : summary[bu].TotalHoldTimeOutbound;
@@ -817,7 +817,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
 
 
-                                    if(bu && (bu != "default" || bu != "all")){
+                                    if(bu && (bu != "default" && bu.toLowerCase() != "all")){
 
 
                                         if (summary[bu].TotalHoldInbound > 0) {
@@ -851,16 +851,16 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                             summary[bu].AvgTalkTimeOutbound = 0;
                                         }
 
-                                        summary[bu].IdleTimeInbound = summary[bu].InboundTime - (summary[bu].AfterWorkTimeInbound +
-                                            summary[bu].BreakTime + summary[bu].TalkTimeInbound + summary[bu].TotalHoldTimeInbound);
-                                        summary[bu].IdleTimeOutbound = summary[bu].OutboundTime - (summary[bu].AfterWorkTimeOutbound +
-                                            summary[bu].BreakTime + summary[bu].TalkTimeOutbound + summary[bu].TotalHoldTimeOutbound);
-                                        //summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
-                                        summary[bu].IdleTimeOffline = summary[bu].StaffTime - (summary[bu].InboundTime + summary[bu].OutboundTime);
-
-                                        summary[bu].IdleTimeInbound = (summary[bu].IdleTimeInbound > 0) ? summary[bu].IdleTimeInbound : 0;
-                                        summary[bu].IdleTimeOutbound = (summary[bu].IdleTimeOutbound > 0) ? summary[bu].IdleTimeOutbound : 0;
-                                        summary[bu].IdleTimeOffline = (summary[bu].IdleTimeOffline > 0) ? summary[bu].IdleTimeOffline : 0;
+                                        ///////////////////not require in bu wise////////////////////////////////////////////////////////
+                                        // summary[bu].IdleTimeInbound = summary[bu].InboundTime - (summary[bu].AfterWorkTimeInbound +
+                                        //     summary[bu].BreakTime + summary[bu].TalkTimeInbound + summary[bu].TotalHoldTimeInbound);
+                                        // summary[bu].IdleTimeOutbound = summary[bu].OutboundTime - (summary[bu].AfterWorkTimeOutbound +
+                                        //     summary[bu].BreakTime + summary[bu].TalkTimeOutbound + summary[bu].TotalHoldTimeOutbound);
+                                        // summary[bu].IdleTimeOffline = summary[bu].StaffTime - (summary[bu].InboundTime + summary[bu].OutboundTime);
+                                        //
+                                        // summary[bu].IdleTimeInbound = (summary[bu].IdleTimeInbound > 0) ? summary[bu].IdleTimeInbound : 0;
+                                        // summary[bu].IdleTimeOutbound = (summary[bu].IdleTimeOutbound > 0) ? summary[bu].IdleTimeOutbound : 0;
+                                        // summary[bu].IdleTimeOffline = (summary[bu].IdleTimeOffline > 0) ? summary[bu].IdleTimeOffline : 0;
 
 
 
