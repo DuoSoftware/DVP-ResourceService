@@ -7,6 +7,7 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 
 var config = require('config');
 var mongomodels = require('dvp-mongomodels');
+var dbModel = require('dvp-dbmodels');
 
 var port = config.Host.port || 3000;
 var version = config.Host.version;
@@ -23,6 +24,7 @@ var breakTypeHandler = require('./BreakTypeHandler');
 var agentWisePerformance = require('./AgentWisePerformance');
 var queueSkillHandler = require('./QueueSkillHandler.js');
 var node_uuid = require('node-uuid');
+var healthcheck = require('dvp-healthcheck/DBHealthChecker');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -56,6 +58,13 @@ RestServer.listen(port, function () {
 });
 
 //------------------------- End Restify Server ------------------------- \\
+
+//------------------------- Health Check ------------------------------- \\
+
+hc = new healthcheck(RestServer, {redis: productivityHandler.redisArdsClient, pg: dbModel.SequelizeConn, mongo:mongomodels.connection });
+hc.Initiate();
+
+//------------------------- End Health Check --------------------------- \\
 
 //------------------------- Attribute Handler ------------------------- \\
 
