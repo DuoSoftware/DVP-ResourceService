@@ -6,7 +6,6 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
 var DbConn = require('dvp-dbmodels');
 var moment = require('moment');
-var Sequelize = require('sequelize');
 
 
 module.exports.CreateAttribute =function (attribute, attClass, attType, attCategory, tenantId, companyId, otherData, callback,req_id) {
