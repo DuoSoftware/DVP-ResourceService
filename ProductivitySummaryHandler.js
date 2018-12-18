@@ -483,6 +483,36 @@ var GetCompanyName = function (companyId) {
 };
 
 
+    //
+    // var dashboardQuery = {
+    //
+    //     where: [
+    //         {
+    //             SummaryDate: {between: [summaryFromDate, summaryToDate]},
+    //             TenantId: tenant,
+    //             WindowName: ['LOGIN','CONNECTED','AFTERWORK','BREAK','INBOUND','CALLANSWERED','OUTBOUND','AGENTHOLD']
+    //
+    //         }]
+    //
+    //     ]
+    // };
+    //
+    // if(company){
+    //     CompanyId: company
+    // }
+    //
+    // if(resourceId&& resourceId != "undefined"){
+    //
+    //     dashboardQuery.where[0].ResourceId = resourceId;
+    // }
+    //
+    //
+    //
+    //
+    // dbConn.DashboardDailySummary.findAll(dashboardQuery).then(function (acwInfo) {
+    //
+
+
 var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
     var jsonString;
     var query = "";
