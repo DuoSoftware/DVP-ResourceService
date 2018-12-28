@@ -214,6 +214,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
 
     var AgentsProductivity = [];
     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
+    var bu = req.query.bu || "default";
 
     /*function toSeconds(time) {
      var sTime = time.split(':'); // split it at the colons
@@ -259,7 +260,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                         OutboundAnswerCount: 0
                     };
                     var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-                    var staffedTime = format("SESSION:{0}:{1}:default:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
+                    var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId,bu, resourceId);
                     var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
                     var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
                     var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
@@ -473,6 +474,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
 
     var resourceId = req.params["ResourceId"];
+    var bu = req.query.bu || "default";
 
     var productivity = {
         ResourceId: resourceId,
@@ -495,7 +497,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
 
     };
     var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-    var staffedTime = format("SESSION:{0}:{1}:default:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
+    var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId,bu, resourceId);
     var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
     var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
     var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
@@ -643,6 +645,10 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
     });
 
 };
+
+
+
+
 
 module.exports.GetTransferCallCount = function (req, res, companyId, tenantId) {
 

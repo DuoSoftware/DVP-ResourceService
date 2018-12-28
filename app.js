@@ -7,6 +7,7 @@ var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJ
 
 var config = require('config');
 var mongomodels = require('dvp-mongomodels');
+var dbModel = require('dvp-dbmodels');
 
 var port = config.Host.port || 3000;
 var version = config.Host.version;
@@ -23,6 +24,7 @@ var breakTypeHandler = require('./BreakTypeHandler');
 var agentWisePerformance = require('./AgentWisePerformance');
 var queueSkillHandler = require('./QueueSkillHandler.js');
 var node_uuid = require('node-uuid');
+var healthcheck = require('dvp-healthcheck/DBHealthChecker');
 
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
@@ -56,6 +58,13 @@ RestServer.listen(port, function () {
 });
 
 //------------------------- End Restify Server ------------------------- \\
+
+//------------------------- Health Check ------------------------------- \\
+
+hc = new healthcheck(RestServer, {redis: productivityHandler.redisArdsClient, pg: dbModel.SequelizeConn, mongo:mongomodels.connection });
+hc.Initiate();
+
+//------------------------- End Health Check --------------------------- \\
 
 //------------------------- Attribute Handler ------------------------- \\
 
@@ -323,6 +332,168 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Group', authorization(
     return next();
 });
 
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnit/Skill', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.CreateBusinessUnitSkill] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.CreateBusinessUnitSkill(att.BUId, att.UnitName, att.AttributeId, att.AttributeGroupId, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.CreateBusinessUnitSkill] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.CreateBusinessUnitSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/BusinessUnit/:buId/Skill/:skillId', authorization({
+    resource: "group",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.DeleteBusinessUnitSkill] - [HTTP]  - Request received -  Data - %s', req.params.id);
+        var buId = req.params.buId;
+        var skillId = req.params.skillId;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.DeleteSkillForBusinessUnit(buId, skillId, companyId, tenantId, res);
+    }
+    catch (ex) {
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, null);
+        logger.debug('[groupsHandler.DeleteBusinessUnitSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkill/:buId', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var buId = req.params.buId;
+        groupsHandler.GetSkillsForBusinessUnit(buId, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForBusinessUnit] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnitSkills', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+        logger.info('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var buIds = req.body;
+        groupsHandler.GetSkillsForBusinessUnits(buIds, tenantId, companyId, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.GetSkillsForBusinessUnit] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForBusinessUnit] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+var DbConn = require('dvp-dbmodels');
+RestServer.post('/DVP/API/' + version + '/ResourceManager/BusinessUnitGroupSkills', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+
+
+    try {
+        logger.info('[groupsHandler.BusinessUnitGroupSkills] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+
+        groupsHandler.GetBusinessUnitGroupSkills(req, res);
+    }
+    catch (ex) {
+        logger.error('[groupsHandler.BusinessUnitGroupSkills] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.BusinessUnitGroupSkills] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.post('/DVP/API/' + version + '/ResourceManager/UserGroup/Skill', authorization({
+    resource: "group",
+    action: "write"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.CreateUserGroupSkill] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.body));
+
+        var att = req.body;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.CreateUserGroupsSkill(att.GroupId, att.GroupName, att.AttributeId, att.AttributeGroupId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.CreateGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.CreateGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.del('/DVP/API/' + version + '/ResourceManager/UserGroup/:grpId/Skill/:skillId', authorization({
+    resource: "group",
+    action: "delete"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.DeleteUserGroupSkill] - [HTTP]  - Request received -  Data - %s', req.params.id);
+
+        var grpId = req.params.grpId;
+        var skillId = req.params.skillId;
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.DeleteSkillForUserGroup(grpId, skillId, companyId, tenantId, res);
+
+    }
+    catch (ex) {
+
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, null);
+        logger.debug('[groupsHandler.DeleteUserGroupSkill] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.put('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
     resource: "group",
     action: "write"
@@ -425,6 +596,32 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups', authorization(
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/UserGroupSkill/:groupId', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetSkillsForUserGroup] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        var grpId = req.params.groupId;
+        groupsHandler.GetSkillsForUserGroup(grpId, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetSkillsForUserGroup] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetSkillsForUserGroup] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupsCount', authorization({
     resource: "group",
     action: "read"
@@ -445,6 +642,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/GroupsCount', authoriza
         logger.error('[groupsHandler.GroupsCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GroupsCount] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AllowedGroupsCount', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.AllowedGroupsCount] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.AllowedGroupsCount(tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AllowedGroupsCount] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AllowedGroupsCount] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -475,6 +697,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Groups/:RowCount/:PageN
     return next();
 });
 
+RestServer.get('/DVP/API/' + version + '/ResourceManager/AllowedGroups/:RowCount/:PageNo', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.AllowedGroups] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.GetAllowedGroupsPaging(tenantId, companyId, req.params.RowCount, req.params.PageNo, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.AllowedGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.AllowedGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
 RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', authorization({
     resource: "group",
     action: "read"
@@ -495,6 +742,31 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/:GroupId', author
         logger.error('[groupsHandler.GetAllGroups] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
         var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
         logger.debug('[groupsHandler.GetAllGroups] - Request response : %s ', jsonString);
+        res.end(jsonString);
+    }
+    return next();
+});
+
+RestServer.get('/DVP/API/' + version + '/ResourceManager/Group/Name/:GroupName', authorization({
+    resource: "group",
+    action: "read"
+}), function (req, res, next) {
+    try {
+
+        logger.info('[groupsHandler.GetGroupByName] - [HTTP]  - Request received -  Data - %s ', JSON.stringify(req.params));
+
+        if (!req.user ||!req.user.tenant || !req.user.company)
+            throw new Error("invalid tenant or company.");
+        var tenantId = req.user.tenant;
+        var companyId = req.user.company;
+        groupsHandler.GetGroupByGroupName(req.params.GroupName, tenantId, companyId, res);
+
+    }
+    catch (ex) {
+
+        logger.error('[groupsHandler.GetGroupByName] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.params), ex);
+        var jsonString = messageFormatter.FormatMessage(ex, "EXCEPTION", false, undefined);
+        logger.debug('[groupsHandler.GetGroupByName] - Request response : %s ', jsonString);
         res.end(jsonString);
     }
     return next();
@@ -1751,7 +2023,8 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
         var companyId = req.user.company;
 
         var resourceId = req.query.resourceId;
-        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
+        var bu = req.query.bu;
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, companyId, req.params.summaryFromDate, req.params.summaryToDate, resourceId, bu, res);
     }
     catch (ex) {
         logger.error('[productivitySummaryHandler.GetDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
@@ -1778,7 +2051,8 @@ RestServer.get('/DVP/API/' + version + '/ResourceManager/Resources/Productivity/
             resourceId = req.query.resourceId.replace(new RegExp('"', 'g'), "'").replace('[','').replace(']','');
         }
 
-        productivitySummaryHandler.GetDailySummaryRecords(tenantId, null, req.params.summaryFromDate, req.params.summaryToDate, resourceId, res);
+        var bu = req.query.bu;
+        productivitySummaryHandler.GetDailySummaryRecords(tenantId, null, req.params.summaryFromDate, req.params.summaryToDate, resourceId,bu, res);
     }
     catch (ex) {
         logger.error('[productivitySummaryHandler.GetConsolidatedDailySummaryRecords] - [HTTP]  - Exception occurred -  Data - %s ', JSON.stringify(req.body), ex);
