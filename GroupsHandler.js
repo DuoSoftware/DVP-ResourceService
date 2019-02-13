@@ -302,7 +302,7 @@ function GetGroupByGroupId(groupId, tenantId, companyId, callback) {
         }
         else {
             logger.error('[DVP-ResGroups.GetGroupByGroupId] - [PGSQL]  - No record found for %s - %s  ', tenantId, companyId);
-            var jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+            var jsonString = messageFormatter.FormatMessage(null, "No Record", true, undefined);
             callback.end(jsonString);
         }
     }).error(function (err) {
