@@ -1314,10 +1314,10 @@ var getMyQueueData = function (req,res) {
                                         skillArr.push(skill.AttributeId.toString());
 
                                     });
-                                    callback(undefined,true);
+
                                 }
                             });
-
+                            callback(undefined,true);
 
                         }
                         else
