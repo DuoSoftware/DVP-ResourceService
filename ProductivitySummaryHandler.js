@@ -719,7 +719,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                             if (outAnsItem.Param2 === 'outbound') {
                                                 summary.TotalAnsweredOutbound = summary.TotalAnsweredOutbound + outAnsItem.TotalCount;
 
-                                                if(hItem.BusinessUnit == bu ){
+                                                if(outAnsItem.BusinessUnit == bu ){
 
                                                     summary[bu].TotalAnsweredOutbound = summary[bu].TotalAnsweredOutbound + outAnsItem.TotalCount;
                                                 }
