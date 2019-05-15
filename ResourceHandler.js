@@ -83,7 +83,7 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
         logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         var auditData = {
             KeyProperty: "ResourceName",
-            OldValue: tmpResource,
+            OldValue: {},
             NewValue: tmpResource,
             Description: "New Resource Created.",
             Author: iss,
@@ -103,29 +103,34 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
 }
 
 function EditResource(resourceId, resClass, resType, resCategory, tenantId, companyId, resourceName, otherData, iss, callback) {
+
+    var tempRes = {
+        ResClass: resClass,
+        ResType: resType,
+        ResCategory: resCategory,
+        TenantId: tenantId,
+        CompanyId: companyId,
+        /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
+        OtherData: otherData,
+        Status: true
+    }
     DbConn.ResResource
         .update(
-            {
-                ResClass: resClass,
-                ResType: resType,
-                ResCategory: resCategory,
-                TenantId: tenantId,
-                CompanyId: companyId,
-                /*ResourceName: resourceName, not allow to edit. bcoz profile service not allow to edit*/
-                OtherData: otherData,
-                Status: true
-            }, {
+            tempRes
+            , {
                 where: {
                     ResourceId: resourceId
                 }
+            },{
+                nonce: Sequelize.literal('nonce + 1')
             }
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp == 1, cmp);
         logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         var auditData = {
-            KeyProperty: "ResourceName",
-            OldValue: resourceName,
-            NewValue: resourceName,
+            KeyProperty: "ResourceId",
+            OldValue: cmp,
+            NewValue: tempRes,
             Description: "Update Resource.",
             Author: iss,
             User: iss,
@@ -278,23 +283,39 @@ function GetAllResourceById(resourceId, tenantId, companyId, callback) {
     });
 }
 
-function AssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, callback) {
+function AssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, iss, callback) {
 
+    var resTask =  {
+        ResourceId: resourceId,
+        TaskId: taskId,
+        TenantId: tenantId,
+        CompanyId: companyId,
+        Concurrency: concurrency,
+        RefInfo: refInfo,
+        OtherData: otherData,
+        Status: true
+    }
     DbConn.ResResourceTask
         .create(
-            {
-                ResourceId: resourceId,
-                TaskId: taskId,
-                TenantId: tenantId,
-                CompanyId: companyId,
-                Concurrency: concurrency,
-                RefInfo: refInfo,
-                OtherData: otherData,
-                Status: true
-            }
+            resTask
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+
+        var auditData = {
+            KeyProperty: "ResourceId",
+            OldValue: {},
+            NewValue: resTask,
+            Description: "Assign Task to resource",
+            Author: iss,
+            User: iss,
+            ObjectType: "ResResourceTask",
+            Action: "SAVE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
+
         callback.end(jsonString);
     }).error(function (err) {
         logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
@@ -303,20 +324,42 @@ function AssignTaskToResource(resourceId, taskId, tenantId, companyId, concurren
     });
 }
 
-function UpdateAssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, callback) {
+function UpdateAssignTaskToResource(resourceId, taskId, tenantId, companyId, concurrency, refInfo, otherData, iss, callback) {
+
+    var tempData = {
+        Concurrency: concurrency,
+        RefInfo: refInfo,
+        OtherData: otherData,
+        Status: true
+    };
 
     DbConn.ResResourceTask
         .update(
-            {
-                Concurrency: concurrency, RefInfo: refInfo, OtherData: otherData, Status: true
-            }
+            tempData
             ,
             {
                 where: [{ResourceId: resourceId}, {TaskId: taskId}, {TenantId: tenantId}, {CompanyId: companyId}]
-            }
+            },
+            { nonce: sequelize.literal('nonce + 1') }
+
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+
+        tempData.ResourceId = resourceId;
+        var auditData = {
+            KeyProperty: "ResourceName",
+            OldValue: cmp,
+            NewValue: tempData,
+            Description: "Update Task to resource",
+            Author: iss,
+            User: iss,
+            ObjectType: "ResResourceTask",
+            Action: "UPDATE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
         callback.end(jsonString);
     }).error(function (err) {
         logger.error('[DVP-ResResourceTask.AssignTaskToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', resourceId, err);
@@ -367,7 +410,7 @@ function GetResourceByTaskId(taskId, tenantId, companyId, callback) {
     });
 }
 
-function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, callback) {
+function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, iss,callback) {
     DbConn.ResResourceTask.destroy(
         {
             where: [{ResourceId: resourceId}, {TaskId: taskId}, {TenantId: tenantId}, {CompanyId: companyId}]
@@ -376,6 +419,25 @@ function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, callbac
     ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+
+        var auditData = {
+            KeyProperty: "ResourceId",
+            OldValue: {
+                ResourceId: resourceId},
+            NewValue: {
+                ResourceId: resourceId,
+                TaskId: taskId},
+            Description: "Delete Task from resource.",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResourceTask",
+            Action: "DELETE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
+
         callback.end(jsonString);
     }).error(function (err) {
         logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
@@ -384,7 +446,7 @@ function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, callbac
     });
 }
 
-function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, callback) {
+function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, iss, callback) {
     DbConn.ResResourceTask.destroy(
         {
             where: [{ResourceId: resourceId}, {TenantId: tenantId}, {CompanyId: companyId}]
@@ -392,6 +454,23 @@ function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, callbac
     ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
+
+        var auditData = {
+            KeyProperty: "ResourceId",
+            OldValue: {
+                ResourceId: resourceId},
+            NewValue: {
+                ResourceId: resourceId},
+            Description: "Delete All Task from resource.",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResourceTask",
+            Action: "DELETE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
         callback.end(jsonString);
     }).error(function (err) {
         logger.error('[DVP-ResResourceTask.RemoveTasFromResource] - [%s] - [PGSQL] -  failed-[%s]', taskId, err);
@@ -400,22 +479,39 @@ function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, callbac
     });
 }
 
-function AddAttributeToResource(params, body, tenantId, companyId, callback) {
+function AddAttributeToResource(params, body, tenantId, companyId, iss,callback) {
+
+
+    var attrib = {
+        Percentage: body.Percentage,
+        AttributeId: params.AttributeId,
+        ResTaskId: params.ResTaskId,
+        TenantId: tenantId,
+        CompanyId: companyId,
+        OtherData: body.OtherData,
+        Status: true
+    };
 
     DbConn.ResResourceAttributeTask
         .create(
-            {
-                Percentage: body.Percentage,
-                AttributeId: params.AttributeId,
-                ResTaskId: params.ResTaskId,
-                TenantId: tenantId,
-                CompanyId: companyId,
-                OtherData: body.OtherData,
-                Status: true
-            }
+            attrib
         ).then(function (cmp) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResourceAttributeTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+
+        var auditData = {
+            KeyProperty: "ResourceName",
+            OldValue: {},
+            NewValue: attrib,
+            Description: "Assign Attribute to Resource",
+            Author: iss,
+            User: iss,
+            ObjectType: "ResResourceAttributeTask",
+            Action: "SAVE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
         callback.end(jsonString);
     }).error(function (err) {
         logger.error('[DVP-ResResourceAttributeTask] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
@@ -424,24 +520,50 @@ function AddAttributeToResource(params, body, tenantId, companyId, callback) {
     });
 }
 
-function EditAttributeToResource(params, body, tenantId, companyId, callback) {
+function EditAttributeToResource(params, body, tenantId, companyId, iss, callback) {
 
+    var attribs = {
+        Percentage: body.Percentage,
+        AttributeId: params.AttributeId,
+        ResTaskId: params.ResTaskId,
+        TenantId: tenantId,
+        CompanyId: companyId,
+        OtherData: body.OtherData,
+        Status: true
+    };
     DbConn.ResResourceAttributeTask
         .update(
-            {
-                Percentage: body.Percentage,
-                AttributeId: params.AttributeId,
-                ResTaskId: params.ResTaskId,
-                TenantId: tenantId,
-                CompanyId: companyId,
-                OtherData: body.OtherData,
-                Status: true
-            }, {
+            attribs
+            , {
                 where: {
                     ResAttId: params.ResAttId
-                }
+                },
+                returning: true
             }
         ).then(function (cmp) {
+
+        var previous = {};
+        if (Array.isArray(cmp) && cmp.length > 1) {
+            var val = cmp[1];
+            if (Array.isArray(val) && val.length > 0) {
+                previous = val[0]
+            }
+        }
+
+        var auditData = {
+            KeyProperty: "ResourceId",
+            OldValue: attribs,
+            NewValue: attribs,
+            Description: "Update Resource Attributes",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResourceAttributeTask",
+            Action: "UPDATE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-EditAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         callback.end(jsonString);
@@ -452,7 +574,7 @@ function EditAttributeToResource(params, body, tenantId, companyId, callback) {
     });
 }
 
-function DeleteAttributeToResource(params, body, tenantId, companyId, callback) {
+function DeleteAttributeToResource(params, body, tenantId, companyId, iss, callback) {
 
     DbConn.ResResourceAttributeTask
         .destroy(
@@ -462,6 +584,21 @@ function DeleteAttributeToResource(params, body, tenantId, companyId, callback) 
                 }
             }
         ).then(function (cmp) {
+
+        var auditData = {
+            KeyProperty: "ResourceAttributeId",
+            OldValue: params.ResAttId,
+            NewValue: params.ResAttId,
+            Description: "Delete Resource Attribute.",
+            Author: iss,
+            User: iss,
+            OtherJsonData: JSON.stringify(cmp),
+            ObjectType: "ResResourceAttributeTask",
+            Action: "DELETE",
+            Application: "Resource Service"
+        };
+        addAuditTrail(tenantId, companyId, iss, auditData);
+
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-DeleteAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         callback.end(jsonString);
