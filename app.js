@@ -1173,7 +1173,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/T
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AssignTaskToResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, att.Concurrency, att.RefInfo, att.OtherData, res);
+        resourceHandler.AssignTaskToResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, att.Concurrency, att.RefInfo, att.OtherData, req.user.iss, res);
 
     }
     catch (ex) {
@@ -1199,7 +1199,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.UpdateAssignTaskToResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, att.Concurrency, att.RefInfo, att.OtherData, res);
+        resourceHandler.UpdateAssignTaskToResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, att.Concurrency, att.RefInfo, att.OtherData, req.user.iss, res);
 
     }
     catch (ex) {
@@ -1276,7 +1276,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.RemoveTaskFromResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, res);
+        resourceHandler.RemoveTaskFromResource(req.params.ResourceId, req.params.TaskId, tenantId, companyId, req.user.iss, res);
 
     }
     catch (ex) {
@@ -1301,7 +1301,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/Resource/:ResourceId/Ta
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.RemoveAllTasksAssignToResource(req.params.ResourceId, tenantId, companyId, res);
+        resourceHandler.RemoveAllTasksAssignToResource(req.params.ResourceId, tenantId, companyId, req.user.iss,res);
 
     }
     catch (ex) {
@@ -1458,7 +1458,7 @@ RestServer.post('/DVP/API/' + version + '/ResourceManager/ResourceTask/:ResTaskI
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.AddAttributeToResource(req.params, req.body, tenantId, companyId, res);
+        resourceHandler.AddAttributeToResource(req.params, req.body, tenantId, companyId, req.user.iss, res);
 
     }
     catch (ex) {
@@ -1484,7 +1484,7 @@ RestServer.put('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.EditAttributeToResource(req.params, req.body, tenantId, companyId, res);
+        resourceHandler.EditAttributeToResource(req.params, req.body, tenantId, companyId, req.user.iss, res);
 
     }
     catch (ex) {
@@ -1510,7 +1510,7 @@ RestServer.del('/DVP/API/' + version + '/ResourceManager/ResourceTaskAttribute/:
             throw new Error("invalid tenant or company.");
         var tenantId = req.user.tenant;
         var companyId = req.user.company;
-        resourceHandler.DeleteAttributeToResource(req.params, req.body, tenantId, companyId, res);
+        resourceHandler.DeleteAttributeToResource(req.params, req.body, tenantId, companyId, req.user.iss, res);
 
     }
     catch (ex) {
