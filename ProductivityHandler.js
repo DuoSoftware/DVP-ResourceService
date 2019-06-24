@@ -209,6 +209,344 @@ redisArdsClient.on("connect", function (err) {
 });
 
 
+// module.exports.Productivity = function (req, res, companyId, tenantId) {
+//
+//
+//     var AgentsProductivity = [];
+//     var id = format("Resource:{0}:{1}:*", companyId, tenantId);
+//     var bu = req.query.bu || "default";
+//
+//     /*function toSeconds(time) {
+//      var sTime = time.split(':'); // split it at the colons
+//      // minutes are worth 60 seconds. Hours are worth 60 minutes.
+//      return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
+//      }*/
+//
+//
+//     redisArdsClient.keys(id, function (err, resourceIds) {
+//         console.log("start");
+//         if (err) {
+//             logger.error('[TransferCallCount] - [%s]', id, err);
+//             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+//             res.end(jsonString);
+//         }
+//         else {
+//             console.log(resourceIds);
+//             console.log("-------------------------");
+//             var count = 0;
+//
+//             (async function resourceIter() {
+//                 if (resourceIds.length > 0) {
+//
+//                     async function operation() {
+//                         var currentObj = await redisArdsClient.get(currentState);
+//
+//
+//                         if (err) {
+//                             logger.error('[TransferCallCount] - [%s]', id, err);
+//                             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+//                             res.end(jsonString);
+//                         }
+//                         else {
+//
+//                             (async function redisGetKeys(){
+//                             var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount, outgoingAnswerCount];
+//
+//                             async function redisMget() {
+//                                 await redisClient.mget(keys, function (err, reuslt) {
+//                                     if (err) {
+//                                         console.log(err);
+//                                     }
+//                                     else {
+//                                         var tempInboundOnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+//                                         var tempOutboundOnCallTime = parseInt(reuslt[8] ? reuslt[8] : 0);
+//                                         productivity.InboundAcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+//                                         productivity.OutboundAcwTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+//                                         productivity.InboundHoldTime = parseInt(reuslt[5] ? reuslt[5] : 0);
+//                                         productivity.OutboundHoldTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+//
+//                                         productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
+//                                         productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
+//                                         productivity.OutboundAnswerCount = parseInt(reuslt[10] ? reuslt[10] : 0);
+//                                         productivity.InboundCallTime = (productivity.InboundCallTime > 0) ? productivity.InboundCallTime : 0;
+//                                         productivity.OutboundCallTime = (productivity.OutboundCallTime > 0) ? productivity.OutboundCallTime : 0;
+//
+//                                         productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+//                                         productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
+//                                         productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
+//                                         productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
+//                                         productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
+//                                         productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+//                                         productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
+//
+//
+//                                         (async function staffTimeProcess(){
+//
+//                                         async function redisHget() {
+//                                             await redisClient.hget(staffedTime, "time", function (err, reuslt) {
+//                                                 if (err) {
+//                                                     console.log(err);
+//                                                 }
+//                                                 else {
+//                                                     try {
+//
+//                                                         if (reuslt) {
+//
+//                                                             var now = "04/09/2013 15:00:00";
+//                                                             var then = "04/09/2013 14:20:30";
+//
+//                                                             var timetet = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
+//
+//                                                             var stfTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
+//                                                             productivity.StaffedTime = toSeconds(stfTime);
+//                                                             var workTime = 0;
+//                                                             try {
+//                                                                 /*var currentStateSpendTime = currentObj.StateChangeTime;*/
+//                                                                 workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime) + parseInt(productivity.HoldTime);
+//
+//                                                                 var sTime = JSON.parse(currentObj);
+//
+//                                                                 /*
+//                                                                  if( moment(sTime.StateChangeTime)>moment(reuslt)){
+//                                                                  var currentStateSpendTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(sTime.StateChangeTime))).format("HH:mm:ss"); // split it at the colons
+//                                                                  workTime = parseInt(workTime) + parseInt(toSeconds(currentStateSpendTime));
+//                                                                  }*/
+//
+//
+//                                                             }
+//                                                             catch (ex) {
+//                                                                 console.log(err);
+//                                                             }
+//
+//                                                             (async function LastDayStafftimeProcess(){
+//
+//
+//                                                                 async function redisStafftimeLastDay() {
+//                                                                     try {
+//                                                                     await redisClient.get(staffedTimeLastDay, function (err, reuslt) {
+//                                                                         if (err) {
+//                                                                             console.log(err);
+//                                                                         }
+//                                                                         else {
+//                                                                             if (reuslt) {
+//                                                                                 try {
+//                                                                                     /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
+//                                                                                     productivity.StaffedTime = parseInt(reuslt) + parseInt(productivity.StaffedTime);
+//                                                                                     /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
+//                                                                                 }
+//                                                                                 catch (ex) {
+//                                                                                     console.log(err);
+//                                                                                 }
+//                                                                             }
+//                                                                             productivity.IdleTime = parseInt(productivity.StaffedTime) - parseInt(workTime);
+//
+//                                                                             (async function frf() {
+//
+//
+//                                                                                 async function getMissedCallCount() {
+//                                                                                     await redisClient.keys(missCallCount, function (err, ids) {
+//                                                                                         if (err) {
+//                                                                                             console.log(err);
+//                                                                                         }
+//                                                                                         else {
+//
+//                                                                                             (async function de() {
+//                                                                                                 async function getIds() {
+//                                                                                                     await redisClient.mget(ids, function (err, misscalls) {
+//
+//                                                                                                         try {
+//                                                                                                             productivity.MissCallCount = 0;
+//                                                                                                             productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
+//                                                                                                                 return parseInt(pv) + parseInt(cv);
+//                                                                                                             }, 0);
+//                                                                                                         } catch (ex) {
+//                                                                                                             console.log(err);
+//                                                                                                         }
+//
+//                                                                                                         // if (req.query.productivityStartDate && req.query.productivityEndDate) {
+//                                                                                                         //     productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
+//                                                                                                         //         count++;
+//                                                                                                         //         productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
+//                                                                                                         //         AgentsProductivity.push(productivity);
+//                                                                                                         //         if (count == resourceIds.length) {
+//                                                                                                         //
+//                                                                                                         //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+//                                                                                                         //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+//                                                                                                         //             res.end(jsonString);
+//                                                                                                         //         }
+//                                                                                                         //     }).catch(function (err) {
+//                                                                                                         //         count++;
+//                                                                                                         //         AgentsProductivity.push(productivity);
+//                                                                                                         //         if (count == resourceIds.length) {
+//                                                                                                         //
+//                                                                                                         //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+//                                                                                                         //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+//                                                                                                         //             res.end(jsonString);
+//                                                                                                         //         }
+//                                                                                                         //
+//                                                                                                         //     });
+//                                                                                                         // } else {
+//                                                                                                         count++;
+//                                                                                                         AgentsProductivity.push(productivity);
+//                                                                                                         // if (count == resourceIds.length) {
+//                                                                                                         //
+//                                                                                                         //     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+//                                                                                                         //     logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+//                                                                                                         //     res.end(jsonString);
+//                                                                                                         // }
+//                                                                                                         //}
+//
+//                                                                                                     });
+//                                                                                                 }
+//
+//
+//                                                                                                 await getIds();
+//                                                                                             })();
+//
+//
+//                                                                                         }
+//                                                                                     });
+//
+//                                                                                 }
+//
+//                                                                                 await getMissedCallCount();
+//                                                                             })();
+//                                                                         }
+//                                                                     });
+//
+//                                                                 }
+//
+//                                                             catch
+//                                                                 (ex)
+//                                                                 {
+//                                                                     console.log(err);
+//                                                                 }
+//                                                             }
+//                                                             await redisStafftimeLastDay();
+//                                                             })();
+//                                                         }  //check if the user has a staffed time today
+//
+//                                                         else {
+//                                                             productivity.StaffedTime = 0;
+//                                                             productivity.IdleTime = 0;
+//                                                             // var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+//                                                             // logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
+//                                                             AgentsProductivity.push(productivity);
+//                                                             count++;
+//
+//                                                         }
+//                                                     } catch (ex) {
+//                                                         console.log(ex);
+//                                                     }
+//
+//
+//                                                 }
+//                                             });
+//                                         }
+//
+//                                         await redisHget();
+//                                     })()
+//                                     }
+//                                 });
+//                             }
+//
+//                             await redisMget();
+//                             })()
+//                         }
+//
+//
+//                     }
+//
+//                     for (const resId of resourceIds) {
+//
+//                         //Resource:3:1:1
+//
+//                         var resourceId = resId.split(":")[3];
+//                         var productivity = {
+//                             ResourceId: resourceId,
+//                             LoginTime: undefined,
+//                             AcwTime: 0,
+//                             BreakTime: 0,
+//                             OnCallTime: 0,
+//                             StaffedTime: 0,
+//                             IdleTime: 0,
+//                             HoldTime: 0,
+//                             IncomingCallCount: 0,
+//                             OutgoingCallCount: 0,
+//                             TransferCallCount: 0,
+//                             MissCallCount: 0,
+//                             InboundCallTime: 0,
+//                             OutboundCallTime: 0,
+//                             InboundAcwTime: 0,
+//                             OutboundAcwTime: 0,
+//                             InboundHoldTime: 0,
+//                             OutboundHoldTime: 0,
+//                             OutboundAnswerCount: 0
+//                         };
+//                         if (bu === 'default') {
+//
+//                             var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+//                             var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId, bu, resourceId);
+//                             var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
+//                             var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
+//                             var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
+//                             var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+//                             var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
+//                             var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
+//                             var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
+//                             var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
+//                             var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
+//                             var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
+//                             var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+//                             var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+//                             var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound", tenantId, companyId, resourceId);
+//
+//                             /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
+//                              var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
+//                              var holdTime = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");*/
+//                         }
+//                         else {
+//                             var inboundCallTime = format("TOTALTIME:{0}:{1}:{2}:CONNECTED:{3}:CALLinbound", tenantId, companyId, bu, resourceId);
+//                             var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId, bu, resourceId);
+//                             var acwInbound = format("TOTALTIME:{0}:{1}:{2}:AFTERWORK:{3}:AfterWorkCALLinbound", tenantId, companyId, bu, resourceId);
+//                             var acwOutbound = format("TOTALTIME:{0}:{1}:{2}:AFTERWORK:{3}:AfterWorkCALLoutbound", tenantId, companyId, bu, resourceId);
+//                             var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:{2}:BREAK:{3}", tenantId, companyId, bu, resourceId);
+//                             var incomingCallCount = format("TOTALCOUNT:{0}:{1}:{2}:CONNECTED:{3}:CALLinbound", tenantId, companyId, bu, resourceId);
+//                             var missCallCount = format("TOTALCOUNT:{0}:{1}:{2}:AGENTREJECT:*:{3}", tenantId, companyId, bu, resourceId);
+//                             var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:{2}:LOGIN:{3}:Register", tenantId, companyId, bu, resourceId);
+//                             var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
+//                             var inboundHoldTime = format("TOTALTIME:{0}:{1}:{2}:AGENTHOLD:{3}:inbound", tenantId, companyId, bu, resourceId);
+//                             var outboundHoldTime = format("TOTALTIME:{0}:{1}:{2}:AGENTHOLD:{3}:outbound", tenantId, companyId, bu, resourceId);
+//                             var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:{2}:AGENTTRANSFER:{3}", tenantId, companyId, bu, resourceId);
+//                             var outboundCallTime = format("TOTALTIME:{0}:{1}:{2}:CONNECTED:{3}:CALLoutbound", tenantId, companyId, bu, resourceId);
+//                             var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:{2}:CONNECTED:{3}:CALLoutbound", tenantId, companyId, bu, resourceId);
+//                             var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:{2}:CALLANSWERED:{3}:outbound", tenantId, companyId, bu, resourceId);
+//                         }
+//
+//                         await operation();
+//
+//
+//                     }
+//
+//                     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+//                     logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
+//                     res.end(jsonString);
+//
+//                 } else {
+//
+//                     var jsonString = messageFormatter.FormatMessage(undefined, "No Registered Resource Found", true, []);
+//                     logger.info('[Productivity] . [%s]', jsonString);
+//                     res.end(jsonString);
+//                 }
+//             })()
+//
+//         }
+//
+//     });
+//
+// };
+
+
 module.exports.Productivity = function (req, res, companyId, tenantId) {
 
 
@@ -222,9 +560,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
      return (+sTime[0]) * 60 * 60 + (+sTime[1]) * 60 + (+sTime[2]);
      }*/
 
-
     redisArdsClient.keys(id, function (err, resourceIds) {
-        console.log("start");
         if (err) {
             logger.error('[TransferCallCount] - [%s]', id, err);
             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -234,14 +570,54 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
             console.log(resourceIds);
             console.log("-------------------------");
             var count = 0;
+            if(resourceIds.length > 0) {
+                resourceIds.forEach(function (resId) {
 
-            (async function resourceIter() {
-                if (resourceIds.length > 0) {
+                    //Resource:3:1:1
+                    var resourceId = resId.split(":")[3];
 
-                    async function operation() {
-                        var currentObj = await redisArdsClient.get(currentState);
+                    var productivity = {
+                        ResourceId: resourceId,
+                        LoginTime: undefined,
+                        AcwTime: 0,
+                        BreakTime: 0,
+                        OnCallTime: 0,
+                        StaffedTime: 0,
+                        IdleTime: 0,
+                        HoldTime: 0,
+                        IncomingCallCount: 0,
+                        OutgoingCallCount: 0,
+                        TransferCallCount: 0,
+                        MissCallCount: 0,
+                        InboundCallTime: 0,
+                        OutboundCallTime: 0,
+                        InboundAcwTime: 0,
+                        OutboundAcwTime: 0,
+                        InboundHoldTime: 0,
+                        OutboundHoldTime: 0,
+                        OutboundAnswerCount: 0
+                    };
+                    var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+                    var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId,bu, resourceId);
+                    var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
+                    var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
+                    var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
+                    var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+                    var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
+                    var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
+                    var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
+                    var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
+                    var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
+                    var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
+                    var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+                    var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
+                    var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound", tenantId, companyId, resourceId);
 
+                    /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
+                     var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
+                     var holdTime = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");*/
 
+                    redisArdsClient.get(currentState, function (err, currentObj) {
                         if (err) {
                             logger.error('[TransferCallCount] - [%s]', id, err);
                             var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
@@ -249,301 +625,180 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                         }
                         else {
 
-                            (async function redisGetKeys(){
+
                             var keys = [inboundCallTime, acwInbound, acwOutbound, breakTime, incomingCallCount, inboundHoldTime, outboundHoldTime, transferCount, outboundCallTime, outgoingCallCount, outgoingAnswerCount];
+                            redisClient.mget(keys, function (err, reuslt) {
+                                if (err) {
+                                    console.log(err);
+                                }
+                                else {
+                                    var tempInboundOnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
+                                    var tempOutboundOnCallTime = parseInt(reuslt[8] ? reuslt[8] : 0);
+                                    productivity.InboundAcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
+                                    productivity.OutboundAcwTime = parseInt(reuslt[2] ? reuslt[2] : 0);
+                                    productivity.InboundHoldTime = parseInt(reuslt[5] ? reuslt[5] : 0);
+                                    productivity.OutboundHoldTime = parseInt(reuslt[6] ? reuslt[6] : 0);
 
-                            async function redisMget() {
-                                await redisClient.mget(keys, function (err, reuslt) {
-                                    if (err) {
-                                        console.log(err);
-                                    }
-                                    else {
-                                        var tempInboundOnCallTime = parseInt(reuslt[0] ? reuslt[0] : 0);
-                                        var tempOutboundOnCallTime = parseInt(reuslt[8] ? reuslt[8] : 0);
-                                        productivity.InboundAcwTime = parseInt(reuslt[1] ? reuslt[1] : 0);
-                                        productivity.OutboundAcwTime = parseInt(reuslt[2] ? reuslt[2] : 0);
-                                        productivity.InboundHoldTime = parseInt(reuslt[5] ? reuslt[5] : 0);
-                                        productivity.OutboundHoldTime = parseInt(reuslt[6] ? reuslt[6] : 0);
+                                    productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
+                                    productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
+                                    productivity.OutboundAnswerCount = parseInt(reuslt[10] ? reuslt[10] : 0);
+                                    productivity.InboundCallTime = (productivity.InboundCallTime > 0) ? productivity.InboundCallTime : 0;
+                                    productivity.OutboundCallTime = (productivity.OutboundCallTime > 0) ? productivity.OutboundCallTime : 0;
 
-                                        productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
-                                        productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
-                                        productivity.OutboundAnswerCount = parseInt(reuslt[10] ? reuslt[10] : 0);
-                                        productivity.InboundCallTime = (productivity.InboundCallTime > 0) ? productivity.InboundCallTime : 0;
-                                        productivity.OutboundCallTime = (productivity.OutboundCallTime > 0) ? productivity.OutboundCallTime : 0;
+                                    productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
+                                    productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
+                                    productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
+                                    productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
+                                    productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
+                                    productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
+                                    productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
+                                    redisClient.hget(staffedTime, "time", function (err, reuslt) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                        else {
+                                            try {
 
-                                        productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
-                                        productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
-                                        productivity.BreakTime = parseInt(reuslt[3] ? reuslt[3] : 0);
-                                        productivity.IncomingCallCount = parseInt(reuslt[4] ? reuslt[4] : 0);
-                                        productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
-                                        productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
-                                        productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
+                                                if (reuslt) {
 
+                                                    var now = "04/09/2013 15:00:00";
+                                                    var then = "04/09/2013 14:20:30";
 
-                                        (async function staffTimeProcess(){
+                                                    var timetet = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
 
-                                        async function redisHget() {
-                                            await redisClient.hget(staffedTime, "time", function (err, reuslt) {
-                                                if (err) {
-                                                    console.log(err);
-                                                }
-                                                else {
+                                                    var stfTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
+                                                    productivity.StaffedTime = toSeconds(stfTime);
+                                                    var workTime = 0;
                                                     try {
+                                                        /*var currentStateSpendTime = currentObj.StateChangeTime;*/
+                                                        workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime) + parseInt(productivity.HoldTime);
 
-                                                        if (reuslt) {
+                                                        var sTime = JSON.parse(currentObj);
 
-                                                            var now = "04/09/2013 15:00:00";
-                                                            var then = "04/09/2013 14:20:30";
-
-                                                            var timetet = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss");
-
-                                                            var stfTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
-                                                            productivity.StaffedTime = toSeconds(stfTime);
-                                                            var workTime = 0;
-                                                            try {
-                                                                /*var currentStateSpendTime = currentObj.StateChangeTime;*/
-                                                                workTime = parseInt(productivity.OnCallTime) + parseInt(productivity.AcwTime) + parseInt(productivity.BreakTime) + parseInt(productivity.HoldTime);
-
-                                                                var sTime = JSON.parse(currentObj);
-
-                                                                /*
-                                                                 if( moment(sTime.StateChangeTime)>moment(reuslt)){
-                                                                 var currentStateSpendTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(sTime.StateChangeTime))).format("HH:mm:ss"); // split it at the colons
-                                                                 workTime = parseInt(workTime) + parseInt(toSeconds(currentStateSpendTime));
-                                                                 }*/
+                                                        /*
+                                                         if( moment(sTime.StateChangeTime)>moment(reuslt)){
+                                                         var currentStateSpendTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(sTime.StateChangeTime))).format("HH:mm:ss"); // split it at the colons
+                                                         workTime = parseInt(workTime) + parseInt(toSeconds(currentStateSpendTime));
+                                                         }*/
 
 
-                                                            }
-                                                            catch (ex) {
+                                                    }
+                                                    catch (ex) {
+                                                        console.log(err);
+                                                    }
+                                                    try {
+                                                        redisClient.get(staffedTimeLastDay, function (err, reuslt) {
+                                                            if (err) {
                                                                 console.log(err);
                                                             }
-
-                                                            (async function LastDayStafftimeProcess(){
-
-
-                                                                async function redisStafftimeLastDay() {
+                                                            else {
+                                                                if (reuslt) {
                                                                     try {
-                                                                    await redisClient.get(staffedTimeLastDay, function (err, reuslt) {
-                                                                        if (err) {
-                                                                            console.log(err);
-                                                                        }
-                                                                        else {
-                                                                            if (reuslt) {
-                                                                                try {
-                                                                                    /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
-                                                                                    productivity.StaffedTime = parseInt(reuslt) + parseInt(productivity.StaffedTime);
-                                                                                    /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
-                                                                                }
-                                                                                catch (ex) {
-                                                                                    console.log(err);
-                                                                                }
+                                                                        /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
+                                                                        productivity.StaffedTime = parseInt(reuslt) + parseInt(productivity.StaffedTime);
+                                                                        /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
+                                                                    }
+                                                                    catch (ex) {
+                                                                        console.log(err);
+                                                                    }
+                                                                }
+                                                                productivity.IdleTime = parseInt(productivity.StaffedTime) - parseInt(workTime);
+
+                                                                redisClient.keys(missCallCount, function (err, ids) {
+                                                                    if (err) {
+                                                                        console.log(err);
+                                                                    }
+                                                                    else {
+                                                                        redisClient.mget(ids, function (err, misscalls) {
+
+                                                                            try {
+                                                                                productivity.MissCallCount = 0;
+                                                                                productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
+                                                                                    return parseInt(pv) + parseInt(cv);
+                                                                                }, 0);
+                                                                            } catch (ex) {
                                                                             }
-                                                                            productivity.IdleTime = parseInt(productivity.StaffedTime) - parseInt(workTime);
 
-                                                                            (async function frf() {
+                                                                            // if (req.query.productivityStartDate && req.query.productivityEndDate) {
+                                                                            //     productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
+                                                                            //         count++;
+                                                                            //         productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
+                                                                            //         AgentsProductivity.push(productivity);
+                                                                            //         if (count == resourceIds.length) {
+                                                                            //
+                                                                            //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                            //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                            //             res.end(jsonString);
+                                                                            //         }
+                                                                            //     }).catch(function (err) {
+                                                                            //         count++;
+                                                                            //         AgentsProductivity.push(productivity);
+                                                                            //         if (count == resourceIds.length) {
+                                                                            //
+                                                                            //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                            //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                            //             res.end(jsonString);
+                                                                            //         }
+                                                                            //
+                                                                            //     });
+                                                                            // } else {
+                                                                            count++;
+                                                                            AgentsProductivity.push(productivity);
+                                                                            if (count == resourceIds.length) {
 
+                                                                                var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                                logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                                res.end(jsonString);
+                                                                            }
+                                                                            //}
 
-                                                                                async function getMissedCallCount() {
-                                                                                    await redisClient.keys(missCallCount, function (err, ids) {
-                                                                                        if (err) {
-                                                                                            console.log(err);
-                                                                                        }
-                                                                                        else {
-
-                                                                                            (async function de() {
-                                                                                                async function getIds() {
-                                                                                                    await redisClient.mget(ids, function (err, misscalls) {
-
-                                                                                                        try {
-                                                                                                            productivity.MissCallCount = 0;
-                                                                                                            productivity.MissCallCount = misscalls.reduce(function (pv, cv) {
-                                                                                                                return parseInt(pv) + parseInt(cv);
-                                                                                                            }, 0);
-                                                                                                        } catch (ex) {
-                                                                                                            console.log(err);
-                                                                                                        }
-
-                                                                                                        // if (req.query.productivityStartDate && req.query.productivityEndDate) {
-                                                                                                        //     productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
-                                                                                                        //         count++;
-                                                                                                        //         productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
-                                                                                                        //         AgentsProductivity.push(productivity);
-                                                                                                        //         if (count == resourceIds.length) {
-                                                                                                        //
-                                                                                                        //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                                                        //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                                                        //             res.end(jsonString);
-                                                                                                        //         }
-                                                                                                        //     }).catch(function (err) {
-                                                                                                        //         count++;
-                                                                                                        //         AgentsProductivity.push(productivity);
-                                                                                                        //         if (count == resourceIds.length) {
-                                                                                                        //
-                                                                                                        //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                                                        //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                                                        //             res.end(jsonString);
-                                                                                                        //         }
-                                                                                                        //
-                                                                                                        //     });
-                                                                                                        // } else {
-                                                                                                        count++;
-                                                                                                        AgentsProductivity.push(productivity);
-                                                                                                        // if (count == resourceIds.length) {
-                                                                                                        //
-                                                                                                        //     var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                                                        //     logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                                                        //     res.end(jsonString);
-                                                                                                        // }
-                                                                                                        //}
-
-                                                                                                    });
-                                                                                                }
-
-
-                                                                                                await getIds();
-                                                                                            })();
-
-
-                                                                                        }
-                                                                                    });
-
-                                                                                }
-
-                                                                                await getMissedCallCount();
-                                                                            })();
-                                                                        }
-                                                                    });
-
-                                                                }
-
-                                                            catch
-                                                                (ex)
-                                                                {
-                                                                    console.log(err);
-                                                                }
+                                                                        });
+                                                                    }
+                                                                });
                                                             }
-                                                            await redisStafftimeLastDay();
-                                                            })();
-                                                        }  //check if the user has a staffed time today
-
-                                                        else {
-                                                            productivity.StaffedTime = 0;
-                                                            productivity.IdleTime = 0;
-                                                            // var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                            // logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                            AgentsProductivity.push(productivity);
-                                                            count++;
-
-                                                        }
+                                                        });
                                                     } catch (ex) {
-                                                        console.log(ex);
+                                                        console.log(err);
                                                     }
-
-
                                                 }
-                                            });
+                                                else {
+                                                    productivity.StaffedTime = 0;
+                                                    productivity.IdleTime = 0;
+                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                    logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                    AgentsProductivity.push(productivity);
+                                                    count++;
+                                                    if (count == resourceIds.length) {
+
+                                                        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                        logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                        res.end(jsonString);
+                                                    }
+                                                    //res.end(jsonString);
+                                                }
+                                            } catch (ex) {
+                                                console.log(ex);
+                                            }
+
+
                                         }
+                                    });
+                                }
+                            });
 
-                                        await redisHget();
-                                    })()
-                                    }
-                                });
-                            }
-
-                            await redisMget();
-                            })()
                         }
+                    });
 
 
-                    }
-
-                    for (const resId of resourceIds) {
-
-                        //Resource:3:1:1
-
-                        var resourceId = resId.split(":")[3];
-                        var productivity = {
-                            ResourceId: resourceId,
-                            LoginTime: undefined,
-                            AcwTime: 0,
-                            BreakTime: 0,
-                            OnCallTime: 0,
-                            StaffedTime: 0,
-                            IdleTime: 0,
-                            HoldTime: 0,
-                            IncomingCallCount: 0,
-                            OutgoingCallCount: 0,
-                            TransferCallCount: 0,
-                            MissCallCount: 0,
-                            InboundCallTime: 0,
-                            OutboundCallTime: 0,
-                            InboundAcwTime: 0,
-                            OutboundAcwTime: 0,
-                            InboundHoldTime: 0,
-                            OutboundHoldTime: 0,
-                            OutboundAnswerCount: 0
-                        };
-                        if (bu === 'default') {
-
-                            var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-                            var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId, bu, resourceId);
-                            var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
-                            var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
-                            var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
-                            var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-                            var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
-                            var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
-                            var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
-                            var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
-                            var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
-                            var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
-                            var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
-                            var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
-                            var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound", tenantId, companyId, resourceId);
-
-                            /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
-                             var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
-                             var holdTime = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");*/
-                        }
-                        else {
-                            var inboundCallTime = format("TOTALTIME:{0}:{1}:{2}:CONNECTED:{3}:CALLinbound", tenantId, companyId, bu, resourceId);
-                            var staffedTime = format("SESSION:{0}:{1}:{2}:LOGIN:{3}:{3}:Register", tenantId, companyId, bu, resourceId);
-                            var acwInbound = format("TOTALTIME:{0}:{1}:{2}:AFTERWORK:{3}:AfterWorkCALLinbound", tenantId, companyId, bu, resourceId);
-                            var acwOutbound = format("TOTALTIME:{0}:{1}:{2}:AFTERWORK:{3}:AfterWorkCALLoutbound", tenantId, companyId, bu, resourceId);
-                            var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:{2}:BREAK:{3}", tenantId, companyId, bu, resourceId);
-                            var incomingCallCount = format("TOTALCOUNT:{0}:{1}:{2}:CONNECTED:{3}:CALLinbound", tenantId, companyId, bu, resourceId);
-                            var missCallCount = format("TOTALCOUNT:{0}:{1}:{2}:AGENTREJECT:*:{3}", tenantId, companyId, bu, resourceId);
-                            var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:{2}:LOGIN:{3}:Register", tenantId, companyId, bu, resourceId);
-                            var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
-                            var inboundHoldTime = format("TOTALTIME:{0}:{1}:{2}:AGENTHOLD:{3}:inbound", tenantId, companyId, bu, resourceId);
-                            var outboundHoldTime = format("TOTALTIME:{0}:{1}:{2}:AGENTHOLD:{3}:outbound", tenantId, companyId, bu, resourceId);
-                            var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:{2}:AGENTTRANSFER:{3}", tenantId, companyId, bu, resourceId);
-                            var outboundCallTime = format("TOTALTIME:{0}:{1}:{2}:CONNECTED:{3}:CALLoutbound", tenantId, companyId, bu, resourceId);
-                            var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:{2}:CONNECTED:{3}:CALLoutbound", tenantId, companyId, bu, resourceId);
-                            var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:{2}:CALLANSWERED:{3}:outbound", tenantId, companyId, bu, resourceId);
-                        }
-
-                        await operation();
-
-
-                    }
-
-                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                    logger.info('[Productivity-miss some data1] . [%s] -[%s]', AgentsProductivity, jsonString);
-                    res.end(jsonString);
-
-                } else {
-
-                    var jsonString = messageFormatter.FormatMessage(undefined, "No Registered Resource Found", true, []);
-                    logger.info('[Productivity] . [%s]', jsonString);
-                    res.end(jsonString);
-                }
-            })()
+                });
+            }else {
+                var jsonString = messageFormatter.FormatMessage(undefined, "No Registered Resource Found", true, []);
+                logger.info('[Productivity] . [%s]', jsonString);
+                res.end(jsonString);
+            }
 
         }
-
     });
-
 };
 
 var getProductivityByResourceId = function (companyId, tenantId, resourceId) {
