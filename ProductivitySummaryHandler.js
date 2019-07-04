@@ -513,7 +513,7 @@ var GetCompanyName = function (companyId) {
     //
 
 
-var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
+var GetDailySummaryRecordsCon = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
     var jsonString;
     var query = "";
     //BusinessUnit
@@ -836,7 +836,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                                         summary.AvgTalkTimeOutbound = 0;
                                     }
 
-                                    summary.IdleTimeInbound = summary.InboundTime - (summary.AfterWorkTimeInbound + summary.BreakTime + summary.TalkTimeInbound + summary.TotalHoldTimeInbound);
+                                    summary.IdleTimeInbound = summary.InboundTime - (summary.AfterWorkTimeInbound +  + summary.TalkTimeInbound + summary.TotalHoldTimeInbound);
                                     summary.IdleTimeOutbound = summary.OutboundTime - (summary.AfterWorkTimeOutbound + summary.BreakTime + summary.TalkTimeOutbound + summary.TotalHoldTimeOutbound);
                                     //summary.IdleTimeOffline = summary.StaffTime - (summary.IdleTimeInbound + summary.IdleTimeOutbound - summary.BreakTime);
                                     summary.IdleTimeOffline = summary.StaffTime - (summary.InboundTime + summary.OutboundTime);
@@ -956,6 +956,101 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
     });
 };
 
+var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
+    var jsonString;
+    var query = "";
+
+    if (company) {
+        query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "' , '" + summaryToDate + "' , " + null + " , " + "'+05:30'" + " , '" + bu + "' , " + company + "," + tenant +");";
+        if (resourceId) {
+            query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "' , '" + summaryToDate + "' , '" + resourceId + "' , " + "'+05:30'" + " , '" + bu + "'," + company + "," + tenant +");";
+        }
+    }
+    else {
+        query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "', '" + summaryToDate + "' , '" + null + " , " + "'+05:30'" + " , '" + bu + "'," + null + "," + tenant +");";
+        if (resourceId) {
+            query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "', '" + summaryToDate + "' , '" + resourceId + "' , " + "'+05:30'" + " , '" + bu + "'," + null + "," + tenant +");";
+        }
+    }
+
+    dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
+        .then(function (records) {
+            if (records) {
+                logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
+                var DailySummary = [];
+                records.forEach(function (record) {
+                    var summary = {};
+
+                    summary.Date = record.summary_date;
+                    summary.Company = record.company;
+                    summary.CompanyName = GetCompanyName(record.company);
+                    summary.Agent = record.agent;
+                    summary.LoginTime = record.login_time;
+                    summary.StaffTime = record.login_total_time;
+                    summary.InboundTime = record.inbound_total_time;
+                    summary.OutboundTime = record.outbound_total_time;
+                    summary.TalkTimeInbound = record.inbound_talk_total_time;
+                    summary.TalkTimeOutbound = record.outbound_talk_total_time;
+                    summary.AvgTalkTimeInbound = record.avg_inbound_talk_time;
+                    summary.AvgTalkTimeOutbound = record.avg_outbound_talk_time;
+                    summary.TotalAnswered = parseInt(record.connected_total_count);
+                    summary.TotalAnsweredOutbound = parseInt(record.outbound_connected_total_count);
+                    summary.TotalCallsInbound = record.inbound_total_count;
+                    summary.TotalCallsOutbound = record.outbound_total_count;
+                    summary.AverageHandlingTimeInbound = record.full_avg_inbound_handling_time;
+                    summary.AverageHandlingTimeOutbound = record.full_avg_outbound_handling_time;
+                    summary.BreakTime = record.total_break_time;
+                    summary.AfterWorkTimeInbound = record.inbound_acw_total_time;
+                    summary.AfterWorkTimeOutbound = record.outbound_acw_total_time;
+                    summary.IdleTimeInbound = record.idle_time_inbound;
+                    summary.IdleTimeOutbound = record.idle_time_outbound;
+                    summary.IdleTimeOffline = record.idle_time_offline;
+                    summary.TotalHoldInbound = parseInt(record.inbound_hold_total_count);
+                    summary.TotalHoldTimeInbound = record.inbound_hold_total_time;
+                    summary.AvgHoldTimeInbound = record.avg_inbound_hold_time;
+                    summary.TotalHoldOutbound = parseInt(record.total_acw_total_count);
+                    summary.TotalHoldTimeOutbound = record.outbound_hold_total_time;
+                    summary.AvgHoldTimeOutbound = record.avg_outbound_hold_time;
+
+                    summary.totalStaffTime = record.full_total_login_time;
+                    summary.totalInboundIdleTime = record.full_total_inbound_idle_time;
+                    summary.totalOutboundIdleTime = record.full_total_outbound_idle_time;
+                    summary.totalOfflineIdleTime = record.full_total_offline_idle_time;
+                    summary.totalInboundAfterWorkTime = record.full_total_inbound_acw_time;
+                    summary.totalOutboundAfterWorkTime = record.full_total_outbound_acw_time;
+                    summary.totalInboundTalkTime = record.full_total_inbound_talk_time;
+                    summary.totalOutboundTalkTime = record.full_total_outbound_talk_time;
+                    summary.totalInboundHoldTime = record.full_total_inbound_hold_time;
+                    summary.totalOutboundHoldTime = record.full_total_outbound_hold_time;
+                    summary.totalBreakTime = record.full_total_break_time;
+                    summary.totalInboundAnswered = parseInt(record.full_total_connected_inbound_calls);
+                    summary.totalOutboundAnswered = parseInt(record.full_total_connected_outbound_calls);
+                    summary.totalCallsInb = parseInt(record.full_total_inbound_calls);
+                    summary.totalCallsOut = parseInt(record.full_total_outbound_calls);
+                    summary.avgInboundHandlingTime = record.full_avg_inbound_handling_time;
+                    summary.avgOutboundHandlingTime = record.full_avg_outbound_handling_time;
+
+                    DailySummary.push(summary);
+
+                });
+                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, DailySummary);
+
+                callback.end(jsonString);
+
+            }
+            else {
+                logger.error('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL]  - No record found for %s - %s  ', tenant, company);
+                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                callback.end(jsonString);
+            }
+        }).error(function (err) {
+        logger.error('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenant, company, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
+    });
+};
+
 module.exports.GetCompanyName = GetCompanyName;
 module.exports.GetDailySummaryRecords = GetDailySummaryRecords;
+module.exports.GetDailySummaryRecordsCon = GetDailySummaryRecordsCon;
 module.exports.GetFirstLoginForTheDate = GetFirstLoginForTheDate;
