@@ -1013,6 +1013,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     summary.AvgHoldTimeOutbound = record.avg_outbound_hold_time;
 
                     summary.totalStaffTime = record.full_total_login_time;
+                    summary.totalInboundTime = record.full_total_inbound_time;
+                    summary.totalOutboundTime = record.full_total_outbound_time;
                     summary.totalInboundIdleTime = record.full_total_inbound_idle_time;
                     summary.totalOutboundIdleTime = record.full_total_outbound_idle_time;
                     summary.totalOfflineIdleTime = record.full_total_offline_idle_time;
@@ -1022,6 +1024,8 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     summary.totalOutboundTalkTime = record.full_total_outbound_talk_time;
                     summary.totalInboundHoldTime = record.full_total_inbound_hold_time;
                     summary.totalOutboundHoldTime = record.full_total_outbound_hold_time;
+                    summary.totalInboundHoldCount = parseInt(record.full_total_inbound_hold_count);
+                    summary.totalOutboundHoldCount = parseInt(record.full_total_outbound_hold_count);
                     summary.totalBreakTime = record.full_total_break_time;
                     summary.totalInboundAnswered = parseInt(record.full_total_connected_inbound_calls);
                     summary.totalOutboundAnswered = parseInt(record.full_total_connected_outbound_calls);
@@ -1029,6 +1033,10 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     summary.totalCallsOut = parseInt(record.full_total_outbound_calls);
                     summary.avgInboundHandlingTime = record.full_avg_inbound_handling_time;
                     summary.avgOutboundHandlingTime = record.full_avg_outbound_handling_time;
+                    summary.avgInboundTalkTime = record.full_avg_inbound_talk_time;
+                    summary.avgOutboundTalkTime = record.full_avg_outbound_talk_time;
+                    summary.avgInboundHoldTime = record.full_avg_inbound_hold_time;
+                    summary.avgOutboundHoldTime = record.full_avg_outbound_hold_time;
 
                     DailySummary.push(summary);
 
