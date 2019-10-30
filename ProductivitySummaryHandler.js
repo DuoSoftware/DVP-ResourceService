@@ -961,21 +961,21 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
     var query = "";
 
     if (company) {
-        query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "' , '" + summaryToDate + "' , " + null + " , " + "'+05:30'" + " , '" + bu + "' , " + company + "," + tenant +");";
+        query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND company =" + company + " AND tenant = " + tenant +";";
         if (resourceId) {
-            query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "' , '" + summaryToDate + "' , '" + resourceId + "' , " + "'+05:30'" + " , '" + bu + "'," + company + "," + tenant +");";
+            query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND company = " + company + " AND tenant = " + tenant +" AND agent = " + resourceId +";";
         }
     }
     else {
-        query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "', '" + summaryToDate + "' , '" + null + " , " + "'+05:30'" + " , '" + bu + "'," + null + "," + tenant +");";
+        query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant +";";
         if (resourceId) {
-            query = "SELECT * FROM agent_productivity_summary( '" + summaryFromDate + "', '" + summaryToDate + "' , '" + resourceId + "' , " + "'+05:30'" + " , '" + bu + "'," + null + "," + tenant +");";
+            query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant + " AND agent = " + resourceId +";";
         }
     }
 
     dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function (records) {
-            if (records) {
+            if (records && records.length) {
                 logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
                 var DailySummary = [];
                 records.forEach(function (record) {
@@ -1048,7 +1048,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
             }
             else {
                 logger.error('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL]  - No record found for %s - %s  ', tenant, company);
-                jsonString = messageFormatter.FormatMessage(new Error('No record'), "EXCEPTION", false, undefined);
+                jsonString = messageFormatter.FormatMessage(null, "No records found for the selected filters", true, undefined);
                 callback.end(jsonString);
             }
         }).error(function (err) {
