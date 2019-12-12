@@ -834,6 +834,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         MissCallCount: 0,
         InboundCallTime: 0,
         OutboundCallTime: 0,
+        OutboundTime: 0,
         InboundAcwTime: 0,
         OutboundAcwTime: 0,
         InboundHoldTime: 0,
@@ -852,6 +853,8 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
     var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
     var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
     var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
+    var outboundTime = format("SESSION:{0}:{1}:{2}:OUTBOUND:{3}:{3}:Outbound", tenantId, companyId,bu, resourceId);
+    var outboundTimeLastDay = format("TOTALTIME:{0}:{1}:OUTBOUND:{2}:Outbound", tenantId, companyId, resourceId);
     var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
     var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
 
@@ -974,6 +977,67 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                     jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                                     logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
                                     res.end(jsonString);
+                                }
+                            } catch (ex) {
+                                jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                logger.error('[TransferCallCount] - [%s]', id, ex);
+                                res.end(jsonString);
+                            }
+                        }
+                    });
+
+                    redisClient.hget(outboundTime, "time", function (err, reuslt) {
+                        if (err) {
+                            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                            logger.error('[TransferCallCount] - [%s]', id, err);
+                            res.end(jsonString);
+                        }
+                        else {
+                            try {
+                                if (reuslt) {
+                                    var outTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
+                                    productivity.OutboundTime = toSeconds(outTime);
+                                    try {
+                                        redisClient.get(outboundTimeLastDay, function (err, reuslt) {
+                                            if (err) {
+                                                console.log(err);
+                                            }
+                                            else {
+                                                if (reuslt) {
+                                                    try {
+                                                        /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
+                                                        productivity.OutboundTime = parseInt(reuslt) + parseInt(productivity.OutboundTime) - parseInt(productivity.BreakTime)  ;
+                                                        /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
+                                                    }
+                                                    catch (ex) {
+                                                        console.log(err);
+                                                    }
+                                                }
+                                            }
+                                        });
+                                    } catch (ex) {
+                                        console.log(err);
+                                    }
+                                }
+                                else {
+                                    redisClient.get(outboundTimeLastDay, function (err, reuslt) {
+                                        if (err) {
+                                            console.log(err);
+                                        }
+                                        else {
+                                            if (reuslt) {
+                                                try {
+                                                    productivity.OutboundTime = parseInt(reuslt) - parseInt(productivity.BreakTime);
+                                                    jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                                    logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
+                                                    res.end(jsonString);
+                                                }
+                                                catch (ex) {
+                                                    console.log(err);
+                                                }
+                                            }
+                                        }
+                                    });
                                 }
                             } catch (ex) {
                                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
