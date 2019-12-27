@@ -1019,6 +1019,14 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                         console.log(err);
                                                     }
                                                 }
+                                                else {
+                                                    try {
+                                                        productivity.OutboundTime = parseInt(productivity.OutboundTime) - parseInt(productivity.BreakTime);
+                                                    }
+                                                    catch (ex) {
+                                                        console.log(err);
+                                                    }
+                                                }
                                             }
                                         });
                                     } catch (ex) {
