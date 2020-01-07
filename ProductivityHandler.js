@@ -1012,7 +1012,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                 if (reuslt) {
                                                     try {
                                                         /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
-                                                        productivity.OutboundTime = parseInt(reuslt) + parseInt(productivity.OutboundTime) - parseInt(productivity.BreakTime)  ;
+                                                        productivity.OutboundTime = parseInt(reuslt) + parseInt(productivity.OutboundTime) ;
                                                         /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
                                                     }
                                                     catch (ex) {
@@ -1021,7 +1021,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                                 }
                                                 else {
                                                     try {
-                                                        productivity.OutboundTime = parseInt(productivity.OutboundTime) - parseInt(productivity.BreakTime);
+                                                        productivity.OutboundTime = parseInt(productivity.OutboundTime) ;
                                                     }
                                                     catch (ex) {
                                                         console.log(err);
@@ -1041,7 +1041,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                                         else {
                                             if (reuslt) {
                                                 try {
-                                                    productivity.OutboundTime = parseInt(reuslt) - parseInt(productivity.BreakTime);
+                                                    productivity.OutboundTime = parseInt(reuslt);
                                                     jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
                                                     logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
                                                     res.end(jsonString);
