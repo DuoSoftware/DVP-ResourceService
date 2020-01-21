@@ -838,9 +838,7 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         InboundAcwTime: 0,
         OutboundAcwTime: 0,
         InboundHoldTime: 0,
-        OutboundHoldTime: 0,
-        AvgTalkTimeInbound: 0,
-        AvgTalkTimeOutbound: 0
+        OutboundHoldTime: 0
 
     };
     var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
@@ -898,10 +896,6 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
                     productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
                     productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
-
-                    productivity.AvgTalkTimeInbound = (productivity.IncomingCallCount!=0)? productivity.InboundCallTime/productivity.IncomingCallCount : 0;
-                    productivity.AvgTalkTimeOutbound = (productivity.OutgoingCallCount!=0)? productivity.OutboundCallTime/productivity.OutgoingCallCount : 0;
-
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
                             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
