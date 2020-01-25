@@ -9,7 +9,7 @@
     "config": "^1.19.0",
     "cors": "^2.7.1",
     "dvp-common": "^1.5.1",
-    "dvp-dbmodels": "3.0.7",
+    "dvp-dbmodels": "^3.4.0",
     "dvp-healthcheck": "^1.0.3",
     "dvp-mongomodels": "^5.2.3",
     "enum": "^2.3.0",
