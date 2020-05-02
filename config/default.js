@@ -1,30 +1,30 @@
 module.exports = {
     "DB": {
         "Type": "postgres",
-        "User": "duo",
-        "Password": "DuoS123",
+        "User": "",
+        "Password": "",
         "Port": 5432,
-        "Host": "104.236.231.11",//104.131.105.222
-        "Database": "duo" //duo
+        "Host": "",//104.131.105.222
+        "Database": "" //duo
     },
     "Mongo": {
-        "ip": "104.236.231.11",
+        "ip": "",
         "port": "27017",
         "dbname": "dvpdb",
-        "password": "DuoS123",
-        "user": "duo",
-        "replicaset": ""
+        "password": "",
+        "user": "",
+        "type": "mongodb+srv"
     },
     "Redis":
         {
-            "ip": "104.131.67.21",
+            "ip": "",
             "port": 6379,
-            "user": "duo",
-            "password": "DuoS123",
-            "mode": "sentinel",//instance, cluster, sentinel
+            "user": "",
+            "password": "",
+            "mode": "instance",//instance, cluster, sentinel
             "db": 8,
             "sentinels": {
-                "hosts": "138.197.90.92,45.55.205.92,138.197.90.92",
+                "hosts": "",
                 "port": 16389,
                 "name": "redis-cluster"
             }
@@ -32,14 +32,14 @@ module.exports = {
 
     "ArdsRedis":
         {
-            "ip": "45.55.142.207",
+            "ip": "",
             "port": 6389,
-            "user": "duo",
-            "password": "DuoS123",
-            "mode": "sentinel",//instance, cluster, sentinel
+            "user": "",
+            "password": "",
+            "mode": "instance",//instance, cluster, sentinel
             "db": 6,
             "sentinels": {
-                "hosts": "138.197.90.92,45.55.205.92,138.197.90.92",
+                "hosts": "",
                 "port": 16389,
                 "name": "redis-cluster"
             }
@@ -47,13 +47,13 @@ module.exports = {
 
     "Security":
         {
-            "ip": "45.55.142.207",
+            "ip": "",
             "port": 6389,
-            "user": "duo",
-            "password": "DuoS123",
-            "mode": "sentinel",//instance, cluster, sentinel
+            "user": "",
+            "password": "",
+            "mode": "instance",//instance, cluster, sentinel
             "sentinels": {
-                "hosts": "138.197.90.92,45.55.205.92,138.197.90.92",
+                "hosts": "",
                 "port": 16389,
                 "name": "redis-cluster"
             }
