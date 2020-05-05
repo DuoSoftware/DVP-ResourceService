@@ -27,7 +27,7 @@ var redisArdsSetting = {
     }
 };
 
-if (ardsredispass) redisArdsSetting.password = ardsredispass;
+if (ardsredispass != "") redisArdsSetting.password = ardsredispass;
 
 var redisArdsClient = undefined;
 
@@ -48,7 +48,7 @@ if (redismode != "cluster") {
                 family: 4,
                 db: ardsredisdb
             }
-            if (ardsredispass) redisConf.password = ardsredispass;
+            if (ardsredispass != "") redisConf.password = ardsredispass;
             redisArdsSetting.push(redisConf);
         });
 

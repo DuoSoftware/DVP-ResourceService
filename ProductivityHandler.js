@@ -31,7 +31,7 @@ var redisSetting = {
   },
 };
 
-if (redispass) redisSetting.password = redispass;
+if (redispass != "") redisSetting.password = redispass;
 
 if (redismode == "sentinel") {
   if (
@@ -57,7 +57,7 @@ if (redismode == "sentinel") {
         db: redisdb,
       };
 
-      if (redispass) redisSetting.password = redispass;
+      if (redispass != "") redisSetting.password = redispass;
     } else {
       console.log("No enough sentinel servers found .........");
     }
@@ -73,13 +73,15 @@ if (redismode != "cluster") {
   if (Array.isArray(redisHosts)) {
     redisSetting = [];
     redisHosts.forEach(function (item) {
-      redisSetting.push({
+      let redisConf = {
         host: item,
         port: redisport,
         family: 4,
         db: redisdb,
-      });
-      if (redispass) redisSetting.password = redispass;
+      };
+
+      if (redispass != "") redisConf.password = redispass;
+      redisSetting.push(redisConf);
     });
 
     var redisClient = new redis.Cluster([redisSetting]);
@@ -103,8 +105,6 @@ var ardsredisdb = config.ArdsRedis.db;
 var redisArdsSetting = {
   port: ardsredisport,
   host: ardsredisip,
-  family: 4,
-  password: ardsredispass,
   db: ardsredisdb,
   retryStrategy: function (times) {
     var delay = Math.min(times * 50, 2000);
@@ -114,6 +114,8 @@ var redisArdsSetting = {
     return true;
   },
 };
+
+if (ardsredispass != "") redisArdsSetting.password = ardsredispass;
 
 if (redismode == "sentinel") {
   if (
@@ -136,9 +138,10 @@ if (redismode == "sentinel") {
       redisArdsSetting = {
         sentinels: sentinelConnections,
         name: config.ArdsRedis.sentinels.name,
-        password: ardsredispass,
         db: ardsredisdb,
       };
+
+      if (ardsredispass != "") redisArdsSetting.password = ardsredispass;
     } else {
       console.log("No enough sentinel servers found .........");
     }
@@ -154,13 +157,14 @@ if (redismode != "cluster") {
   if (Array.isArray(redisHosts)) {
     redisArdsSetting = [];
     redisHosts.forEach(function (item) {
-      redisArdsSetting.push({
+      let redisConf = {
         host: item,
         port: ardsredisport,
         family: 4,
-        password: ardsredispass,
         db: ardsredisdb,
-      });
+      };
+      if (ardsredispass != "") redisConf.password = ardsredispass;
+      redisArdsSetting.push(redisConf);
     });
 
     var redisArdsClient = new redis.Cluster([redisArdsSetting]);
