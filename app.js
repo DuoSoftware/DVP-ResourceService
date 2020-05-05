@@ -26,6 +26,18 @@ var queueSkillHandler = require('./QueueSkillHandler.js');
 var node_uuid = require('node-uuid');
 var healthcheck = require('dvp-healthcheck/DBHealthChecker');
 
+process.on("uncaughtException", function(err) {
+  console.error(err);
+  console.log("[Unhandled Exception] Node Exiting...");
+  process.exit(1);
+});
+
+process.on("unhandledRejection", err => {
+  console.error(err);
+  console.log("[Unhandled Rejection] Node Exiting...");
+  process.exit(1);
+});
+
 //-------------------------  Restify Server ------------------------- \\
 var RestServer = restify.createServer({
     name: "ResourceService",
