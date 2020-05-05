@@ -174,11 +174,11 @@ if (redismode != "cluster") {
 }
 
 //**** ards data con
-redisArdsClient.auth(config.ArdsRedis.password, function (err) {
-  /*if (err)
-     throw err;*/
-  console.log("Redis[ARDS] Auth error  " + err);
-});
+// redisArdsClient.auth(config.ArdsRedis.password, function (err) {
+//   /*if (err)
+//      throw err;*/
+//   console.log("Redis[ARDS] Auth error  " + err);
+// });
 
 redisArdsClient.on("error", function (err) {
   console.log("Redis[ARDS] connection error  " + err);
