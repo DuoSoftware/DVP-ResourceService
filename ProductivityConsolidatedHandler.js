@@ -3,7 +3,7 @@
  */
 
 var config = require('config');
-
+var redis = require("ioredis");
 /* ----------------------- ArdsRedis configurations ------------------------------ */
 var ardsredisip = config.ArdsRedis.ip;
 var ardsredisport = config.ArdsRedis.port;
@@ -16,7 +16,6 @@ var redisArdsSetting = {
     port: ardsredisport,
     host: ardsredisip,
     family: 4,
-    password: ardsredispass,
     db: ardsredisdb,
     retryStrategy: function (times) {
         var delay = Math.min(times * 50, 2000);
@@ -27,6 +26,8 @@ var redisArdsSetting = {
         return true;
     }
 };
+
+if (ardsredispass) redisArdsSetting.password = ardsredispass;
 
 var redisArdsClient = undefined;
 
@@ -40,14 +41,18 @@ if (redismode != "cluster") {
 
         redisArdsSetting = [];
         redisHosts.forEach(function (item) {
-            redisArdsSetting.push({
+
+            let redisConf = {
                 host: item,
                 port: ardsredisport,
                 family: 4,
-                password: ardsredispass,
                 db: ardsredisdb
-            });
+            }
+            if (ardsredispass) redisConf.password = ardsredispass;
+            redisArdsSetting.push(redisConf);
         });
+
+        
 
         var redisArdsClient = new redis.Cluster([redisArdsSetting]);
 
