@@ -59,7 +59,7 @@ RestServer.use(restify.queryParser());
 var jwt = require('restify-jwt');
 var secret = require('dvp-common/Authentication/Secret.js');
 var authorization = require('dvp-common/Authentication/Authorization.js');
-RestServer.use(jwt({secret: secret.Secret})).unless({path: ['/healthcheck']});
+RestServer.use(jwt({secret: secret.Secret}).unless({path: ['/healthcheck']}));
 // ---------------- Security -------------------------- \\
 
 //Server listen
