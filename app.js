@@ -3,7 +3,7 @@
  */
 
 var restify = require('restify');
-var messageFormatter = require('dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js');
+var messageFormatter = require('dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js');
 
 var config = require('config');
 var mongomodels = require('dvp-mongomodels');
@@ -11,7 +11,7 @@ var dbModel = require('dvp-dbmodels');
 
 var port = config.Host.port || 3000;
 var version = config.Host.version;
-var logger = require('dvp-common/LogHandler/CommonLogHandler.js').logger;
+var logger = require('dvp-common-lite/LogHandler/CommonLogHandler.js').logger;
 var attributeHandler = require('./AttributeHandler');
 var groupsHandler = require('./GroupsHandler');
 var resourceHandler = require('./ResourceHandler');
@@ -57,8 +57,8 @@ RestServer.use(restify.queryParser());
 
 // ---------------- Security -------------------------- \\
 var jwt = require('restify-jwt');
-var secret = require('dvp-common/Authentication/Secret.js');
-var authorization = require('dvp-common/Authentication/Authorization.js');
+var secret = require('dvp-common-lite/Authentication/Secret.js');
+var authorization = require('dvp-common-lite/Authentication/Authorization.js');
 RestServer.use(jwt({secret: secret.Secret}).unless({path: ['/healthcheck']}));
 // ---------------- Security -------------------------- \\
 

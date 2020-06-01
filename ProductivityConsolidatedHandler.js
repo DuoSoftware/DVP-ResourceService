@@ -66,7 +66,7 @@ redisArdsClient.on("connect", function (err) {});
 /* ----------------------- ArdsRedis configurations End ------------------------------ */
 
 var UserAccount = require("dvp-mongomodels/model/UserAccount");
-var messageFormatter = require("dvp-common/CommonMessageGenerator/ClientMessageJsonFormatter.js");
+var messageFormatter = require("dvp-common-lite/CommonMessageGenerator/ClientMessageJsonFormatter.js");
 var productivitySummary = require("./ProductivitySummaryHandler");
 
 module.exports.GetConsolidatedProductivity = function (req, res) {
