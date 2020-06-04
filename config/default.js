@@ -9,7 +9,7 @@ module.exports = {
     },
     "Mongo": {
         "ip": "",
-        "port": "27017",
+        "port": "",
         "dbname": "dvpdb",
         "password": "",
         "user": "",
