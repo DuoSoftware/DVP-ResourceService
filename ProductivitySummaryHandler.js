@@ -995,6 +995,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     summary.AvgTalkTimeOutbound = record.avg_outbound_talk_time;
                     summary.TotalAnswered = parseInt(record.connected_total_count);
                     summary.TotalAnsweredOutbound = parseInt(record.outbound_connected_total_count);
+                    summary.TotalAnsweredInbound = parseInt(record.inbound_connected_total_count);
                     summary.TotalCallsInbound = record.inbound_total_count;
                     summary.TotalCallsOutbound = record.outbound_total_count;
                     summary.AverageHandlingTimeInbound = record.full_avg_inbound_handling_time;
@@ -1008,7 +1009,7 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     summary.TotalHoldInbound = parseInt(record.inbound_hold_total_count);
                     summary.TotalHoldTimeInbound = record.inbound_hold_total_time;
                     summary.AvgHoldTimeInbound = record.avg_inbound_hold_time;
-                    summary.TotalHoldOutbound = parseInt(record.total_acw_total_count);
+                    summary.TotalHoldOutbound = parseInt(record.outbound_hold_total_count);
                     summary.TotalHoldTimeOutbound = record.outbound_hold_total_time;
                     summary.AvgHoldTimeOutbound = record.avg_outbound_hold_time;
 
