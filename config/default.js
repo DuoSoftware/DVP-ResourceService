@@ -13,7 +13,7 @@ module.exports = {
         "dbname": "dvpdb",
         "password": "",
         "user": "",
-        "type": "mongodb+srv"
+        "type": "mongodb"
     },
     "Redis":
         {
