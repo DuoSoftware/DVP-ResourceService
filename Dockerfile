@@ -16,7 +16,7 @@
 # EXPOSE 8831
 # CMD [ "node", "/usr/local/src/resourceservice/app.js" ]
 
-FROM node:10
+FROM node:10-alpine
 WORKDIR /usr/local/src/resourceservice
 COPY package*.json ./
 RUN apk add --update python make g++\
