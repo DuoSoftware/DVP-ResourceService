@@ -16,7 +16,7 @@
 # EXPOSE 8831
 # CMD [ "node", "/usr/local/src/resourceservice/app.js" ]
 
-FROM node:10-alpine
+FROM node:10
 WORKDIR /usr/local/src/resourceservice
 COPY package*.json ./
 RUN npm install
