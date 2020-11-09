@@ -19,6 +19,8 @@
 FROM node:10
 WORKDIR /usr/local/src/resourceservice
 COPY package*.json ./
+RUN apk add --update python make g++\
+   && rm -rf /var/cache/apk/*
 RUN npm install
 COPY . .
 EXPOSE 8831
