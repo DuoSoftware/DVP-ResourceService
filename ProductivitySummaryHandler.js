@@ -986,10 +986,10 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                     resNameArr.forEach(function (res) {
                         if (res.id === record.Agent) {
                             if (company) {
-                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE (SipFromUser = '" + res.name + "' OR RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND company =" + company + " AND tenant = " + tenant + "; "
+                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND company =" + company + " AND tenant = " + tenant + "; "
                             }
                             else{
-                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE (SipFromUser = '" + res.name + "' OR RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND tenant = " + tenant + "; "
+                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND tenant = " + tenant + "; "
                             }
 
                             dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
