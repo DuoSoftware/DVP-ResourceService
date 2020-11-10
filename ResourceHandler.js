@@ -531,45 +531,54 @@ function EditAttributeToResource(params, body, tenantId, companyId, iss, callbac
         OtherData: body.OtherData,
         Status: true
     };
-    DbConn.ResResourceAttributeTask
-        .update(
-            attribs
-            , {
-                where: {
-                    ResAttId: params.ResAttId
-                },
-                returning: true
-            }
-        ).then(function (cmp) {
-
-        var previous = {};
-        if (Array.isArray(cmp) && cmp.length > 1) {
-            var val = cmp[1];
-            if (Array.isArray(val) && val.length > 0) {
-                previous = val[0]
-            }
+    DbConn.ResResourceAttributeTask.find({
+            where: [{TenantId: tenantId}, {CompanyId: companyId}, {ResAttId: params.ResAttId}]
         }
+    ).then(function (oldAttribs) {
+        DbConn.ResResourceAttributeTask
+            .update(
+                attribs
+                , {
+                    where: {
+                        ResAttId: params.ResAttId
+                    },
+                    returning: true
+                }
+            ).then(function (cmp) {
 
-        var auditData = {
-            KeyProperty: "ResourceId",
-            OldValue: attribs,
-            NewValue: attribs,
-            Description: "Update Resource Attributes",
-            Author: iss,
-            User: iss,
-            OtherJsonData: JSON.stringify(cmp),
-            ObjectType: "ResResourceAttributeTask",
-            Action: "UPDATE",
-            Application: "Resource Service"
-        };
-        addAuditTrail(tenantId, companyId, iss, auditData);
+            var previous = {};
+            if (Array.isArray(cmp) && cmp.length > 1) {
+                var val = cmp[1];
+                if (Array.isArray(val) && val.length > 0) {
+                    previous = val[0]
+                }
+            }
+            var auditData = {
+                KeyProperty: "ResourceId",
+                OldValue: oldAttribs,
+                NewValue: attribs,
+                Description: "Update Resource Attributes",
+                Author: iss,
+                User: iss,
+                OtherJsonData: JSON.stringify(cmp),
+                ObjectType: "ResResourceAttributeTask",
+                Action: "UPDATE",
+                Application: "Resource Service"
+            };
+            addAuditTrail(tenantId, companyId, iss, auditData);
 
-        var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
-        logger.info('[DVP-EditAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
-        callback.end(jsonString);
+            var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
+            logger.info('[DVP-EditAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
+            callback.end(jsonString);
+        }).error(function (err) {
+            logger.error('[DVP-EditAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
+            var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+            callback.end(jsonString);
+        });
+
     }).error(function (err) {
-        logger.error('[DVP-EditAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
-        var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        logger.error('[DVP-ResResource.CheckResourceExists] - [%s] - [PGSQL] - find resource failed-[%s]', resourceName, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
 }
