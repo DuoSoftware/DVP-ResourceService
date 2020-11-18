@@ -62,7 +62,8 @@ module.exports = {
         "ip": "SYS_RABBITMQ_HOST",
         "port": "SYS_RABBITMQ_PORT",
         "user": "SYS_RABBIMQ_USER",
-        "password": "SYS_RABBIMQ_PASSWORD"
+        "password": "SYS_RABBIMQ_PASSWORD",
+        "vhost": "SYS_RABBITMQ_VHOST"
     },
 
     "Security":
