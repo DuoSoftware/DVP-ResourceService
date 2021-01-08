@@ -956,11 +956,9 @@ var GetDailySummaryRecordsCon = function (tenant, company, summaryFromDate, summ
     });
 };
 
-var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, resource, bu, callback) {
+var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summaryToDate, resourceId, bu, callback) {
     var jsonString;
     var query = "";
-    var cdrquery = "";
-    var resNameArr = [];
 
     if (company) {
         query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND company =" + company + " AND tenant = " + tenant +";";
@@ -969,12 +967,11 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
         }
     }
     else {
-        query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant + ";";
+        query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant +";";
         if (resourceId) {
-            query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant + " AND agent = " + resourceId + ";";
+            query = "SELECT * FROM agent_productivity_summary WHERE summary_date >= '" + summaryFromDate + "' AND summary_date <= '" + summaryToDate + "' AND bu = '" + bu + "' AND tenant = " + tenant + " AND agent = " + resourceId +";";
         }
     }
-    resNameArr = JSON.parse(resource);
 
     dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function (records) {
@@ -983,47 +980,6 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
                 var DailySummary = [];
                 records.forEach(function (record) {
                     var summary = {};
-                    resNameArr.forEach(function (res) {
-                        if (res.id === record.Agent) {
-                            if (company) {
-                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND company =" + company + " AND tenant = " + tenant + "; "
-                            }
-                            else{
-                                cdrquery = "SELECT * FROM CSDB_CallCDRProcesseds WHERE RecievedBy = '" + res.name + "' AND CreatedTime >= '" + summaryFromDate + "' AND CreatedTime <= '" + summaryToDate + "' AND IsAnswered = 'true' AND ObjType = 'PRIVATE_USER' AND bu = '" + bu + "' AND tenant = " + tenant + "; "
-                            }
-
-                            dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
-                                .then(function (cdrRecords) {
-                                    if(cdrRecords && cdrRecords.length) {
-                                        logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found CDR  - %s-[%s]', tenant, company, JSON.stringify(cdrRecords));
-                                        record.outbound_connected_total_count = parseInt(record.outbound_connected_total_count) - cdrRecords.length;
-                                        console.log("Outbound Connected Total Count : " + record.outbound_connected_total_count);
-                                        var a = record.outbound_talk_total_time.split(':'); // split it at the colons
-                                        // minutes are worth 60 seconds. Hours are worth 60 minutes.
-                                        var seconds = (+a[0]) * 60 * 60 + (+a[1]) * 60 + (+a[2]);
-
-                                        cdrRecords.forEach(function (cdrRecord) {
-                                            record.outbound_talk_total_time = parseInt(seconds) - parseInt(cdrRecord.BillSec);
-                                        });
-                                        record.avgOutboundTalkTime = record.avgOutboundTalkTime / record.outbound_connected_total_count;
-
-                                        record.outbound_talk_total_time = new Date(record.outbound_talk_total_time * 1000).toISOString().substr(11, 8);
-                                        console.log("Outbound Total TalkTime : " + record.outbound_talk_total_time);
-
-                                        record.avgOutboundTalkTime = new Date(record.avgOutboundTalkTime * 1000).toISOString().substr(11, 8);
-                                        console.log("Outbound Average TalkTime : " + record.avgOutboundTalkTime);
-                                    }
-                                    else {
-                                        logger.error('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL]  - No CDR record found for %s - %s  ', tenant, company);
-                                        jsonString = messageFormatter.FormatMessage(null, "No CDR records found for the selected filters", true, undefined);
-                                    }
-                                }).error(function (err) {
-                                logger.error('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [%s] - [PGSQL]  - Error in searching.-[%s]', tenant, company, err);
-                                jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
-                                callback.end(jsonString);
-                            });
-                        }
-                    });
 
                     summary.Date = record.summary_date;
                     summary.Company = record.company;
