@@ -21,9 +21,9 @@ var redisdb = config.Redis.db;
 
 
 
-var redisSetting =  {
-    port:redisport,
-    host:redisip,
+var redisSetting = {
+    port: redisport,
+    host: redisip,
     family: 4,
     password: redispass,
     db: redisdb,
@@ -37,27 +37,27 @@ var redisSetting =  {
     }
 };
 
-if(redismode == 'sentinel'){
+if (redismode == 'sentinel') {
 
-    if(config.Redis.sentinels && config.Redis.sentinels.hosts && config.Redis.sentinels.port && config.Redis.sentinels.name){
+    if (config.Redis.sentinels && config.Redis.sentinels.hosts && config.Redis.sentinels.port && config.Redis.sentinels.name) {
         var sentinelHosts = config.Redis.sentinels.hosts.split(',');
-        if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
+        if (Array.isArray(sentinelHosts) && sentinelHosts.length > 2) {
             var sentinelConnections = [];
 
-            sentinelHosts.forEach(function(item){
+            sentinelHosts.forEach(function (item) {
 
-                sentinelConnections.push({host: item, port:config.Redis.sentinels.port})
+                sentinelConnections.push({ host: item, port: config.Redis.sentinels.port })
 
             })
 
             redisSetting = {
-                sentinels:sentinelConnections,
+                sentinels: sentinelConnections,
                 name: config.Redis.sentinels.name,
                 password: redispass,
                 db: redisdb
             }
 
-        }else{
+        } else {
 
             console.log("No enough sentinel servers found .........");
         }
@@ -67,27 +67,28 @@ if(redismode == 'sentinel'){
 
 var redisClient = undefined;
 
-if(redismode != "cluster") {
+if (redismode != "cluster") {
     redisClient = new redis(redisSetting);
-}else{
+} else {
 
     var redisHosts = redisip.split(",");
-    if(Array.isArray(redisHosts)){
+    if (Array.isArray(redisHosts)) {
 
 
         redisSetting = [];
-        redisHosts.forEach(function(item){
+        redisHosts.forEach(function (item) {
             redisSetting.push({
                 host: item,
                 port: redisport,
                 family: 4,
                 password: redispass,
-                db: redisdb});
+                db: redisdb
+            });
         });
 
         var redisClient = new redis.Cluster([redisSetting]);
 
-    }else{
+    } else {
 
         redisClient = new redis(redisSetting);
     }
@@ -114,9 +115,9 @@ var ardsredisdb = config.ArdsRedis.db;
 
 
 
-var redisArdsSetting =  {
-    port:ardsredisport,
-    host:ardsredisip,
+var redisArdsSetting = {
+    port: ardsredisport,
+    host: ardsredisip,
     family: 4,
     password: ardsredispass,
     db: ardsredisdb,
@@ -130,27 +131,27 @@ var redisArdsSetting =  {
     }
 };
 
-if(redismode == 'sentinel'){
+if (redismode == 'sentinel') {
 
-    if(config.ArdsRedis.sentinels && config.ArdsRedis.sentinels.hosts && config.ArdsRedis.sentinels.port, config.ArdsRedis.sentinels.name){
+    if (config.ArdsRedis.sentinels && config.ArdsRedis.sentinels.hosts && config.ArdsRedis.sentinels.port, config.ArdsRedis.sentinels.name) {
         var sentinelHosts = config.ArdsRedis.sentinels.hosts.split(',');
-        if(Array.isArray(sentinelHosts) && sentinelHosts.length > 2){
+        if (Array.isArray(sentinelHosts) && sentinelHosts.length > 2) {
             var sentinelConnections = [];
 
-            sentinelHosts.forEach(function(item){
+            sentinelHosts.forEach(function (item) {
 
-                sentinelConnections.push({host: item, port:config.ArdsRedis.sentinels.port})
+                sentinelConnections.push({ host: item, port: config.ArdsRedis.sentinels.port })
 
             })
 
             redisArdsSetting = {
-                sentinels:sentinelConnections,
+                sentinels: sentinelConnections,
                 name: config.ArdsRedis.sentinels.name,
                 password: ardsredispass,
                 db: ardsredisdb
             }
 
-        }else{
+        } else {
 
             console.log("No enough sentinel servers found .........");
         }
@@ -160,27 +161,28 @@ if(redismode == 'sentinel'){
 
 var redisArdsClient = undefined;
 
-if(redismode != "cluster") {
+if (redismode != "cluster") {
     redisArdsClient = new redis(redisArdsSetting);
-}else{
+} else {
 
     var redisHosts = redisip.split(",");
-    if(Array.isArray(redisHosts)){
+    if (Array.isArray(redisHosts)) {
 
 
         redisArdsSetting = [];
-        redisHosts.forEach(function(item){
+        redisHosts.forEach(function (item) {
             redisArdsSetting.push({
                 host: item,
                 port: ardsredisport,
                 family: 4,
                 password: ardsredispass,
-                db: ardsredisdb});
+                db: ardsredisdb
+            });
         });
 
         var redisArdsClient = new redis.Cluster([redisArdsSetting]);
 
-    }else{
+    } else {
 
         redisArdsClient = new redis(redisArdsSetting);
     }
@@ -257,21 +259,38 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                     OutboundHoldTime: 0,
                     OutboundAnswerCount: 0
                 };
-                var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-                var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
-                var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
-                var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
-                var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}", tenantId, companyId, resourceId);
-                var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
-                var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}", tenantId, companyId, resourceId);
-                var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register", tenantId, companyId, resourceId);
-                var currentState = format("ResourceState:{0}:{1}:{2}", companyId, tenantId, resourceId);
-                var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound", tenantId, companyId, resourceId);
-                var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound", tenantId, companyId, resourceId);
-                var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", tenantId, companyId, resourceId);
-                var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
-                var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound", tenantId, companyId, resourceId);
-                var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound", tenantId, companyId, resourceId);
+                var inboundCallTime = format(
+                    "TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound",
+                    tenantId, companyId, resourceId);
+                var staffedTime = format(
+                    "SESSION:{0}:{1}:LOGIN:{2}:{2}:Register",
+                    tenantId, companyId, resourceId);
+                var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound",
+                    tenantId, companyId, resourceId);
+                var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound",
+                    tenantId, companyId, resourceId);
+                var breakTime = format("TOTALTIMEWSPARAM:{0}:{1}:BREAK:{2}",
+                 tenantId, companyId, resourceId);
+                var incomingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLinbound",
+                 tenantId, companyId, resourceId);
+                var missCallCount = format("TOTALCOUNT:{0}:{1}:AGENTREJECT:*:{2}",
+                 tenantId, companyId, resourceId);
+                var staffedTimeLastDay = format("TOTALTIME:{0}:{1}:LOGIN:{2}:Register",
+                 tenantId, companyId, resourceId);
+                var currentState = format("ResourceState:{0}:{1}:{2}",
+                 companyId, tenantId, resourceId);
+                var inboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:inbound",
+                 tenantId, companyId, resourceId);
+                var outboundHoldTime = format("TOTALTIME:{0}:{1}:AGENTHOLD:{2}:outbound",
+                 tenantId, companyId, resourceId);
+                var transferCount = format("TOTALCOUNTWSPARAM:{0}:{1}:AGENTTRANSFER:{2}", 
+                tenantId, companyId, resourceId);
+                var outboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLoutbound",
+                 tenantId, companyId, resourceId);
+                var outgoingCallCount = format("TOTALCOUNT:{0}:{1}:CONNECTED:{2}:CALLoutbound",
+                 tenantId, companyId, resourceId);
+                var outgoingAnswerCount = format("TOTALCOUNT:{0}:{1}:CALLANSWERED:{2}:outbound",
+                 tenantId, companyId, resourceId);
 
                 /* var transferCall = "TOTALCOUNT:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "window", resourceId, "parameter2");
                  var idleTime = "TOTALTIME:{0}:{1}:{2}:{3}:{4}".format(tenantId, companyId, "LOGIN", resourceId, "parameter2");
@@ -302,8 +321,8 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                 productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
                                 productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
                                 productivity.OutboundAnswerCount = parseInt(reuslt[10] ? reuslt[10] : 0);
-                                productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
-                                productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
+                                productivity.InboundCallTime = (productivity.InboundCallTime > 0) ? productivity.InboundCallTime : 0;
+                                productivity.OutboundCallTime = (productivity.OutboundCallTime > 0) ? productivity.OutboundCallTime : 0;
 
                                 productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
                                 productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
@@ -379,30 +398,30 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                         } catch (ex) {
                                                                         }
 
-                                                                        if(req.query.productivityStartDate && req.query.productivityEndDate){
-                                                                            productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function(firstLoginRecord){
-                                                                                count++;
-                                                                                productivity.LoginTime = firstLoginRecord? firstLoginRecord.createdAt: undefined;
-                                                                                AgentsProductivity.push(productivity);
-                                                                                if (count == resourceIds.length) {
+                                                                        // if (req.query.productivityStartDate && req.query.productivityEndDate) {
+                                                                        //     productivitySummary.GetFirstLoginForTheDate(resourceId, req.query.productivityStartDate, req.query.productivityEndDate).then(function (firstLoginRecord) {
+                                                                        //         count++;
+                                                                        //         productivity.LoginTime = firstLoginRecord ? firstLoginRecord.createdAt : undefined;
+                                                                        //         AgentsProductivity.push(productivity);
+                                                                        //         if (count == resourceIds.length) {
 
-                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                                    res.end(jsonString);
-                                                                                }
-                                                                            }).catch(function(err){
-                                                                                count++;
-                                                                                AgentsProductivity.push(productivity);
-                                                                                if (count == resourceIds.length) {
+                                                                        //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                        //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                        //             res.end(jsonString);
+                                                                        //         }
+                                                                        //     }).catch(function (err) {
+                                                                        //         count++;
+                                                                        //         AgentsProductivity.push(productivity);
+                                                                        //         if (count == resourceIds.length) {
 
-                                                                                    var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
-                                                                                    logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
-                                                                                    res.end(jsonString);
-                                                                                }
+                                                                        //             var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, AgentsProductivity);
+                                                                        //             logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
+                                                                        //             res.end(jsonString);
+                                                                        //         }
 
-                                                                            });
-                                                                        }else{
-                                                                            count++;
+                                                                        //     });
+                                                                        // } else {
+                                                                             count++;
                                                                             AgentsProductivity.push(productivity);
                                                                             if (count == resourceIds.length) {
 
@@ -410,7 +429,7 @@ module.exports.Productivity = function (req, res, companyId, tenantId) {
                                                                                 logger.info('[Productivity] . [%s] -[%s]', AgentsProductivity, jsonString);
                                                                                 res.end(jsonString);
                                                                             }
-                                                                        }
+                                                                        // }
 
                                                                     });
                                                                 }
@@ -482,13 +501,29 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
         MissCallCount: 0,
         InboundCallTime: 0,
         OutboundCallTime: 0,
+        OutboundTime: 0,
         InboundAcwTime: 0,
         OutboundAcwTime: 0,
         InboundHoldTime: 0,
-        OutboundHoldTime: 0
+        OutboundHoldTime: 0,
+        AvgTalkTimeInbound: 0,
+        AvgTalkTimeOutbound: 0
 
     };
     var inboundCallTime = format("TOTALTIME:{0}:{1}:CONNECTED:{2}:CALLinbound", tenantId, companyId, resourceId);
+    var outboundTime = format(
+        "SESSION:{0}:{1}:{2}:OUTBOUND:{3}:{3}:Outbound",
+        tenantId,
+        companyId,
+        bu,
+        resourceId
+    );
+    var outboundTimeLastDay = format(
+        "TOTALTIME:{0}:{1}:OUTBOUND:{2}:Outbound",
+        tenantId,
+        companyId,
+        resourceId
+    );
     var staffedTime = format("SESSION:{0}:{1}:LOGIN:{2}:{2}:Register", tenantId, companyId, resourceId);
     var acwInbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
     var acwOutbound = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
@@ -531,8 +566,8 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
 
                     productivity.InboundCallTime = tempInboundOnCallTime - productivity.InboundHoldTime;
                     productivity.OutboundCallTime = tempOutboundOnCallTime - productivity.OutboundHoldTime;
-                    productivity.InboundCallTime = (productivity.InboundCallTime > 0)? productivity.InboundCallTime: 0;
-                    productivity.OutboundCallTime = (productivity.OutboundCallTime > 0)? productivity.OutboundCallTime: 0;
+                    productivity.InboundCallTime = (productivity.InboundCallTime > 0) ? productivity.InboundCallTime : 0;
+                    productivity.OutboundCallTime = (productivity.OutboundCallTime > 0) ? productivity.OutboundCallTime : 0;
 
                     productivity.OnCallTime = productivity.InboundCallTime + productivity.OutboundCallTime;
                     productivity.AcwTime = productivity.InboundAcwTime + productivity.OutboundAcwTime;
@@ -541,6 +576,13 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                     productivity.HoldTime = productivity.InboundHoldTime + productivity.OutboundHoldTime;
                     productivity.TransferCallCount = parseInt(reuslt[7] ? reuslt[7] : 0);
                     productivity.OutgoingCallCount = parseInt(reuslt[9] ? reuslt[9] : 0);
+
+                    productivity.AvgTalkTimeInbound = (productivity.IncomingCallCount!=0)? productivity.InboundCallTime/productivity.IncomingCallCount : 0;
+                    productivity.AvgTalkTimeOutbound = (productivity.OutgoingCallCount!=0)? productivity.OutboundCallTime/productivity.OutgoingCallCount : 0;
+
+
+
+
                     redisClient.hget(staffedTime, "time", function (err, reuslt) {
                         if (err) {
                             jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
@@ -630,6 +672,79 @@ module.exports.ProductivityByResourceId = function (req, res, companyId, tenantI
                             }
                         }
                     });
+
+
+                    redisClient.hget(outboundTime, "time", function (err, reuslt) {
+                        if (err) {
+                          jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                          logger.error('[TransferCallCount] - [%s]', id, err);
+                          res.end(jsonString);
+                        }
+                        else {
+                          try {
+                            if (reuslt) {
+                              var outTime = moment.utc(moment(moment(), "DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt), "DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons
+                              productivity.OutboundTime = toSeconds(outTime);
+                              try {
+                                redisClient.get(outboundTimeLastDay, function (err, reuslt) {
+                                  if (err) {
+                                    console.log(err);
+                                  }
+                                  else {
+                                    if (reuslt) {
+                                      try {
+                                        /*sTime = moment.utc(moment(moment(),"DD/MM/YYYY HH:mm:ss").diff(moment(moment(reuslt),"DD/MM/YYYY HH:mm:ss"))).format("HH:mm:ss"); // split it at the colons*/
+                                        productivity.OutboundTime = parseInt(reuslt) + parseInt(productivity.OutboundTime)  ;
+                                        /*productivity.StaffedTime = parseInt(toSeconds(sTime)) + parseInt(productivity.StaffedTime);*/
+                                      }
+                                      catch (ex) {
+                                        console.log(err);
+                                      }
+                                    }
+                                    else {
+                                      try {
+                                        productivity.OutboundTime = parseInt(productivity.OutboundTime);
+                                      }
+                                      catch (ex) {
+                                        console.log(err);
+                                      }
+                                    }
+                                  }
+                                });
+                              } catch (ex) {
+                                console.log(err);
+                              }
+                            }
+            
+                            else {
+                              redisClient.get(outboundTimeLastDay, function (err, reuslt) {
+                                if (err) {
+                                  console.log(err);
+                                }
+                                else {
+                                  if (reuslt) {
+                                    try {
+                                      productivity.OutboundTime = parseInt(reuslt);
+                                      jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                                      logger.info('[Productivity-miss some data1] . [%s] -[%s]', productivity, jsonString);
+                                      res.end(jsonString);
+                                    }
+                                    catch (ex) {
+                                      console.log(err);
+                                    }
+                                  }
+                                }
+                              });
+                            }
+                          } catch (ex) {
+                            jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, productivity);
+                            logger.error('[TransferCallCount] - [%s]', id, ex);
+                            res.end(jsonString);
+                          }
+                        }
+                      });
+
+
                 }
             });
 
@@ -805,9 +920,9 @@ module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
     var key;
     var jsonString;
 
-    if(req.query && req.query.direction === 'outbound'){
+    if (req.query && req.query.direction === 'outbound') {
         key = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLoutbound", tenantId, companyId, resourceId);
-    }else{
+    } else {
         key = format("TOTALTIME:{0}:{1}:AFTERWORK:{2}:AfterWorkCALLinbound", tenantId, companyId, resourceId);
     }
     redisClient.get(key, function (err, reuslt) {
@@ -824,4 +939,4 @@ module.exports.GetAcwTime = function (req, res, companyId, tenantId) {
     });
 };
 
-module.exports.redisArdsClient=redisArdsClient;
+module.exports.redisArdsClient = redisArdsClient;
