@@ -975,73 +975,132 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
 
     dbConn.SequelizeConn.query(query, {type: dbConn.SequelizeConn.QueryTypes.SELECT})
         .then(function (records) {
-            if (records) {
-                logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
+            if (records && records.length) {
+                //logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Data found  - %s-[%s]', tenant, company, JSON.stringify(records));
                 var DailySummary = [];
-                records.forEach(function (record) {
+
+                for (var i = 0; i < records.length; i++) {
                     var summary = {};
 
-                    summary.Date = record.summary_date;
-                    summary.Company = record.company;
-                    summary.CompanyName = GetCompanyName(record.company);
-                    summary.Agent = record.agent;
-                    summary.LoginTime = record.login_time;
-                    summary.StaffTime = record.login_total_time;
-                    summary.InboundTime = record.inbound_total_time;
-                    summary.OutboundTime = record.outbound_total_time;
-                    summary.TalkTimeInbound = record.inbound_talk_total_time;
-                    summary.TalkTimeOutbound = record.outbound_talk_total_time;
-                    summary.AvgTalkTimeInbound = record.avg_inbound_talk_time;
-                    summary.AvgTalkTimeOutbound = record.avg_outbound_talk_time;
-                    summary.TotalAnswered = parseInt(record.connected_total_count);
-                    summary.TotalAnsweredOutbound = parseInt(record.outbound_connected_total_count);
-                    summary.TotalAnsweredInbound = parseInt(record.inbound_connected_total_count);
-                    summary.TotalCallsInbound = record.inbound_total_count;
-                    summary.TotalCallsOutbound = record.outbound_total_count;
-                    summary.AverageHandlingTimeInbound = record.avg_inbound_handling_time;
-                    summary.AverageHandlingTimeOutbound = record.avg_outbound_handling_time;
-                    summary.BreakTime = record.total_break_time;
-                    summary.AfterWorkTimeInbound = record.inbound_acw_total_time;
-                    summary.AfterWorkTimeOutbound = record.outbound_acw_total_time;
-                    summary.IdleTimeInbound = record.idle_time_inbound;
-                    summary.IdleTimeOutbound = record.idle_time_outbound;
-                    summary.IdleTimeOffline = record.idle_time_offline;
-                    summary.TotalHoldInbound = parseInt(record.inbound_hold_total_count);
-                    summary.TotalHoldTimeInbound = record.inbound_hold_total_time;
-                    summary.AvgHoldTimeInbound = record.avg_inbound_hold_time;
-                    summary.TotalHoldOutbound = parseInt(record.outbound_hold_total_count);
-                    summary.TotalHoldTimeOutbound = record.outbound_hold_total_time;
-                    summary.AvgHoldTimeOutbound = record.avg_outbound_hold_time;
+                    summary.Date = records[i].summary_date;
+                    summary.Company = records[i].company;
+                    summary.CompanyName = GetCompanyName(records[i].company);
+                    summary.Agent = records[i].agent;
+                    summary.LoginTime = records[i].login_time;
+                    summary.StaffTime = records[i].login_total_time;
+                    summary.InboundTime = records[i].inbound_total_time;
+                    summary.OutboundTime = records[i].outbound_total_time;
+                    summary.TalkTimeInbound = records[i].inbound_talk_total_time;
+                    summary.TalkTimeOutbound = records[i].outbound_talk_total_time;
+                    summary.AvgTalkTimeInbound = records[i].avg_inbound_talk_time;
+                    summary.AvgTalkTimeOutbound = records[i].avg_outbound_talk_time;
+                    summary.TotalAnswered = parseInt(records[i].connected_total_count);
+                    summary.TotalAnsweredOutbound = parseInt(records[i].outbound_connected_total_count);
+                    summary.TotalAnsweredInbound = parseInt(records[i].inbound_connected_total_count);
+                    summary.TotalCallsInbound = records[i].inbound_total_count;
+                    summary.TotalCallsOutbound = records[i].outbound_total_count;
+                    summary.AverageHandlingTimeInbound = records[i].avg_inbound_handling_time;
+                    summary.AverageHandlingTimeOutbound = records[i].avg_outbound_handling_time;
+                    summary.BreakTime = records[i].total_break_time;
+                    summary.AfterWorkTimeInbound = records[i].inbound_acw_total_time;
+                    summary.AfterWorkTimeOutbound = records[i].outbound_acw_total_time;
+                    summary.IdleTimeInbound = records[i].idle_time_inbound;
+                    summary.IdleTimeOutbound = records[i].idle_time_outbound;
+                    summary.IdleTimeOffline = records[i].idle_time_offline;
+                    summary.TotalHoldInbound = parseInt(records[i].inbound_hold_total_count);
+                    summary.TotalHoldTimeInbound = records[i].inbound_hold_total_time;
+                    summary.AvgHoldTimeInbound = records[i].avg_inbound_hold_time;
+                    summary.TotalHoldOutbound = parseInt(records[i].outbound_hold_total_count);
+                    summary.TotalHoldTimeOutbound = records[i].outbound_hold_total_time;
+                    summary.AvgHoldTimeOutbound = records[i].avg_outbound_hold_time;
 
-                    summary.totalStaffTime = record.full_total_login_time;
-                    summary.totalInboundTime = record.full_total_inbound_time;
-                    summary.totalOutboundTime = record.full_total_outbound_time;
-                    summary.totalInboundIdleTime = record.full_total_inbound_idle_time;
-                    summary.totalOutboundIdleTime = record.full_total_outbound_idle_time;
-                    summary.totalOfflineIdleTime = record.full_total_offline_idle_time;
-                    summary.totalInboundAfterWorkTime = record.full_total_inbound_acw_time;
-                    summary.totalOutboundAfterWorkTime = record.full_total_outbound_acw_time;
-                    summary.totalInboundTalkTime = record.full_total_inbound_talk_time;
-                    summary.totalOutboundTalkTime = record.full_total_outbound_talk_time;
-                    summary.totalInboundHoldTime = record.full_total_inbound_hold_time;
-                    summary.totalOutboundHoldTime = record.full_total_outbound_hold_time;
-                    summary.totalInboundHoldCount = parseInt(record.full_total_inbound_hold_count);
-                    summary.totalOutboundHoldCount = parseInt(record.full_total_outbound_hold_count);
-                    summary.totalBreakTime = record.full_total_break_time;
-                    summary.totalInboundAnswered = parseInt(record.full_total_connected_inbound_calls);
-                    summary.totalOutboundAnswered = parseInt(record.full_total_connected_outbound_calls);
-                    summary.totalCallsInb = parseInt(record.full_total_inbound_calls);
-                    summary.totalCallsOut = parseInt(record.full_total_outbound_calls);
-                    summary.avgInboundHandlingTime = record.full_avg_inbound_handling_time;
-                    summary.avgOutboundHandlingTime = record.full_avg_outbound_handling_time;
-                    summary.avgInboundTalkTime = record.full_avg_inbound_talk_time;
-                    summary.avgOutboundTalkTime = record.full_avg_outbound_talk_time;
-                    summary.avgInboundHoldTime = record.full_avg_inbound_hold_time;
-                    summary.avgOutboundHoldTime = record.full_avg_outbound_hold_time;
+                    if (i === 0) {
+                        //logger.info('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL]  - i === 0 ');
+                        summary.totalStaffTime = convertToSeconds(records[i].login_total_time);
+                        summary.totalInboundTime = convertToSeconds(records[i].inbound_total_time);
+                        summary.totalOutboundTime = convertToSeconds(records[i].outbound_total_time);
+                        summary.totalInboundIdleTime = convertToSeconds(records[i].idle_time_inbound);
+                        summary.totalOutboundIdleTime = convertToSeconds(records[i].idle_time_outbound);
+                        summary.totalOfflineIdleTime = convertToSeconds(records[i].idle_time_offline);
+                        summary.totalInboundAfterWorkTime = convertToSeconds(records[i].inbound_acw_total_time);
+                        summary.totalOutboundAfterWorkTime = convertToSeconds(records[i].outbound_acw_total_time);
+                        summary.totalInboundTalkTime = convertToSeconds(records[i].inbound_talk_total_time);
+                        summary.totalOutboundTalkTime = convertToSeconds(records[i].outbound_talk_total_time);
+                        summary.totalInboundHoldTime = convertToSeconds(records[i].inbound_hold_total_time);
+                        summary.totalOutboundHoldTime = convertToSeconds(records[i].outbound_hold_total_time);
+                        summary.totalInboundHoldCount = parseInt(records[i].inbound_hold_total_count);
+                        summary.totalOutboundHoldCount = parseInt(records[i].outbound_hold_total_count);
+                        summary.totalBreakTime = convertToSeconds(records[i].total_break_time);
+                        summary.totalInboundAnswered = parseInt(records[i].inbound_connected_total_count);
+                        summary.totalOutboundAnswered = parseInt(records[i].outbound_connected_total_count);
+                        summary.totalCallsInb = parseInt(records[i].inbound_total_count);
+                        summary.totalCallsOut = parseInt(records[i].outbound_total_count);
+                        summary.avgInboundHandlingTime = convertToSeconds(records[i].avg_inbound_handling_time);
+                        summary.avgOutboundHandlingTime = convertToSeconds(records[i].avg_outbound_handling_time);
+                        summary.avgInboundTalkTime = convertToSeconds(records[i].avg_inbound_talk_time);
+                        summary.avgOutboundTalkTime = convertToSeconds(records[i].avg_outbound_talk_time);
+                        summary.avgInboundHoldTime = convertToSeconds(records[i].avg_inbound_hold_time);
+                        summary.avgOutboundHoldTime = convertToSeconds(records[i].avg_outbound_hold_time);
+                    }
+                    if (i > 0) {
+                        summary.totalStaffTime = DailySummary[i-1].totalStaffTime + convertToSeconds(records[i].login_total_time);
+                        summary.totalInboundTime = DailySummary[i-1].totalInboundTime + convertToSeconds(records[i].inbound_total_time);
+                        summary.totalOutboundTime = DailySummary[i-1].totalOutboundTime + convertToSeconds(records[i].outbound_total_time);
+                        summary.totalInboundIdleTime = DailySummary[i-1].totalInboundIdleTime + convertToSeconds(records[i].idle_time_inbound);
+                        summary.totalOutboundIdleTime = DailySummary[i-1].totalOutboundIdleTime + convertToSeconds(records[i].idle_time_outbound);
+                        summary.totalOfflineIdleTime = DailySummary[i-1].totalOfflineIdleTime + convertToSeconds(records[i].idle_time_offline);
+                        summary.totalInboundAfterWorkTime = DailySummary[i-1].totalInboundAfterWorkTime + convertToSeconds(records[i].inbound_acw_total_time);
+                        summary.totalOutboundAfterWorkTime = DailySummary[i-1].totalOutboundAfterWorkTime + convertToSeconds(records[i].outbound_acw_total_time);
+                        summary.totalInboundTalkTime = DailySummary[i-1].totalInboundTalkTime + convertToSeconds(records[i].inbound_talk_total_time);
+                        summary.totalOutboundTalkTime = DailySummary[i-1].totalOutboundTalkTime + convertToSeconds(records[i].outbound_talk_total_time);
+                        summary.totalInboundHoldTime = DailySummary[i-1].totalInboundHoldTime + convertToSeconds(records[i].inbound_hold_total_time);
+                        summary.totalOutboundHoldTime = DailySummary[i-1].totalOutboundHoldTime + convertToSeconds(records[i].outbound_hold_total_time);
+                        summary.totalInboundHoldCount = DailySummary[i-1].totalInboundHoldCount + parseInt(records[i].inbound_hold_total_count);
+                        summary.totalOutboundHoldCount = DailySummary[i-1].totalOutboundHoldCount + parseInt(records[i].outbound_hold_total_count);
+                        summary.totalBreakTime = DailySummary[i-1].totalBreakTime + convertToSeconds(records[i].total_break_time);
+                        summary.totalInboundAnswered = DailySummary[i-1].totalInboundAnswered + parseInt(records[i].inbound_connected_total_count);
+                        summary.totalOutboundAnswered = DailySummary[i-1].totalOutboundAnswered + parseInt(records[i].outbound_connected_total_count);
+                        summary.totalCallsInb = DailySummary[i-1].totalCallsInb + parseInt(records[i].inbound_total_count);
+                        summary.totalCallsOut = DailySummary[i-1].totalCallsOut + parseInt(records[i].outbound_total_count);
+                        summary.avgInboundHandlingTime = DailySummary[i-1].avgInboundHandlingTime + convertToSeconds(records[i].avg_inbound_handling_time);
+                        summary.avgOutboundHandlingTime = DailySummary[i-1].avgOutboundHandlingTime + convertToSeconds(records[i].avg_outbound_handling_time);
+                        summary.avgInboundTalkTime = DailySummary[i-1].avgInboundTalkTime + convertToSeconds(records[i].avg_inbound_talk_time);
+                        summary.avgOutboundTalkTime = DailySummary[i-1].avgOutboundTalkTime + convertToSeconds(records[i].avg_outbound_talk_time);
+                        summary.avgInboundHoldTime = DailySummary[i-1].avgInboundHoldTime + convertToSeconds(records[i].avg_inbound_hold_time);
+                        summary.avgOutboundHoldTime = DailySummary[i-1].avgOutboundHoldTime + convertToSeconds(records[i].avg_outbound_hold_time);
+                        //logger.info('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL] - i > 0 - staffTime - [%s] ', summary.totalStaffTime);
+                    }
 
                     DailySummary.push(summary);
+                }
 
-                });
+                var lastRec = DailySummary.length - 1;
+
+                    DailySummary[lastRec].totalStaffTime = convertToHHMMSS(DailySummary[lastRec].totalStaffTime);
+                    DailySummary[lastRec].totalInboundTime = convertToHHMMSS(DailySummary[lastRec].totalInboundTime);
+                    DailySummary[lastRec].totalOutboundTime = convertToHHMMSS(DailySummary[lastRec].totalOutboundTime);
+                    DailySummary[lastRec].totalInboundIdleTime = convertToHHMMSS(DailySummary[lastRec].totalInboundIdleTime);
+                    DailySummary[lastRec].totalOutboundIdleTime = convertToHHMMSS(DailySummary[lastRec].totalOutboundIdleTime);
+                    DailySummary[lastRec].totalOfflineIdleTime = convertToHHMMSS(DailySummary[lastRec].totalOfflineIdleTime);
+                    DailySummary[lastRec].totalInboundAfterWorkTime = convertToHHMMSS(DailySummary[lastRec].totalInboundAfterWorkTime);
+                    DailySummary[lastRec].totalOutboundAfterWorkTime = convertToHHMMSS(DailySummary[lastRec].totalOutboundAfterWorkTime);
+                    DailySummary[lastRec].totalInboundTalkTime = convertToHHMMSS(DailySummary[lastRec].totalInboundTalkTime);
+                    DailySummary[lastRec].totalOutboundTalkTime = convertToHHMMSS(DailySummary[lastRec].totalOutboundTalkTime);
+                    DailySummary[lastRec].totalInboundHoldTime = convertToHHMMSS(DailySummary[lastRec].totalInboundHoldTime);
+                    DailySummary[lastRec].totalOutboundHoldTime = convertToHHMMSS(DailySummary[lastRec].totalOutboundHoldTime);
+                    DailySummary[lastRec].totalBreakTime = convertToHHMMSS(DailySummary[lastRec].totalBreakTime);
+                    DailySummary[lastRec].totalCallsInb = convertToHHMMSS(DailySummary[lastRec].totalCallsInb);
+                    DailySummary[lastRec].totalCallsOut = convertToHHMMSS(DailySummary[lastRec].totalCallsOut);
+                    DailySummary[lastRec].avgInboundHandlingTime = convertToHHMMSS(DailySummary[lastRec].avgInboundHandlingTime);
+                    DailySummary[lastRec].avgOutboundHandlingTime = convertToHHMMSS(DailySummary[lastRec].avgOutboundHandlingTime);
+                    DailySummary[lastRec].avgInboundTalkTime = convertToHHMMSS(DailySummary[lastRec].avgInboundTalkTime);
+                    DailySummary[lastRec].avgOutboundTalkTime = convertToHHMMSS(DailySummary[lastRec].avgOutboundTalkTime);
+                    DailySummary[lastRec].avgInboundHoldTime = convertToHHMMSS(DailySummary[lastRec].avgInboundHoldTime);
+                    DailySummary[lastRec].avgOutboundHoldTime = convertToHHMMSS(DailySummary[lastRec].avgOutboundHoldTime);
+                    logger.info('[DVP-ResResource.GetDailySummaryRecords] - [PGSQL]  - LAST Record - total inbound Answered - [%s]', DailySummary[lastRec].totalStaffTime);
+
+                logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - First Record  - %s-[%s]', tenant, company, JSON.stringify(DailySummary[0]));
+                logger.info('[DVP-ResResource.GetDailySummaryRecords] - [%s] - [PGSQL]  - Last Record  - %s-[%s]', tenant, company, JSON.stringify(DailySummary[lastRec]));
                 jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, DailySummary);
 
                 callback.end(jsonString);
@@ -1057,6 +1116,39 @@ var GetDailySummaryRecords = function (tenant, company, summaryFromDate, summary
         jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
     });
+};
+
+var convertToHHMMSS = function (sec) {
+    var hours = Math.floor(sec / 3600);
+
+    var seconds = sec - hours * 3600;
+
+    var minutes = Math.floor(seconds / 60);
+
+    seconds = seconds - minutes * 60;
+
+    if (hours < 10) {
+        hours = '0' + hours.toString();
+    }
+
+    if (minutes < 10) {
+        minutes = '0' + minutes.toString();
+    }
+
+    if (seconds < 10) {
+        seconds = '0' + seconds.toString();
+    }
+
+    return hours + ':' + minutes + ':' + seconds;
+};
+
+var convertToSeconds  = function (time) {
+    time = time.trim();
+
+    var timeArr =time.split(":");
+    //logger.info('[DVP-ResResource.convertToSeconds] - [PGSQL]  - Return value - [%s]', parseInt(timeArr[0])*3600 + parseInt(timeArr[1])*60 + parseInt(timeArr[2]));
+    return parseInt(timeArr[0])*3600 + parseInt(timeArr[1])*60 + parseInt(timeArr[2]);
+
 };
 
 module.exports.GetCompanyName = GetCompanyName;
