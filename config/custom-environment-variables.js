@@ -1,13 +1,13 @@
 module.exports = {
     "Mongo":
-        {
-            "ip":"SYS_MONGO_HOST",
-            "port":"SYS_MONGO_PORT",
-            "dbname":"SYS_MONGO_DB",
-            "password":"SYS_MONGO_PASSWORD",
-            "user":"SYS_MONGO_USER",
-            "replicaset" :"SYS_MONGO_REPLICASETNAME"
-        },
+    {
+        "ip": "SYS_MONGO_HOST",
+        "port": "SYS_MONGO_PORT",
+        "dbname": "SYS_MONGO_DB",
+        "password": "SYS_MONGO_PASSWORD",
+        "user": "SYS_MONGO_USER",
+        "replicaset": "SYS_MONGO_REPLICASETNAME"
+    },
     "DB": {
         "Type": "SYS_DATABASE_TYPE",
         "User": "SYS_DATABASE_POSTGRES_USER",
@@ -17,59 +17,59 @@ module.exports = {
         "Database": "SYS_DATABASE_NAME"
     },
     "Host":
-        {
-            "domain": "HOST_NAME",
-            "port": "HOST_RESOURCESERVICE_PORT",
-            "version": "HOST_VERSION",
-            "hostpath": "HOST_PATH",
-            "logfilepath": "LOG4JS_CONFIG"
-        },
+    {
+        "domain": "HOST_NAME",
+        "port": "HOST_RESOURCESERVICE_PORT",
+        "version": "HOST_VERSION",
+        "hostpath": "HOST_PATH",
+        "logfilepath": "LOG4JS_CONFIG"
+    },
+
     "Redis":
-        {
-
-
-            "mode": "SYS_REDIS_MODE",
-            "ip": "SYS_DASHBOARD_REDIS_HOST",
-            "port": "SYS_DASHBOARD_REDIS_PORT",
-            "user": "SYS_DASHBOARD_REDIS_USER",
-            "password": "SYS_DASHBOARD_REDIS_PASSWORD",
-            "sentinels": {
-                "hosts": "SYS_REDIS_SENTINEL_HOSTS",
-                "port": "SYS_REDIS_SENTINEL_PORT",
-                "name": "SYS_REDIS_SENTINEL_NAME"
-            }
-        },
+    {
+        "mode": "SYS_DASHBOARD_REDIS_MODE",
+        "ip": "SYS_DASHBOARD_REDIS_HOST",
+        "port": "SYS_DASHBOARD_REDIS_PORT",
+        "user": "SYS_DASHBOARD_REDIS_USER",
+        "db": "SYS_REDIS_DB_DASHBOARD",
+        "password": "SYS_DASHBOARD_REDIS_PASSWORD",
+        "sentinels": {
+            "hosts": "SYS_REDIS_DASHBOARD_SENTINEL_HOSTS",
+            "port": "SYS_REDIS_DASHBOARD_SENTINEL_PORT",
+            "name": "SYS_REDIS_DASHBOARD_SENTINEL_NAME"
+        }
+    },
 
 
     "ArdsRedis":
-        {
-            "mode": "SYS_REDIS_MODE",
-            "ip": "SYS_REDIS_HOST",
-            "port": "SYS_REDIS_PORT",
-            "user": "SYS_REDIS_USER",
-            "password": "SYS_REDIS_PASSWORD",
-            "db": "SYS_REDIS_DB_ARDS",
-            "sentinels": {
-                "hosts": "SYS_REDIS_SENTINEL_HOSTS",
-                "port": "SYS_REDIS_SENTINEL_PORT",
-                "name": "SYS_REDIS_SENTINEL_NAME"
-            }
+    {
+        "mode": "SYS_REDIS_MODE",
+        "ip": "SYS_REDIS_HOST",
+        "port": "SYS_REDIS_PORT",
+        "user": "SYS_REDIS_USER",
+        "password": "SYS_REDIS_PASSWORD",
+        "db": "SYS_REDIS_DB_ARDS",
+        "sentinels": {
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port": "SYS_REDIS_SENTINEL_PORT",
+            "name": "SYS_REDIS_SENTINEL_NAME"
+        }
 
-        },
+    },
 
     "Security":
-        {
-            "ip": "SYS_REDIS_HOST",
-            "port": "SYS_REDIS_PORT",
-            "user": "SYS_REDIS_USER",
-            "password": "SYS_REDIS_PASSWORD",
-            "mode": "SYS_REDIS_MODE",
-            "sentinels": {
-                "hosts": "SYS_REDIS_SENTINEL_HOSTS",
-                "port": "SYS_REDIS_SENTINEL_PORT",
-                "name": "SYS_REDIS_SENTINEL_NAME"
-            }
-
+    {
+        "ip": "SYS_REDIS_HOST",
+        "port": "SYS_REDIS_PORT",
+        "user": "SYS_REDIS_USER",
+        "password": "SYS_REDIS_PASSWORD",
+        "mode": "SYS_REDIS_MODE",
+        "sentinels": {
+            "hosts": "SYS_REDIS_SENTINEL_HOSTS",
+            "port": "SYS_REDIS_SENTINEL_PORT",
+            "name": "SYS_REDIS_SENTINEL_NAME"
         }
+
+    }
 };
 
