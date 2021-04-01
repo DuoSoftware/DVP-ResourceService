@@ -117,7 +117,7 @@ var redisArdsSetting = {
 
 if (ardsredispass != "") redisArdsSetting.password = ardsredispass;
 
-if (redismode == "sentinel") {
+if (ardsredismode == "sentinel") {
   if (
     (config.ArdsRedis.sentinels &&
       config.ArdsRedis.sentinels.hosts &&
@@ -150,7 +150,7 @@ if (redismode == "sentinel") {
 
 var redisArdsClient = undefined;
 
-if (redismode != "cluster") {
+if (ardsredismode != "cluster") {
   redisArdsClient = new redis(redisArdsSetting);
 } else {
   var redisHosts = redisip.split(",");
