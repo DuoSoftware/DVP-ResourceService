@@ -29,7 +29,7 @@ if (ardsredispass != "") redisArdsSetting.password = ardsredispass;
 
 var redisArdsClient = undefined;
 
-if (redismode != "cluster") {
+if (ardsredismode != "cluster") {
   redisArdsClient = new redis(redisArdsSetting);
 } else {
   var redisHosts = redisip.split(",");
