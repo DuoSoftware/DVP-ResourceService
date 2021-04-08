@@ -588,7 +588,11 @@ function EditAttributeToResource(params, body, tenantId, companyId, iss, callbac
 
 function DeleteAttributeToResource(params, body, tenantId, companyId, iss, callback) {
 
-    DbConn.ResResourceAttributeTask
+    DbConn.ResResourceAttributeTask.find({
+        where: [{TenantId: tenantId}, {CompanyId: companyId}, {ResAttId: params.ResAttId}]
+    }
+    ).then(function (oldAttribs) {
+        DbConn.ResResourceAttributeTask
         .destroy(
             {
                 where: {
@@ -598,9 +602,9 @@ function DeleteAttributeToResource(params, body, tenantId, companyId, iss, callb
         ).then(function (cmp) {
 
         var auditData = {
-            KeyProperty: "ResourceAttributeId",
-            OldValue: params.ResAttId,
-            NewValue: params.ResAttId,
+            KeyProperty: "AttributeId",
+            OldValue: oldAttribs,
+            NewValue: {},
             Description: "Delete Resource Attribute.",
             Author: iss,
             User: iss,
@@ -614,11 +618,22 @@ function DeleteAttributeToResource(params, body, tenantId, companyId, iss, callb
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-DeleteAttributeToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         callback.end(jsonString);
-    }).error(function (err) {
+     }).error(function (err) {
         logger.error('[DVP-DeleteAttributeToResource] - [%s] - [PGSQL] - insertion  failed-[%s]', companyId, err);
         var jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
         callback.end(jsonString);
+     });
+
+
+    }).error(function (err) {
+        logger.error('[DVP-ResResource.CheckResourceExists] - [%s] - [PGSQL] - find resource failed-[%s]', resourceName, err);
+        jsonString = messageFormatter.FormatMessage(err, "EXCEPTION", false, undefined);
+        callback.end(jsonString);
     });
+
+
+
+    
 }
 
 function ViewAttributeToResource(params, tenantId, companyId, callback) {
