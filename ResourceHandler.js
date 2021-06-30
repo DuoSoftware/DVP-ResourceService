@@ -82,13 +82,13 @@ function CreateResource(resClass, resType, resCategory, tenantId, companyId, res
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", true, cmp);
         logger.info('[DVP-ResResource.CreateResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         var auditData = {
-            KeyProperty: "ResourceName",
+            KeyProperty: "Resources",
             OldValue: {},
             NewValue: tmpResource,
             Description: "New Resource Created.",
             Author: iss,
-            User: iss,
-            ObjectType: "ResResource",
+            User: resourceName,
+            ObjectType: "Resource",
             Action: "SAVE",
             Application: "Resource Service"
         };
@@ -128,12 +128,12 @@ function EditResource(resourceId, resClass, resType, resCategory, tenantId, comp
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp == 1, cmp);
         logger.info('[DVP-ResResource.EditResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         var auditData = {
-            KeyProperty: "ResourceId",
+            KeyProperty: "Resource",
             OldValue: cmp,
             NewValue: tempRes,
             Description: "Update Resource.",
             Author: iss,
-            User: iss,
+            User: resourceName,
             OtherJsonData: JSON.stringify(cmp),
             ObjectType: "ResResource",
             Action: "UPDATE",
@@ -162,12 +162,12 @@ function DeleteResource(resourceId, tenantId, companyId, iss, callback) {
         var jsonString = messageFormatter.FormatMessage(undefined, "SUCCESS", cmp == 1, cmp);
         logger.info('[DVP-ResResource.DeleteResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
         var auditData = {
-            KeyProperty: "ResourceId",
+            KeyProperty: "Resource",
             OldValue: resourceId,
-            NewValue: resourceId,
+            NewValue: {},
             Description: "Delete Resource.",
             Author: iss,
-            User: iss,
+            User: "resourceId: "+resourceId,
             OtherJsonData: JSON.stringify(cmp),
             ObjectType: "ResResource",
             Action: "DELETE",
@@ -303,12 +303,12 @@ function AssignTaskToResource(resourceId, taskId, tenantId, companyId, concurren
         logger.info('[DVP-ResResourceTask.AssignTaskToResource] - [PGSQL] - inserted successfully. [%s] ', jsonString);
 
         var auditData = {
-            KeyProperty: "ResourceId",
+            KeyProperty: "Resource",
             OldValue: {},
             NewValue: resTask,
-            Description: "Assign Task to resource",
+            Description: "Assign Task to Resource",
             Author: iss,
-            User: iss,
+            User: "resourceId: "+resourceId,
             ObjectType: "ResResourceTask",
             Action: "SAVE",
             Application: "Resource Service"
@@ -348,12 +348,12 @@ function UpdateAssignTaskToResource(resourceId, taskId, tenantId, companyId, con
 
         tempData.ResourceId = resourceId;
         var auditData = {
-            KeyProperty: "ResourceName",
+            KeyProperty: "Resource",
             OldValue: cmp,
             NewValue: tempData,
             Description: "Update Task to resource",
             Author: iss,
-            User: iss,
+            User: "resourceId: "+resourceId,
             ObjectType: "ResResourceTask",
             Action: "UPDATE",
             Application: "Resource Service"
@@ -424,12 +424,10 @@ function RemoveTaskFromResource(resourceId, taskId, tenantId, companyId, iss,cal
             KeyProperty: "ResourceId",
             OldValue: {
                 ResourceId: resourceId},
-            NewValue: {
-                ResourceId: resourceId,
-                TaskId: taskId},
-            Description: "Delete Task from resource.",
+            NewValue: {},
+            Description: "Delete Task from Resource.",
             Author: iss,
-            User: iss,
+            User: "resourceId: "+resourceId,
             OtherJsonData: JSON.stringify(cmp),
             ObjectType: "ResResourceTask",
             Action: "DELETE",
@@ -456,14 +454,14 @@ function RemoveAllTasksAssignToResource(resourceId, tenantId, companyId, iss, ca
         logger.info('[DVP-ResResourceTask.RemoveTasFromResource] - [PGSQL] -  successfully. [%s] ', jsonString);
 
         var auditData = {
-            KeyProperty: "ResourceId",
+            KeyProperty: "Resource",
             OldValue: {
                 ResourceId: resourceId},
             NewValue: {
                 ResourceId: resourceId},
             Description: "Delete All Task from resource.",
             Author: iss,
-            User: iss,
+            User: "resourceId: "+resourceId,
             OtherJsonData: JSON.stringify(cmp),
             ObjectType: "ResResourceTask",
             Action: "DELETE",
@@ -500,7 +498,7 @@ function AddAttributeToResource(params, body, tenantId, companyId, iss,callback)
         logger.info('[DVP-ResResourceAttributeTask] - [PGSQL] - inserted successfully. [%s] ', jsonString);
 
         var auditData = {
-            KeyProperty: "ResourceName",
+            KeyProperty: "Resource",
             OldValue: {},
             NewValue: attrib,
             Description: "Assign Attribute to Resource",
@@ -555,7 +553,7 @@ function EditAttributeToResource(params, body, tenantId, companyId, iss, callbac
                 }
             }
             var auditData = {
-                KeyProperty: "ResourceId",
+                KeyProperty: "Resource",
                 OldValue: oldAttribs,
                 NewValue: attribs,
                 Description: "Update Resource Attributes",
@@ -602,7 +600,7 @@ function DeleteAttributeToResource(params, body, tenantId, companyId, iss, callb
         ).then(function (cmp) {
 
         var auditData = {
-            KeyProperty: "AttributeId",
+            KeyProperty: "Resources",
             OldValue: oldAttribs,
             NewValue: {},
             Description: "Delete Resource Attribute.",
